@@ -62,5 +62,4 @@ shape = SubResource("RectangleShape2D_qfnau")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="quick_inventory" parent="CanvasLayer" instance=ExtResource("6_gidsr")]
-anchors_preset = 7
 offset_bottom = 0.0

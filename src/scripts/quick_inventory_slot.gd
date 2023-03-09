@@ -14,10 +14,10 @@ func _ready():
 	
 func _process(delta):
 	if focused and Globals.can_accept_mw_input:
-		if Input.is_action_just_released("ui_mwu"):
+		if Input.is_action_just_released("ux_mwu"):
 			get_node(focus_previous).grab_focus()
 			_wait_and_reset(0.01)
-		elif Input.is_action_just_released("ui_mwd"):
+		elif Input.is_action_just_released("ux_mwd"):
 			get_node(focus_next).grab_focus()
 			_wait_and_reset(0.01)
 		elif Input.is_action_pressed("ux_left"):
