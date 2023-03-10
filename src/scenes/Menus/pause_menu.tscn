@@ -1,0 +1,124 @@
+[gd_scene load_steps=2 format=3 uid="uid://dk1v2ir84osj"]
+
+[ext_resource type="Script" path="res://scripts/pause_menu.gd" id="1_acin8"]
+
+[node name="pause_menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_acin8")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(286, 360)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.717647, 0.698039, 0.533333, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -28.5
+offset_top = 32.0
+offset_right = 28.5
+offset_bottom = 72.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Paused"
+
+[node name="ColorRect1" type="ColorRect" parent="ColorRect/VBoxContainer"]
+custom_minimum_size = Vector2(196, 64)
+layout_mode = 2
+color = Color(0.415686, 0.164706, 0.2, 1)
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/ColorRect1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Resume"
+
+[node name="ColorRect2" type="ColorRect" parent="ColorRect/VBoxContainer"]
+custom_minimum_size = Vector2(196, 64)
+layout_mode = 2
+color = Color(0.415686, 0.164706, 0.2, 1)
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/ColorRect2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Config"
+
+[node name="ColorRect3" type="ColorRect" parent="ColorRect/VBoxContainer"]
+custom_minimum_size = Vector2(196, 64)
+layout_mode = 2
+color = Color(0.415686, 0.164706, 0.2, 1)
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/ColorRect3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Save"
+
+[node name="ColorRect4" type="ColorRect" parent="ColorRect/VBoxContainer"]
+custom_minimum_size = Vector2(196, 64)
+layout_mode = 2
+color = Color(0.415686, 0.164706, 0.2, 1)
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer/ColorRect4"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Load"

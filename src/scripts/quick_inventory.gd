@@ -7,14 +7,16 @@ func _ready():
 
 func _process(delta):
 	if Globals.can_accept_mw_input:
-		if Input.is_action_just_released("ux_mwu"):
-			focus(_get_prev(), 0.01)
-		elif Input.is_action_just_released("ux_mwd"):
-			focus(_get_next(), 0.01)
-		elif Input.is_action_pressed("ux_left"):
-			focus(_get_prev(), 0.125)
-		elif Input.is_action_pressed("ux_right"):
-			focus(_get_next(), 0.125)
+		if Globals.keyboard:
+			if Input.is_action_just_released("ux_mwu"):
+				focus(_get_prev(), 0.01)
+			elif Input.is_action_just_released("ux_mwd"):
+				focus(_get_next(), 0.01)
+		else:
+			if Input.is_action_pressed("ux_left"):
+				focus(_get_prev(), 0.125)
+			elif Input.is_action_pressed("ux_right"):
+				focus(_get_next(), 0.125)
 
 func _get_next():
 	return get_node("HBoxContainer/ColorRect" + str(focused_index + 1 if focused_index < 10 else 1))

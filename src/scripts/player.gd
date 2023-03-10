@@ -13,9 +13,9 @@ func _physics_process(delta):
 			velocity.x = move_toward(velocity.x, 0, Globals.WALK_SPEED)
 		var ydirection = Input.get_axis("move_up", "move_down")
 		if ydirection:
-			velocity.x = ydirection * Globals.WALK_SPEED
+			velocity.y = ydirection * Globals.WALK_SPEED
 		else:
-			velocity.x = move_toward(velocity.y, 0, Globals.WALK_SPEED)
+			velocity.y = move_toward(velocity.y, 0, Globals.WALK_SPEED)
 		
 		if Input.is_action_just_pressed("player_interact"):
 			velocity = Vector2(0,0)
@@ -23,9 +23,11 @@ func _physics_process(delta):
 		elif Input.is_action_just_pressed("player_cancel"):
 			_cancel()
 		elif Input.is_action_just_pressed("ux_menu"):
-			Globals.open_menu()
+			Globals.menuLayer.ig_menu()
 		elif Input.is_action_just_pressed("ux_pause"):
-			Globals.pause()
+			Globals.menuLayer.pause_menu()
+		elif Input.is_action_just_pressed("ux_debug"):
+			Globals.menuLayer.debug_menu()
 	
 		_handle_walk_animation()
 		move_and_slide()
