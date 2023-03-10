@@ -1,3 +1,18 @@
-[gd_scene format=3 uid="uid://bxnsehgv5k0f6"]
+[gd_scene load_steps=4 format=3 uid="uid://bxnsehgv5k0f6"]
 
-[node name="Node2D" type="Node2D"]
+[ext_resource type="PackedScene" uid="uid://cc81lp1slmt20" path="res://scenes/player.tscn" id="1_2d27c"]
+[ext_resource type="PackedScene" uid="uid://ydgkkqqwkjhb" path="res://scenes/Menus/quick_inventory.tscn" id="2_o3fxd"]
+[ext_resource type="Script" path="res://scripts/MenuLayer.gd" id="2_pls61"]
+
+[node name="Map" type="Node2D"]
+
+[node name="ActorLayer" type="Node2D" parent="."]
+
+[node name="player" parent="ActorLayer" instance=ExtResource("1_2d27c")]
+
+[node name="Camera2D" type="Camera2D" parent="ActorLayer/player"]
+
+[node name="MenuLayer" type="CanvasLayer" parent="."]
+script = ExtResource("2_pls61")
+
+[node name="quick_inventory" parent="MenuLayer" instance=ExtResource("2_o3fxd")]

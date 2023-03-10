@@ -1,9 +1,8 @@
 extends CharacterBody2D
 
-var ingame_menu = preload("res://scenes/Menus/ingame_menu.tscn")
-
 func _ready():
 	Globals.player = self
+	Globals.camera = get_node("Camera2D")
 
 func _physics_process(delta):
 	if not Globals.movement_blocked:
@@ -24,9 +23,9 @@ func _physics_process(delta):
 		elif Input.is_action_just_pressed("player_cancel"):
 			_cancel()
 		elif Input.is_action_just_pressed("ux_menu"):
-			_menu()
+			Globals.open_menu()
 		elif Input.is_action_just_pressed("ux_pause"):
-			_pause()
+			Globals.pause()
 	
 		_handle_walk_animation()
 		move_and_slide()
@@ -46,16 +45,3 @@ func _interact():
 	
 func _cancel():
 	pass
-	
-func _menu():
-	Globals.movement_blocked = true
-	$CanvasLayer/quick_inventory.hide()
-	$CanvasLayer.add_child(ingame_menu.instantiate())
-	
-func menu_hide(menu):
-	Globals.movement_blocked = false
-	$CanvasLayer/quick_inventory.show()
-	menu.queue_free()
-	
-func _pause():
-	Globals.pause()

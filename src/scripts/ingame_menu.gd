@@ -26,7 +26,7 @@ func _process(delta):
 		elif Input.is_action_just_pressed("ux_right"):
 			_change_focus_menu(focused_menu_index, _get_neighbor_menu(RIGHT))
 		elif can_hide and (Input.is_action_just_pressed("ux_menu") or Input.is_action_just_pressed("player_cancel")):
-			Globals.player.menu_hide(self)
+			Globals.close_menu(self)
 	if focused_menu == 1:
 		if Input.is_action_just_pressed("ux_left"):
 			_change_focus_inventory(focused_inventory_index, _get_neighbor(LEFT))
