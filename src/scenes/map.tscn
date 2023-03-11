@@ -212,22 +212,6 @@ terrain_set_0/terrain_1/name = "Terrain2 1"
 terrain_set_0/terrain_1/color = Color(0.0862745, 0.721569, 0.384314, 1)
 sources/1 = SubResource("TileSetAtlasSource_3hg2n")
 
-[sub_resource type="Animation" id="Animation_cap8d"]
-resource_name = "night_to_morning"
-length = 3.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0.0196078, 0, 0.054902, 0.588235), Color(0.807843, 0.662745, 1, 0.0784314)]
-}
-
 [sub_resource type="Animation" id="Animation_gdtri"]
 length = 0.001
 tracks/0/type = "value"
@@ -241,22 +225,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Color(0.0196078, 0, 0.054902, 0.588235)]
-}
-
-[sub_resource type="Animation" id="Animation_2fgxf"]
-resource_name = "morning_to_day"
-length = 3.0
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0.807843, 0.662745, 1, 0.0784314), Color(0.807843, 0.662745, 1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_lues2"]
@@ -304,6 +272,38 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Color(0.807843, 0.662745, 1, 0.0784314)]
+}
+
+[sub_resource type="Animation" id="Animation_2fgxf"]
+resource_name = "morning_to_day"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.807843, 0.662745, 1, 0.0784314), Color(0.807843, 0.662745, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_cap8d"]
+resource_name = "night_to_morning"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.0196078, 0, 0.054902, 0.588235), Color(0.807843, 0.662745, 1, 0.0784314)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_70si5"]

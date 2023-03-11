@@ -7,13 +7,13 @@ var increment = 1
 
 enum { MORNING, DAY, EVENING, NIGHT }
 
-signal group_change(transition)
 signal day_change
 
 func _ready():
 	Globals.clock = self
 	_increment_time()
-	emit_signal("group_change", "morning")
+	await get_tree().create_timer(0.01).timeout
+	Globals.menuLayer.on_clock_group_change("morning")
 
 func _increment_time():
 	await get_tree().create_timer(increment).timeout
@@ -23,15 +23,17 @@ func _increment_time():
 		var minute = _format(time % 60)
 		$ColorRect/Label.text = hour + ":" + minute
 		if time == 359:
-			emit_signal("group_change", "night_to_morning")
+			Globals.menuLayer.on_clock_group_change("night_to_morning")
 		elif time == 719:
-			emit_signal("group_change", "morning_to_day")
+			Globals.menuLayer.on_clock_group_change("morning_to_day")
 		elif time == 1019:
-			emit_signal("group_change", "day_to_evening")
+			Globals.menuLayer.on_clock_group_change("day_to_evening")
 		elif time == 1199:
-			emit_signal("group_change", "evening_to_night")
+			Globals.menuLayer.on_clock_group_change("evening_to_night")
 		elif time == 360:
 			emit_signal("day_change")
+		elif time == 0:
+			Globals.increment_day()
 	_increment_time()
 
 func _format(num):

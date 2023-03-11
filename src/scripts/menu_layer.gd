@@ -4,15 +4,14 @@ var ingame_menu = preload("res://scenes/Menus/ingame_menu.tscn")
 var quick_inv = preload("res://scenes/Menus/quick_inventory.tscn")
 var pauseMenu = preload("res://scenes/Menus/pause_menu.tscn")
 var debug = preload("res://scenes/Menus/debug.tscn")
-var clock = preload("res://scenes/Menus/clock.tscn")
+var time_display = preload("res://scenes/Menus/time_display.tscn")
 var debugging = false
 var reset_timer = false
 
 func _ready():
 	Globals.menuLayer = self
-	var clock_inst = clock.instantiate()
-	add_child(clock_inst)
-	clock_inst.group_change.connect(_on_clock_group_change)
+	var time_display_inst = time_display.instantiate()
+	add_child(time_display_inst)
 
 func debug_menu():
 	if not reset_timer:
@@ -45,5 +44,5 @@ func reset(timeout):
 	await get_tree().create_timer(timeout).timeout
 	reset_timer = false
 
-func _on_clock_group_change(transition):
+func on_clock_group_change(transition):
 	$AnimationPlayer.play(transition)

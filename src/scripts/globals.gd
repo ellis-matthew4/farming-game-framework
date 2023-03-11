@@ -11,12 +11,14 @@ var unlocked_inventory_slots = 30
 var keyboard = true
 var seed = 0
 var time_stopped = false
+var day = 0
 
 # Instances - Important dynamically-loaded "singletons"
 var player
 var menuLayer
 var camera
 var clock
+var calendar
 
 # Preloads - Important classes to keep a base in memory at all times
 
@@ -28,8 +30,13 @@ func get_state():
 		'can_move?': movement_blocked,
 		'inventory slots': str(unlocked_inventory_slots) + "/" + str(max_inventory_slots),
 		'device': 'keyboard' if keyboard else 'controller',
-		'time stopped?': time_stopped
+		'time stopped?': time_stopped,
+		'in-game day': day
 	}
+	
+func increment_day():
+	day += 1
+	calendar.parse_day(day)
 
 # Global processes
 func _ready():

@@ -21,7 +21,7 @@ func _physics_process(delta):
 			velocity = Vector2(0,0)
 			_interact()
 		elif Input.is_action_just_pressed("player_cancel"):
-			_cancel()
+			Globals.increment_day()
 		elif Input.is_action_just_pressed("ux_menu"):
 			Globals.menuLayer.ig_menu()
 		elif Input.is_action_just_pressed("ux_pause"):
