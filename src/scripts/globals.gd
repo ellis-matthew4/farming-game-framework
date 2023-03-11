@@ -1,7 +1,7 @@
 extends Node
 
 # Constants - Global values that never change
-const WALK_SPEED = 300
+const WALK_SPEED = 140
 
 # Variables - Global values that can change at any time
 var can_accept_mw_input = true
@@ -9,12 +9,14 @@ var movement_blocked = false
 var max_inventory_slots = 30
 var unlocked_inventory_slots = 30
 var keyboard = true
-var seed
+var seed = 0
+var time_stopped = false
 
 # Instances - Important dynamically-loaded "singletons"
 var player
 var menuLayer
 var camera
+var clock
 
 # Preloads - Important classes to keep a base in memory at all times
 
@@ -25,7 +27,8 @@ func get_state():
 		'mw input?': can_accept_mw_input,
 		'can_move?': movement_blocked,
 		'inventory slots': str(unlocked_inventory_slots) + "/" + str(max_inventory_slots),
-		'device': 'keyboard' if keyboard else 'controller'
+		'device': 'keyboard' if keyboard else 'controller',
+		'time stopped?': time_stopped
 	}
 
 # Global processes

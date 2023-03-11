@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bfq56xy2562sw"]
+[gd_scene load_steps=14 format=3 uid="uid://bfq56xy2562sw"]
 
 [ext_resource type="PackedScene" uid="uid://cc81lp1slmt20" path="res://scenes/player.tscn" id="1_2d27c"]
 [ext_resource type="Texture2D" uid="uid://deuegakx8gbpk" path="res://assets/free.png" id="1_w3cr0"]
@@ -212,6 +212,110 @@ terrain_set_0/terrain_1/name = "Terrain2 1"
 terrain_set_0/terrain_1/color = Color(0.0862745, 0.721569, 0.384314, 1)
 sources/1 = SubResource("TileSetAtlasSource_3hg2n")
 
+[sub_resource type="Animation" id="Animation_cap8d"]
+resource_name = "night_to_morning"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.0196078, 0, 0.054902, 0.588235), Color(0.807843, 0.662745, 1, 0.0784314)]
+}
+
+[sub_resource type="Animation" id="Animation_gdtri"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.0196078, 0, 0.054902, 0.588235)]
+}
+
+[sub_resource type="Animation" id="Animation_2fgxf"]
+resource_name = "morning_to_day"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.807843, 0.662745, 1, 0.0784314), Color(0.807843, 0.662745, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_lues2"]
+resource_name = "day_to_evening"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.807843, 0.662745, 1, 0), Color(0.819608, 0.32549, 0, 0.192157)]
+}
+
+[sub_resource type="Animation" id="Animation_5npdq"]
+resource_name = "evening_to_night"
+length = 3.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.819608, 0.32549, 0, 0.192157), Color(0.0196078, 0, 0.054902, 0.588235)]
+}
+
+[sub_resource type="Animation" id="Animation_x6g0n"]
+resource_name = "morning"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.807843, 0.662745, 1, 0.0784314)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_70si5"]
+_data = {
+"RESET": SubResource("Animation_gdtri"),
+"day_to_evening": SubResource("Animation_lues2"),
+"evening_to_night": SubResource("Animation_5npdq"),
+"morning": SubResource("Animation_x6g0n"),
+"morning_to_day": SubResource("Animation_2fgxf"),
+"night_to_morning": SubResource("Animation_cap8d")
+}
+
 [node name="Map" type="Node2D"]
 
 [node name="TileLayer" type="Node2D" parent="."]
@@ -231,5 +335,16 @@ zoom = Vector2(4, 4)
 [node name="MenuLayer" type="CanvasLayer" parent="."]
 process_mode = 3
 script = ExtResource("2_0m1c7")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MenuLayer"]
+libraries = {
+"": SubResource("AnimationLibrary_70si5")
+}
+
+[node name="DayNightCycle" type="ColorRect" parent="MenuLayer/AnimationPlayer"]
+custom_minimum_size = Vector2(1152, 648)
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.0196078, 0, 0.054902, 0.588235)
 
 [node name="quick_inventory" parent="MenuLayer" instance=ExtResource("2_o3fxd")]
