@@ -3,6 +3,7 @@ extends Control
 var focused_index = 1
 
 func _ready():
+	_populate()
 	focus(_get_current(), 0.01)
 
 func _process(delta):
@@ -26,6 +27,18 @@ func _get_prev():
 	
 func _get_current():
 	return get_node("HBoxContainer/ColorRect" + str(focused_index))
+	
+func _populate():
+	var inv = Globals.inventory
+	for i in range(0, 10):
+		if i < len(inv):
+			get_node("HBoxContainer/ColorRect" + str(i + 1)).get_children()[0].texture = inv[i].texture
+
+func _depopulate():
+	for i in range(1, 11):
+		var n = get_node("HBoxContainer/ColorRect" + str(i))
+		var c = n.get_children()[0]
+		n.remove_child(c)
 
 func _wait_and_reset(timeout):
 	Globals.can_accept_mw_input = false

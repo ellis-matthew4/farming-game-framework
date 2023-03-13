@@ -1,5 +1,8 @@
 extends CharacterBody2D
 
+enum DIRS { DOWN, UP, LEFT, RIGHT }
+var facing = DIRS.DOWN
+
 func _ready():
 	Globals.player = self
 	Globals.camera = get_node("Camera2D")
@@ -35,15 +38,25 @@ func _physics_process(delta):
 func _handle_walk_animation():
 	if Input.is_action_just_pressed("move_right"):
 		$AnimatedSprite2D.play("right")
+		facing = DIRS.RIGHT
 	elif Input.is_action_just_pressed("move_left"):
 		$AnimatedSprite2D.play("left")
+		facing = DIRS.LEFT
 	elif Input.is_action_just_pressed("move_down"):
 		$AnimatedSprite2D.play("down")
+		facing = DIRS.DOWN
 	elif Input.is_action_just_pressed("move_up"):
 		$AnimatedSprite2D.play("up")
+		facing = DIRS.UP
 
 func _interact():
-	pass
+	var slot = Globals.menuLayer.get_node("quick_inventory").focused_index - 1
+	var currently_held_item = Globals.inventory[slot]
+	if currently_held_item is Tool:
+		var tool = currently_held_item.item_name.to_snake_case()
+		var animation = currently_held_item.animation_key + DIRS.keys()[facing].to_lower()
+		print("Tool: " + tool + "/" + animation)
+		# Play an animation and perform an action
 	
 func _cancel():
 	pass

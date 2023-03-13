@@ -12,6 +12,7 @@ var keyboard = true
 var seed = 0
 var time_stopped = false
 var day = 0
+var inventory = []
 
 # Instances - Important dynamically-loaded "singletons"
 var player
@@ -34,6 +35,11 @@ func get_state():
 		'in-game day': day
 	}
 	
+func try_add_inventory(item):
+	if len(inventory) >= unlocked_inventory_slots:
+		return false
+	inventory.append(item)
+	
 func increment_day():
 	day += 1
 	calendar.parse_day(day)
@@ -44,6 +50,11 @@ func _ready():
 	randomize()
 	seed = randi()
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	try_add_inventory(ItemDatabase.get_item(0))
+	try_add_inventory(ItemDatabase.get_item(1))
+	try_add_inventory(ItemDatabase.get_item(2))
+	try_add_inventory(ItemDatabase.get_item(3))
+	try_add_inventory(ItemDatabase.get_item(4))
 
 func _input(event):
 	if (event is InputEventKey):
