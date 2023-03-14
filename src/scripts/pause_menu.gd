@@ -1,8 +1,7 @@
 extends Control
 
-var index = 1
-var max_index = 4
 var can_change_focus = true
+var grid = Grid.new(4, 1)
 
 func _ready():
 	get_tree().paused = true
@@ -10,11 +9,13 @@ func _ready():
 
 func _process(delta):
 	if Input.is_action_just_pressed("ux_down"):
+		defocus(_get_current())
 		focus(_get_next(), 0.125)
 	elif Input.is_action_just_pressed("ux_up"):
+		defocus(_get_current())
 		focus(_get_prev(), 0.125)
 	elif Input.is_action_just_pressed("player_interact"):
-		match(index):
+		match(grid.get_current()):
 			1:	# Resume
 				get_tree().paused = false
 				Globals.menuLayer.menu_hide(self)
@@ -24,20 +25,20 @@ func _process(delta):
 				pass
 			4:	# Load
 				pass
+			_:
+				print("ERR: PauseMenuIndexOutOfBounds: " + str(grid.get_current()))
 
 func _get_next():
-	return get_node("ColorRect/VBoxContainer/ColorRect" + str(index + 1 if index < max_index else 1))
+	return get_node("ColorRect/VBoxContainer/ColorRect" + str(grid.get_next()))
 	
 func _get_prev():
-	return get_node("ColorRect/VBoxContainer/ColorRect" + str(index + 1 if index < max_index else 1))
+	return get_node("ColorRect/VBoxContainer/ColorRect" + str(grid.get_previous()))
 
 func _get_current():
-	return get_node("ColorRect/VBoxContainer/ColorRect" + str(index))
+	return get_node("ColorRect/VBoxContainer/ColorRect" + str(grid.get_current()))
 
 func focus(node, timeout):
-	defocus(_get_current())
 	node.color = Color.DARK_GRAY
-	index = int(node.get_name().substr(9, -1))
 	_wait_and_reset(timeout)
 	
 func defocus(node):

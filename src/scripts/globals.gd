@@ -13,6 +13,7 @@ var seed = 0
 var time_stopped = false
 var day = 0
 var inventory = []
+var map_grid_size = 16
 
 # Instances - Important dynamically-loaded "singletons"
 var player

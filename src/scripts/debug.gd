@@ -4,7 +4,7 @@ func _ready():
 	_refresh()
 
 func _process_text(hash):
-	var result = ""
+	var result = "fps: " + str(Engine.get_frames_per_second()) + "\n"
 	for key in hash.keys():
 		result += key + ": " + str(hash[key]) + "\n"
 	return result

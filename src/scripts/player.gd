@@ -2,6 +2,11 @@ extends CharacterBody2D
 
 enum DIRS { DOWN, UP, LEFT, RIGHT }
 var facing = DIRS.DOWN
+var vertical = DIRS.DOWN
+var horizontal = DIRS.RIGHT
+var moving = false
+
+var snap = Globals.map_grid_size
 
 func _ready():
 	Globals.player = self
@@ -9,17 +14,6 @@ func _ready():
 
 func _physics_process(delta):
 	if not Globals.movement_blocked:
-		var xdirection = Input.get_axis("move_left", "move_right")
-		if xdirection:
-			velocity.x = xdirection * Globals.WALK_SPEED
-		else:
-			velocity.x = move_toward(velocity.x, 0, Globals.WALK_SPEED)
-		var ydirection = Input.get_axis("move_up", "move_down")
-		if ydirection:
-			velocity.y = ydirection * Globals.WALK_SPEED
-		else:
-			velocity.y = move_toward(velocity.y, 0, Globals.WALK_SPEED)
-		
 		if Input.is_action_just_pressed("player_interact"):
 			velocity = Vector2(0,0)
 			_interact()
@@ -32,23 +26,41 @@ func _physics_process(delta):
 		elif Input.is_action_just_pressed("ux_debug"):
 			Globals.menuLayer.debug_menu()
 	
-		_handle_walk_animation()
+		_handle_walk()
 		move_and_slide()
 
-func _handle_walk_animation():
-	if Input.is_action_just_pressed("move_right"):
+func _handle_walk():
+	if Input.is_action_pressed("move_right"):
 		$AnimatedSprite2D.play("right")
+		moving = true
 		facing = DIRS.RIGHT
-	elif Input.is_action_just_pressed("move_left"):
+		horizontal = DIRS.RIGHT
+		velocity = Vector2.RIGHT * Globals.WALK_SPEED
+	elif Input.is_action_pressed("move_left"):
 		$AnimatedSprite2D.play("left")
+		moving = true
 		facing = DIRS.LEFT
-	elif Input.is_action_just_pressed("move_down"):
+		horizontal = DIRS.LEFT
+		velocity = Vector2.LEFT * Globals.WALK_SPEED
+	elif Input.is_action_pressed("move_down"):
 		$AnimatedSprite2D.play("down")
+		moving = true
 		facing = DIRS.DOWN
-	elif Input.is_action_just_pressed("move_up"):
+		vertical = DIRS.DOWN
+		velocity = Vector2.DOWN * Globals.WALK_SPEED
+	elif Input.is_action_pressed("move_up"):
 		$AnimatedSprite2D.play("up")
+		moving = true
 		facing = DIRS.UP
-
+		vertical = DIRS.UP
+		velocity = Vector2.UP * Globals.WALK_SPEED
+	else:
+		if _snapped():
+			velocity = Vector2(0,0)
+			global_position = _snap()
+		else:
+			velocity = _get_snap_vector() * Globals.WALK_SPEED
+		
 func _interact():
 	var slot = Globals.menuLayer.get_node("quick_inventory").focused_index - 1
 	var currently_held_item = Globals.inventory[slot]
@@ -60,3 +72,20 @@ func _interact():
 	
 func _cancel():
 	pass
+	
+func _snapped():
+	return global_position.distance_to(_snap()) < 4
+	
+func _get_snap_vector():
+	return global_position.direction_to(_snap())
+	
+func _snap():
+	var x = int(global_position.x)
+	var y = int(global_position.y)
+	var x_modifier = 1 if horizontal == DIRS.RIGHT else -1
+	var y_modifier = 1 if vertical == DIRS.DOWN else -1
+	while x % snap != 0 or y % snap != 0:
+		x += x_modifier if x % snap != 0 else 0
+		y += y_modifier if y % snap != 0 else 0
+	print(Vector2(x,y))
+	return Vector2(x,y)
