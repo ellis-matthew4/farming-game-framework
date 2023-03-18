@@ -11,6 +11,8 @@ var snap = Globals.map_grid_size
 func _ready():
 	Globals.player = self
 	Globals.camera = get_node("Camera2D")
+	for c in get_children():
+		c.position.x += Globals.map_grid_size
 
 func _physics_process(delta):
 	if not Globals.movement_blocked:
@@ -61,9 +63,19 @@ func _handle_walk():
 		else:
 			velocity = _get_snap_vector() * Globals.WALK_SPEED
 		
+func get_direction():
+	match(facing):
+		DIRS.UP:
+			return Vector2.UP
+		DIRS.DOWN:
+			return Vector2.DOWN
+		DIRS.LEFT:
+			return Vector2.LEFT
+		DIRS.RIGHT:
+			return Vector2.RIGHT
+	
 func _interact():
-	var slot = Globals.menuLayer.get_node("quick_inventory").focused_index - 1
-	var currently_held_item = Globals.inventory[slot]
+	var currently_held_item = Globals.get_held_item()
 	if currently_held_item is Tool:
 		var tool = currently_held_item.item_name.to_snake_case()
 		var animation = currently_held_item.animation_key + DIRS.keys()[facing].to_lower()
@@ -87,5 +99,4 @@ func _snap():
 	while x % snap != 0 or y % snap != 0:
 		x += x_modifier if x % snap != 0 else 0
 		y += y_modifier if y % snap != 0 else 0
-	print(Vector2(x,y))
 	return Vector2(x,y)

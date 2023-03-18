@@ -12,6 +12,7 @@ func _ready():
 	Globals.menuLayer = self
 	var time_display_inst = time_display.instantiate()
 	add_child(time_display_inst)
+	$AnimationPlayer/DayNightCycle.show()
 
 func debug_menu():
 	if not reset_timer:

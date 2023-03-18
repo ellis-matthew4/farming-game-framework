@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://clpbd5t7au5p8"]
+
+[ext_resource type="Script" path="res://scripts/soil.gd" id="1_gxwmj"]
+
+[node name="Soil" type="Sprite2D"]
+script = ExtResource("1_gxwmj")
+
+[node name="Crop" type="Sprite2D" parent="."]

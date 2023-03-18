@@ -9,7 +9,7 @@ var movement_blocked = false
 var max_inventory_slots = 30
 var unlocked_inventory_slots = 30
 var keyboard = true
-var seed = 0
+var game_seed = 0
 var time_stopped = false
 var day = 0
 var inventory = []
@@ -27,19 +27,32 @@ var calendar
 # Methods - Global functions that need to be called outside the context of the game objects
 func get_state():
 	return {
-		'seed': seed,
+		'seed': game_seed,
 		'mw input?': can_accept_mw_input,
 		'can_move?': movement_blocked,
 		'inventory slots': str(unlocked_inventory_slots) + "/" + str(max_inventory_slots),
 		'device': 'keyboard' if keyboard else 'controller',
 		'time stopped?': time_stopped,
-		'in-game day': day
+		'in-game day': day,
+		'inventory': get_serialized_inventory()
 	}
+	
+func get_serialized_inventory():
+	var result = ""
+	for i in range(0, unlocked_inventory_slots):
+		if i < len(inventory):
+			result += str(ItemDatabase.get_idx(inventory[i]), ",")
+		else:
+			result += str(-1, ",")
+	return result
 	
 func try_add_inventory(item):
 	if len(inventory) >= unlocked_inventory_slots:
 		return false
 	inventory.append(item)
+	
+func get_held_item():
+	return inventory[menuLayer.get_node("quick_inventory").focused_index() - 1]
 	
 func increment_day():
 	day += 1
@@ -49,7 +62,7 @@ func increment_day():
 func _ready():
 	# Generate seed. This should be moved to the game start
 	randomize()
-	seed = randi()
+	game_seed = randi()
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	try_add_inventory(ItemDatabase.get_item(0))
 	try_add_inventory(ItemDatabase.get_item(1))

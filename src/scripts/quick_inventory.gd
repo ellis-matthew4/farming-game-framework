@@ -55,3 +55,6 @@ func focus(node, timeout):
 	
 func defocus(node):
 	node.color = Color.from_string("#959595", Color.DARK_GRAY)
+
+func focused_index():
+	return grid.get_i()

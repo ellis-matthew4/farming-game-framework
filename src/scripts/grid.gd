@@ -40,3 +40,6 @@ func get_previous_row():
 		i += maxv
 	return i
 	
+func get_i():
+	return i
+	
