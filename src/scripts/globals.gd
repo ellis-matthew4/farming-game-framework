@@ -18,12 +18,14 @@ var farmland_state = {}
 
 # Instances - Important dynamically-loaded "singletons"
 var player
-var menuLayer
+@onready var menuLayer = ml_scene.instantiate()
 var camera
 var clock
 var calendar
 
 # Preloads - Important classes to keep a base in memory at all times
+var map = preload("res://scenes/map.tscn")
+var ml_scene = preload("res://scenes/Menus/menu_layer.tscn")
 
 # Methods - Global functions that need to be called outside the context of the game objects
 func get_state():
@@ -65,7 +67,17 @@ func lookup_inventory(item):
 	return null
 	
 func get_held_item():
-	return inventory[menuLayer.get_node("quick_inventory").focused_index() - 1]
+	var index = menuLayer.get_node("quick_inventory").focused_index() - 1
+	if index < len(inventory):
+		return inventory[index]
+	
+func sleep():
+	menuLayer.transition("fade_out")
+	await menuLayer.get_node("AnimationPlayer").animation_finished
+	get_tree().change_scene_to_packed(map)
+	if clock.time >= 360:
+		increment_day()
+	menuLayer.transition("fade_in")
 	
 func increment_day():
 	day += 1
@@ -86,9 +98,10 @@ func _ready():
 	try_add_inventory(ItemDatabase.get_item(2))
 	try_add_inventory(ItemDatabase.get_item(3))
 	try_add_inventory(ItemDatabase.get_item(4))
-	try_add_inventory(ItemDatabase.get_item(5), 9)
-	try_add_inventory(ItemDatabase.get_item(6))
-	try_add_inventory(ItemDatabase.get_item(7))
+	try_add_inventory(ItemDatabase.get_item(8), 9)
+	try_add_inventory(ItemDatabase.get_item(9))
+	try_add_inventory(ItemDatabase.get_item(10))
+	add_child(menuLayer)
 
 func _input(event):
 	if (event is InputEventKey):

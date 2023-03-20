@@ -42,7 +42,7 @@ func _process(delta):
 	if Input.is_action_just_pressed("player_interact"):
 		if player_inside:
 			var p = Globals.player
-			var coords = global_to_local_coords(p.global_position + (p.get_direction() * Globals.map_grid_size))
+			var coords = global_to_local_coords(p.get_real_position() + (p.get_direction() * Globals.map_grid_size))
 			if coords.x == -1:
 				return
 			else:
@@ -56,10 +56,11 @@ func _process(delta):
 						get_children()[i+1].set_soil_texture(null)
 						tilled[i] = false
 					"Watering Can":
-						get_children()[i+1].set_soil_texture(soil_txt_w)
-						watered[i] = true
+						if tilled[i]:
+							get_children()[i+1].set_soil_texture(soil_txt_w)
+							watered[i] = true
 					"Sickle":
-						if crops[i] > 0:
+						if crops[i] > 7:
 							var product = ItemDatabase.get_item(crops[i])
 							if product.reharvestable:
 								if stages[i] > product.reharvest_stage:
@@ -74,7 +75,7 @@ func _process(delta):
 							if stages[i] == product.max_stages:
 								var item_to_drop = product.get_product()
 								Globals.try_add_inventory(item_to_drop) # replace with ground item
-						elif crops[i] == -1:
+						elif crops[i] == 7:
 							get_children()[i+1].set_crop_texture(null)
 							crops[i] = 0
 					"Fertilizer":
@@ -86,6 +87,7 @@ func _process(delta):
 							if tilled[i] and crops[i] == 0:
 								get_children()[i+1].set_crop_texture(held.get_texture_as_sprite2D(0))
 								crops[i] = ItemDatabase.get_idx(held)
+								stages[i] = 1
 								held.quantity -= 1
 	
 func _get_index(x, y):
@@ -117,19 +119,6 @@ func nearest_neighbor(k, list):
 			if delta == 0:
 				return i
 	return item
-		
-
-func till(x, y):
-	var index = _get_index(x, y)
-	pass
-	
-func axe(x, y):
-	var index = _get_index(x, y)
-	pass
-	
-func hammer(x, y):
-	var index = _get_index(x, y)
-	pass
 
 func get_state():
 	var state = []
@@ -148,6 +137,7 @@ func from_state(state):
 		new_tilled.append(encoded.substr(1, 1) == "1")
 		new_stages.append(int(encoded.substr(2,1)))
 		new_crops.append(int(encoded.substr(3,-1)))
+		watered.append(false)
 	soils = new_soils
 	tilled = new_tilled
 	stages = new_stages
@@ -155,11 +145,14 @@ func from_state(state):
 
 func render(): # draw from freshly loaded state
 	for i in len(tilled):
+		var soil = soil_scene.instantiate()
+		add_child(soil)
+		soil.position = _get_coordinates(i)
 		if tilled[i]:
-			get_children()[i+1].set_soil_texture(soil_txt)
-		if crops[i] > 0:
+			soil.set_soil_texture(soil_txt)
+		if crops[i] > 7:
 			var crop = ItemDatabase.get_item(crops[i])
-			get_children()[i+1].set_crop_texture(crop.get_texture_as_sprite2D(stages[i]))
+			soil.set_crop_texture(crop.get_texture_as_sprite2D(stages[i]))
 			
 
 func _player_entered(p):
@@ -170,34 +163,21 @@ func _player_exited(p):
 
 func increment():
 	for i in range(len(tilled)):
-		if watered[i] and crops[i] > 0:
-			stages[i] += 1
-		watered[i] = false
+		if watered[i] and crops[i] > 7:
+			if stages[i] < ItemDatabase.get_item(crops[i]).max_stages:
+				stages[i] += 1
 		var r = randi() % 100
-		if tilled[i]:
-			if crops[i] == 0:
-				if r < 20:
-					match(r % 3):
-						0:
-							crops[i] = -1 # spawn weed
-						1:
-							crops[i] = -2 # spawn rock
-						2:
-							crops[i] = -3 # spawn branch
-					continue
-			elif crops[i] > 0:
-				if r < 20:
-					tilled[i] = false
-					continue
-				elif r < 30:
-					match(r % 3):
-						0:
-							crops[i] = -1 # spawn weed
-						1:
-							crops[i] = -2 # spawn rock
-						2:
-							crops[i] = -3 # spawn branch
-					continue
+		if crops[i] == 0:
+			if r < 20:
+				tilled[i] = false
+				match(r % 3):
+					0:
+						crops[i] = 1 # spawn weed
+					1:
+						crops[i] = 2 # spawn rock
+					2:
+						crops[i] = 3 # spawn branch
+				continue
 
 func _on_destroy():
 	increment()

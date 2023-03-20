@@ -11,7 +11,6 @@ var reset_timer = false
 signal repopulate_qi
 
 func _ready():
-	Globals.menuLayer = self
 	var time_display_inst = time_display.instantiate()
 	add_child(time_display_inst)
 	$AnimationPlayer/DayNightCycle.show()
@@ -49,5 +48,10 @@ func reset(timeout):
 	await get_tree().create_timer(timeout).timeout
 	reset_timer = false
 
-func on_clock_group_change(transition):
-	$AnimationPlayer.play(transition)
+func transition(ts):
+	if ts == "fade_out":
+		$quick_inventory.hide()
+	$AnimationPlayer.play(ts)
+	if ts == "fade_in":
+		await $AnimationPlayer.animation_finished
+		$quick_inventory.show()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cc81lp1slmt20"]
+[gd_scene load_steps=9 format=3 uid="uid://cc81lp1slmt20"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_5rxtb"]
 [ext_resource type="Texture2D" uid="uid://dxi5p8aa6ycm5" path="res://assets/char/player_d.png" id="1_53utx"]
@@ -42,18 +42,33 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qfnau"]
-size = Vector2(32, 32)
+size = Vector2(15, 15)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8ne0t"]
+size = Vector2(8, 8)
 
 [node name="player" type="CharacterBody2D"]
-scale = Vector2(0.5, 0.5)
+z_index = 1
 collision_mask = 2
 script = ExtResource("1_5rxtb")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
+scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_1kpt3")
 animation = &"up"
+centered = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 16)
+position = Vector2(8, 24)
 shape = SubResource("RectangleShape2D_qfnau")
+
+[node name="InteractPivot" type="Node2D" parent="."]
+position = Vector2(8, 24)
+
+[node name="InteractionArea" type="Area2D" parent="InteractPivot"]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractPivot/InteractionArea"]
+shape = SubResource("RectangleShape2D_8ne0t")

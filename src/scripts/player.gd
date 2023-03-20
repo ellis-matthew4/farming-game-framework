@@ -11,8 +11,6 @@ var snap = Globals.map_grid_size
 func _ready():
 	Globals.player = self
 	Globals.camera = get_node("Camera2D")
-	for c in get_children():
-		c.position.x += Globals.map_grid_size
 
 func _physics_process(delta):
 	if not Globals.movement_blocked:
@@ -62,6 +60,7 @@ func _handle_walk():
 			global_position = _snap()
 		else:
 			velocity = _get_snap_vector() * Globals.WALK_SPEED
+	_align_interact_pivot(facing)
 		
 func get_direction():
 	match(facing):
@@ -73,8 +72,22 @@ func get_direction():
 			return Vector2.LEFT
 		DIRS.RIGHT:
 			return Vector2.RIGHT
+
+func get_real_position():
+	return $InteractPivot.global_position
+
+func get_offset():
+	return Vector2(8, 24)
 	
 func _interact():
+	var li = get_node("InteractPivot/InteractionArea").get_overlapping_bodies()
+	for n in li:
+		if n.is_in_group("Bed"):
+			Globals.sleep()
+			return
+		if n.is_in_group("Door"):
+			n.enter(self)
+			return
 	var currently_held_item = Globals.get_held_item()
 	if currently_held_item is Tool:
 		var tool = currently_held_item.item_name.to_snake_case()
@@ -100,3 +113,15 @@ func _snap():
 		x += x_modifier if x % snap != 0 else 0
 		y += y_modifier if y % snap != 0 else 0
 	return Vector2(x,y)
+
+func _align_interact_pivot(dir):
+	var n = get_node("InteractPivot/InteractionArea")
+	match(dir):
+		DIRS.DOWN:
+			n.position = Vector2(0, 16)
+		DIRS.UP:
+			n.position = Vector2(0, -16)
+		DIRS.LEFT:
+			n.position = Vector2(-16, 0)
+		DIRS.RIGHT:
+			n.position = Vector2(16, 0)

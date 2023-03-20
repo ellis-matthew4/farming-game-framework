@@ -6,13 +6,16 @@ extends Node
 	Tool.new("Watering Can", -1, "res://assets/items/watering_can.png", "sample"),
 	Tool.new("Hammer", -1, "res://assets/items/hammer.png", "sample"),
 	Tool.new("Axe", -1, "res://assets/items/axe.png", "sample"),
-	Seeds.new("Sample Seeds", 20, "res://assets/crop.png", 3, 6),
+	Item.new("Branch", 40, "res://assets/fertilizer.png"),
+	Item.new("Rock", 40, "res://assets/product.png"),
+	Item.new("Weed", 40, "res://assets/items/sickle.png"),
+	Seeds.new("Sample Seeds", 20, "res://assets/crop.png", 3, 9),
 	Food.new("Sample Crop", 50, "res://assets/product.png", 10),
-	Consumable.new("Fertilizer", 40, "res://assets/fertilizer.png")
+	Consumable.new("Fertilizer", 40, "res://assets/fertilizer.png"),
 ]
 
 func get_item(index) -> Item:
-	return items[index].duplicate()
+	return items[index]
 
 func get_idx(item):
 	return items.find(item)

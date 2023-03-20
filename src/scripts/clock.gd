@@ -13,7 +13,7 @@ func _ready():
 	Globals.clock = self
 	_increment_time()
 	await get_tree().create_timer(0.01).timeout
-	Globals.menuLayer.on_clock_group_change("morning")
+	Globals.menuLayer.transition("morning")
 
 func _increment_time():
 	await get_tree().create_timer(increment).timeout
@@ -23,13 +23,13 @@ func _increment_time():
 		var minute = _format(time % 60)
 		$ColorRect/Label.text = hour + ":" + minute
 		if time == 359:
-			Globals.menuLayer.on_clock_group_change("night_to_morning")
+			Globals.menuLayer.transition("night_to_morning")
 		elif time == 719:
-			Globals.menuLayer.on_clock_group_change("morning_to_day")
+			Globals.menuLayer.transition("morning_to_day")
 		elif time == 1019:
-			Globals.menuLayer.on_clock_group_change("day_to_evening")
+			Globals.menuLayer.transition("day_to_evening")
 		elif time == 1199:
-			Globals.menuLayer.on_clock_group_change("evening_to_night")
+			Globals.menuLayer.transition("evening_to_night")
 		elif time == 360:
 			emit_signal("day_change")
 		elif time == 0:

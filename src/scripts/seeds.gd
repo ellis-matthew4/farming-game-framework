@@ -17,10 +17,11 @@ func _init(n: String, v: int, tx_path: String, stages: int, prd: int, rh: bool =
 	reharvest_stage = rhs
 
 func get_texture_as_sprite2D(stage):
+	stage = max(0, stage - 1)
 	var tx = Sprite2D.new()
 	tx.texture = texture
 	tx.region_enabled = true
-	tx.region_rect = Rect2(0, stage, Globals.map_grid_size, Globals.map_grid_size)
+	tx.region_rect = Rect2(stage * Globals.map_grid_size, 0, Globals.map_grid_size, Globals.map_grid_size)
 	tx.centered = true
 	return tx
 
