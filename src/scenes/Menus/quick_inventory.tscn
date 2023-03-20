@@ -48,6 +48,20 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Label" type="Label" parent="HBoxContainer/ColorRect1"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "1"
+horizontal_alignment = 2
+
 [node name="ColorRect2" type="ColorRect" parent="HBoxContainer"]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -68,6 +82,20 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/ColorRect2"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "1"
+horizontal_alignment = 2
 
 [node name="ColorRect3" type="ColorRect" parent="HBoxContainer"]
 custom_minimum_size = Vector2(64, 64)
@@ -90,6 +118,20 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Label" type="Label" parent="HBoxContainer/ColorRect3"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "1"
+horizontal_alignment = 2
+
 [node name="ColorRect4" type="ColorRect" parent="HBoxContainer"]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -110,6 +152,20 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/ColorRect4"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "1"
+horizontal_alignment = 2
 
 [node name="ColorRect5" type="ColorRect" parent="HBoxContainer"]
 custom_minimum_size = Vector2(64, 64)
@@ -132,6 +188,20 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Label" type="Label" parent="HBoxContainer/ColorRect5"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "1"
+horizontal_alignment = 2
+
 [node name="ColorRect6" type="ColorRect" parent="HBoxContainer"]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -152,6 +222,20 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/ColorRect6"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "1"
+horizontal_alignment = 2
 
 [node name="ColorRect7" type="ColorRect" parent="HBoxContainer"]
 custom_minimum_size = Vector2(64, 64)
@@ -174,6 +258,20 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Label" type="Label" parent="HBoxContainer/ColorRect7"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "1"
+horizontal_alignment = 2
+
 [node name="ColorRect8" type="ColorRect" parent="HBoxContainer"]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -194,6 +292,20 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/ColorRect8"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "1"
+horizontal_alignment = 2
 
 [node name="ColorRect9" type="ColorRect" parent="HBoxContainer"]
 custom_minimum_size = Vector2(64, 64)
@@ -216,6 +328,20 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Label" type="Label" parent="HBoxContainer/ColorRect9"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "1"
+horizontal_alignment = 2
+
 [node name="ColorRect10" type="ColorRect" parent="HBoxContainer"]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -236,3 +362,17 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/ColorRect10"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "1"
+horizontal_alignment = 2

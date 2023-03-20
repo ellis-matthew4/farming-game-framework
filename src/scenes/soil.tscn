@@ -4,5 +4,3 @@
 
 [node name="Soil" type="Sprite2D"]
 script = ExtResource("1_gxwmj")
-
-[node name="Crop" type="Sprite2D" parent="."]

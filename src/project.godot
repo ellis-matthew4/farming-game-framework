@@ -16,8 +16,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Globals="*res://scripts/globals.gd"
 ItemDatabase="*res://scripts/item_database.gd"
+Globals="*res://scripts/globals.gd"
 
 [input]
 

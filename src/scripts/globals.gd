@@ -14,6 +14,7 @@ var time_stopped = false
 var day = 0
 var inventory = []
 var map_grid_size = 16
+var farmland_state = {}
 
 # Instances - Important dynamically-loaded "singletons"
 var player
@@ -46,10 +47,22 @@ func get_serialized_inventory():
 			result += str(-1, ",")
 	return result
 	
-func try_add_inventory(item):
+func try_add_inventory(item, quantity = 1):
+	var existing = lookup_inventory(item)
+	if is_instance_valid(existing):
+		existing.quantity += quantity
+		return true
 	if len(inventory) >= unlocked_inventory_slots:
 		return false
+	item.quantity = quantity
 	inventory.append(item)
+	return true
+	
+func lookup_inventory(item):
+	for k in inventory:
+		if k.item_name == item.item_name:
+			return k
+	return null
 	
 func get_held_item():
 	return inventory[menuLayer.get_node("quick_inventory").focused_index() - 1]
@@ -57,6 +70,10 @@ func get_held_item():
 func increment_day():
 	day += 1
 	calendar.parse_day(day)
+	
+func repopulate_quick_inventory():
+	if is_instance_valid(menuLayer):
+		menuLayer.emit_signal("repopulate_qi")
 
 # Global processes
 func _ready():
@@ -69,6 +86,9 @@ func _ready():
 	try_add_inventory(ItemDatabase.get_item(2))
 	try_add_inventory(ItemDatabase.get_item(3))
 	try_add_inventory(ItemDatabase.get_item(4))
+	try_add_inventory(ItemDatabase.get_item(5), 9)
+	try_add_inventory(ItemDatabase.get_item(6))
+	try_add_inventory(ItemDatabase.get_item(7))
 
 func _input(event):
 	if (event is InputEventKey):

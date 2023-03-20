@@ -3,6 +3,7 @@ extends Area2D
 @onready var bounds = $CollisionShape2D.shape.size
 @onready var soil_scene = preload("res://scenes/soil.tscn")
 @onready var soil_txt = preload("res://assets/soil.png")
+@onready var soil_txt_w = preload("res://assets/soil_watered.png")
 var origin = Vector2()
 var xrange = []
 var yrange = []
@@ -20,19 +21,22 @@ func _ready():
 	origin.y = $CollisionShape2D.position.y - bounds.y / 2
 	xrange = range(0, bounds.x, Globals.map_grid_size)
 	yrange = range(0, bounds.y, Globals.map_grid_size)
-	for i in range(len(xrange) * len(yrange)):
-		soils.append(randi() % 3)
-		tilled.append(false)
-		stages.append(0)
-		crops.append(0)
-		watered.append(false)
-		var soil = soil_scene.instantiate()
-		add_child(soil)
-		soil.position = _get_coordinates(i)
-	var state = get_state()
+	if Globals.farmland_state.has(name):
+		from_state(Globals.farmland_state[name])
+		render()
+	else:
+		for i in range(len(xrange) * len(yrange)):
+			soils.append(randi() % 3)
+			tilled.append(false)
+			stages.append(0)
+			crops.append(0)
+			watered.append(false)
+			var soil = soil_scene.instantiate()
+			add_child(soil)
+			soil.position = _get_coordinates(i)
 	body_entered.connect(_player_entered)
 	body_exited.connect(_player_exited)
-	add_to_group("Farmland")
+	tree_exiting.connect(_on_destroy)
 
 func _process(delta):
 	if Input.is_action_just_pressed("player_interact"):
@@ -42,9 +46,9 @@ func _process(delta):
 			if coords.x == -1:
 				return
 			else:
-				var held = Globals.get_held_item().item_name
+				var held = Globals.get_held_item()
 				var i = _get_index(coords.x, coords.y)
-				match(held):
+				match(held.item_name):
 					"Hoe":
 						get_children()[i+1].set_soil_texture(soil_txt)
 						tilled[i] = true
@@ -52,12 +56,37 @@ func _process(delta):
 						get_children()[i+1].set_soil_texture(null)
 						tilled[i] = false
 					"Watering Can":
+						get_children()[i+1].set_soil_texture(soil_txt_w)
 						watered[i] = true
+					"Sickle":
+						if crops[i] > 0:
+							var product = ItemDatabase.get_item(crops[i])
+							if product.reharvestable:
+								if stages[i] > product.reharvest_stage:
+									get_children()[i+1].set_crop_texture(product.get_texture_as_sprite2D(product.reharvest_stage))
+									stages[i] = product.reharvest_stage
+								else:
+									get_children()[i+1].set_crop_texture(null)
+									crops[i] = 0
+							else:
+								get_children()[i+1].set_crop_texture(null)
+								crops[i] = 0
+							if stages[i] == product.max_stages:
+								var item_to_drop = product.get_product()
+								Globals.try_add_inventory(item_to_drop) # replace with ground item
+						elif crops[i] == -1:
+							get_children()[i+1].set_crop_texture(null)
+							crops[i] = 0
 					"Fertilizer":
-						soils[i] = soils[i] + 1 if soils[i] < 4 else 4
+						if tilled[i]:
+							soils[i] = soils[i] + 1 if soils[i] < 4 else 4
+							held.quantity -= 1
 					_:
-						if "Seeds" in held:
-							crops[i] = ItemDatabase.get_index(Globals.get_held_item())
+						if held is Seeds:
+							if tilled[i] and crops[i] == 0:
+								get_children()[i+1].set_crop_texture(held.get_texture_as_sprite2D(0))
+								crops[i] = ItemDatabase.get_idx(held)
+								held.quantity -= 1
 	
 func _get_index(x, y):
 	var result = Vector2()
@@ -110,7 +139,6 @@ func get_state():
 	return state
 	
 func from_state(state):
-	var i = 0
 	var new_soils = []
 	var new_tilled = []
 	var new_stages = []
@@ -126,7 +154,13 @@ func from_state(state):
 	crops = new_crops
 
 func render(): # draw from freshly loaded state
-	pass
+	for i in len(tilled):
+		if tilled[i]:
+			get_children()[i+1].set_soil_texture(soil_txt)
+		if crops[i] > 0:
+			var crop = ItemDatabase.get_item(crops[i])
+			get_children()[i+1].set_crop_texture(crop.get_texture_as_sprite2D(stages[i]))
+			
 
 func _player_entered(p):
 	player_inside = true
@@ -136,6 +170,8 @@ func _player_exited(p):
 
 func increment():
 	for i in range(len(tilled)):
+		if watered[i] and crops[i] > 0:
+			stages[i] += 1
 		watered[i] = false
 		var r = randi() % 100
 		if tilled[i]:
@@ -162,3 +198,8 @@ func increment():
 						2:
 							crops[i] = -3 # spawn branch
 					continue
+
+func _on_destroy():
+	increment()
+	var state = get_state()
+	Globals.farmland_state[name] = state

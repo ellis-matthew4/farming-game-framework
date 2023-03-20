@@ -8,11 +8,15 @@ var time_display = preload("res://scenes/Menus/time_display.tscn")
 var debugging = false
 var reset_timer = false
 
+signal repopulate_qi
+
 func _ready():
 	Globals.menuLayer = self
 	var time_display_inst = time_display.instantiate()
 	add_child(time_display_inst)
 	$AnimationPlayer/DayNightCycle.show()
+	repopulate_qi.connect($quick_inventory._populate)
+	emit_signal("repopulate_qi")
 
 func debug_menu():
 	if not reset_timer:
