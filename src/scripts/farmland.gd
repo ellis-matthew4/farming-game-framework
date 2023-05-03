@@ -47,6 +47,8 @@ func _process(delta):
 				return
 			else:
 				var held = Globals.get_held_item()
+				if not is_instance_valid(held):
+					return
 				var i = _get_index(coords.x, coords.y)
 				match(held.item_name):
 					"Hoe":
