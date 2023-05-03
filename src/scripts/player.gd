@@ -4,13 +4,21 @@ enum DIRS { DOWN, UP, LEFT, RIGHT }
 var facing = DIRS.DOWN
 var vertical = DIRS.DOWN
 var horizontal = DIRS.RIGHT
-var moving = false
+var stopping = false
 
 var snap = Globals.map_grid_size
+var snap_point
+
+signal turn(dir)
+signal walk
+signal stop
 
 func _ready():
 	Globals.player = self
 	Globals.camera = get_node("Camera2D")
+	self.turn.connect(_turn)
+	self.walk.connect(_walk)
+	self.stop.connect(_stop)
 
 func _physics_process(delta):
 	if not Globals.movement_blocked:
@@ -30,34 +38,37 @@ func _physics_process(delta):
 		move_and_slide()
 
 func _handle_walk():
-	if Input.is_action_pressed("move_right"):
-		$AnimatedSprite2D.play("right")
-		moving = true
-		facing = DIRS.RIGHT
-		horizontal = DIRS.RIGHT
-		velocity = Vector2.RIGHT * Globals.WALK_SPEED
-	elif Input.is_action_pressed("move_left"):
-		$AnimatedSprite2D.play("left")
-		moving = true
-		facing = DIRS.LEFT
-		horizontal = DIRS.LEFT
-		velocity = Vector2.LEFT * Globals.WALK_SPEED
-	elif Input.is_action_pressed("move_down"):
-		$AnimatedSprite2D.play("down")
-		moving = true
-		facing = DIRS.DOWN
-		vertical = DIRS.DOWN
-		velocity = Vector2.DOWN * Globals.WALK_SPEED
-	elif Input.is_action_pressed("move_up"):
-		$AnimatedSprite2D.play("up")
-		moving = true
-		facing = DIRS.UP
-		vertical = DIRS.UP
-		velocity = Vector2.UP * Globals.WALK_SPEED
+	if not stopping:
+		if Input.is_action_pressed("move_right"):
+			emit_signal("turn", DIRS.RIGHT)
+			await get_tree().create_timer(0.05).timeout
+			if Input.is_action_pressed("move_right"):
+				emit_signal("walk")
+		elif Input.is_action_pressed("move_left"):
+			emit_signal("turn", DIRS.LEFT)
+			await get_tree().create_timer(0.05).timeout
+			if Input.is_action_pressed("move_left"):
+				emit_signal("walk")
+		elif Input.is_action_pressed("move_down"):
+			emit_signal("turn", DIRS.DOWN)
+			await get_tree().create_timer(0.05).timeout
+			if Input.is_action_pressed("move_down"):
+				emit_signal("walk")
+		elif Input.is_action_pressed("move_up"):
+			emit_signal("turn", DIRS.UP)
+			await get_tree().create_timer(0.05).timeout
+			if Input.is_action_pressed("move_up"):
+				emit_signal("walk")
+		elif velocity != Vector2(0,0):
+			emit_signal("stop")
 	else:
 		if _snapped():
-			velocity = Vector2(0,0)
-			global_position = _snap()
+			if global_position.direction_to(snap_point) == get_direction():
+				velocity = Vector2(0,0)
+				global_position = snap_point
+				stopping = false
+			else:
+				emit_signal("stop")
 		else:
 			velocity = _get_snap_vector() * Globals.WALK_SPEED
 	_align_interact_pivot(facing)
@@ -75,9 +86,6 @@ func get_direction():
 
 func get_real_position():
 	return $InteractPivot.global_position
-
-func get_offset():
-	return Vector2(8, 24)
 	
 func _interact():
 	var li = get_node("InteractPivot/InteractionArea").get_overlapping_bodies()
@@ -99,20 +107,59 @@ func _cancel():
 	pass
 	
 func _snapped():
-	return global_position.distance_to(_snap()) < 4
+	return global_position.distance_to(snap_point) < 4
 	
 func _get_snap_vector():
-	return global_position.direction_to(_snap())
+	return global_position.direction_to(snap_point)
 	
 func _snap():
 	var x = int(global_position.x)
 	var y = int(global_position.y)
-	var x_modifier = 1 if horizontal == DIRS.RIGHT else -1
-	var y_modifier = 1 if vertical == DIRS.DOWN else -1
-	while x % snap != 0 or y % snap != 0:
-		x += x_modifier if x % snap != 0 else 0
-		y += y_modifier if y % snap != 0 else 0
-	return Vector2(x,y)
+	var mod = 0
+	match(facing):
+		DIRS.UP:
+			mod = posmod(y, snap)
+			y -= mod
+		DIRS.DOWN:
+			mod = snap - posmod(y, snap)
+			y += mod
+		DIRS.LEFT:
+			mod = posmod(x, snap)
+			x -= mod
+		DIRS.RIGHT:
+			mod = snap - posmod(x, snap)
+			x += mod
+	var result = Vector2(x,y)
+	return result
+	
+func _turn(dir):
+	if velocity != Vector2(0,0) and facing != dir:
+		emit_signal("stop")
+		return
+	match(dir):
+		DIRS.DOWN:
+			$AnimatedSprite2D.play("down")
+			facing = DIRS.DOWN
+			horizontal = DIRS.DOWN
+		DIRS.LEFT:
+			$AnimatedSprite2D.play("left")
+			facing = DIRS.LEFT
+			horizontal = DIRS.LEFT
+		DIRS.UP:
+			$AnimatedSprite2D.play("up")
+			facing = DIRS.UP
+			horizontal = DIRS.UP
+		DIRS.RIGHT:
+			$AnimatedSprite2D.play("right")
+			facing = DIRS.RIGHT
+			horizontal = DIRS.RIGHT
+	
+func _walk():
+	velocity = get_direction() * Globals.WALK_SPEED
+	
+func _stop():
+	stopping = true
+	snap_point = _snap()
 
 func _align_interact_pivot(dir):
 	var n = get_node("InteractPivot/InteractionArea")
