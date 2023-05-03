@@ -1,24 +1,25 @@
 extends CharacterBody2D
 
-enum DIRS { DOWN, UP, LEFT, RIGHT }
+enum DIRS { DOWN, UP, LEFT, RIGHT, NONE }
 var facing = DIRS.DOWN
 var vertical = DIRS.DOWN
 var horizontal = DIRS.RIGHT
-var stopping = false
 
 var snap = Globals.map_grid_size
 var snap_point
+var moving = false
+var last_movement_accepted = DIRS.NONE
 
 signal turn(dir)
 signal walk
-signal stop
+signal reached
 
 func _ready():
 	Globals.player = self
 	Globals.camera = get_node("Camera2D")
 	self.turn.connect(_turn)
 	self.walk.connect(_walk)
-	self.stop.connect(_stop)
+	self.reached.connect(_reached)
 
 func _physics_process(delta):
 	if not Globals.movement_blocked:
@@ -34,44 +35,50 @@ func _physics_process(delta):
 		elif Input.is_action_just_pressed("ux_debug"):
 			Globals.menuLayer.debug_menu()
 	
-		_handle_walk()
-		move_and_slide()
-
-func _handle_walk():
-	if not stopping:
-		if Input.is_action_pressed("move_right"):
-			emit_signal("turn", DIRS.RIGHT)
-			await get_tree().create_timer(0.05).timeout
-			if Input.is_action_pressed("move_right"):
-				emit_signal("walk")
-		elif Input.is_action_pressed("move_left"):
-			emit_signal("turn", DIRS.LEFT)
-			await get_tree().create_timer(0.05).timeout
-			if Input.is_action_pressed("move_left"):
-				emit_signal("walk")
-		elif Input.is_action_pressed("move_down"):
-			emit_signal("turn", DIRS.DOWN)
-			await get_tree().create_timer(0.05).timeout
-			if Input.is_action_pressed("move_down"):
-				emit_signal("walk")
-		elif Input.is_action_pressed("move_up"):
-			emit_signal("turn", DIRS.UP)
-			await get_tree().create_timer(0.05).timeout
-			if Input.is_action_pressed("move_up"):
-				emit_signal("walk")
-		elif velocity != Vector2(0,0):
-			emit_signal("stop")
-	else:
-		if _snapped():
-			if global_position.direction_to(snap_point) == get_direction():
-				velocity = Vector2(0,0)
+		if moving:
+			if _snapped():
 				global_position = snap_point
-				stopping = false
+				emit_signal("reached")
+				if _parse_movement() == last_movement_accepted:
+					print(_parse_movement())
+					emit_signal("walk")
+				else:
+					print("stopping")
+					velocity = Vector2(0,0)
 			else:
-				emit_signal("stop")
+				velocity = _get_snap_vector() * Globals.WALK_SPEED
 		else:
-			velocity = _get_snap_vector() * Globals.WALK_SPEED
-	_align_interact_pivot(facing)
+			var input = _parse_movement()
+			if input != DIRS.NONE:
+				_handle_walk(input)
+				last_movement_accepted = input
+			else:
+				velocity = Vector2(0,0)
+				
+		# The constant here should be as small as possible to prevent jitter.
+		var test_vector = velocity.normalized() * 1
+		if test_move(transform, test_vector):
+			_force_realign()
+		else:
+			move_and_slide()
+
+func _parse_movement():
+	if Input.is_action_pressed("move_right"):
+		return DIRS.RIGHT
+	elif Input.is_action_pressed("move_left"):
+		return DIRS.LEFT
+	elif Input.is_action_pressed("move_down"):
+		return DIRS.DOWN
+	elif Input.is_action_pressed("move_up"):
+		return DIRS.UP
+	else:
+		return DIRS.NONE
+
+func _handle_walk(input):
+	emit_signal("turn", input)
+	await get_tree().create_timer(0.05).timeout
+	if _parse_movement() == input:
+		emit_signal("walk")
 		
 func get_direction():
 	match(facing):
@@ -112,54 +119,52 @@ func _snapped():
 func _get_snap_vector():
 	return global_position.direction_to(snap_point)
 	
-func _snap():
+func _snap(dir = null):
 	var x = int(global_position.x)
 	var y = int(global_position.y)
-	var mod = 0
-	match(facing):
+	var step_x = snappedi(x, snap)
+	var step_y = snappedi(y, snap)
+	dir = facing if not is_instance_valid(dir) else dir
+	match(dir):
 		DIRS.UP:
-			mod = posmod(y, snap)
-			y -= mod
+			step_y = step_y if step_y < y else step_y - snap
 		DIRS.DOWN:
-			mod = snap - posmod(y, snap)
-			y += mod
+			step_y = step_y if step_y > y else step_y + snap
 		DIRS.LEFT:
-			mod = posmod(x, snap)
-			x -= mod
+			step_x = step_x if step_x < x else step_x - snap
 		DIRS.RIGHT:
-			mod = snap - posmod(x, snap)
-			x += mod
-	var result = Vector2(x,y)
-	return result
+			step_x = step_x if step_x > x else step_x + snap
+	return Vector2(step_x, step_y)
+	
+func _force_realign():
+	moving = false
+	var x = int(global_position.x)
+	var y = int(global_position.y)
+	var step_x = snappedi(x, snap)
+	var step_y = snappedi(y, snap)
+	return Vector2(step_x, step_y)
 	
 func _turn(dir):
-	if velocity != Vector2(0,0) and facing != dir:
-		emit_signal("stop")
-		return
-	match(dir):
-		DIRS.DOWN:
-			$AnimatedSprite2D.play("down")
-			facing = DIRS.DOWN
-			horizontal = DIRS.DOWN
-		DIRS.LEFT:
-			$AnimatedSprite2D.play("left")
-			facing = DIRS.LEFT
-			horizontal = DIRS.LEFT
-		DIRS.UP:
-			$AnimatedSprite2D.play("up")
-			facing = DIRS.UP
-			horizontal = DIRS.UP
-		DIRS.RIGHT:
-			$AnimatedSprite2D.play("right")
-			facing = DIRS.RIGHT
-			horizontal = DIRS.RIGHT
+	var animation_keys = {
+		DIRS.LEFT: 'left',
+		DIRS.DOWN: 'down',
+		DIRS.UP: 'up',
+		DIRS.RIGHT: 'right'
+	}
+	$AnimatedSprite2D.play(animation_keys[dir])
+	facing = dir
+	if dir in [DIRS.LEFT, DIRS.RIGHT]:
+		horizontal = dir
+	elif dir in [DIRS.UP, DIRS.DOWN]:
+		vertical = dir
+	_align_interact_pivot(facing)
 	
 func _walk():
-	velocity = get_direction() * Globals.WALK_SPEED
-	
-func _stop():
-	stopping = true
 	snap_point = _snap()
+	moving = true
+	
+func _reached():
+	moving = false
 
 func _align_interact_pivot(dir):
 	var n = get_node("InteractPivot/InteractionArea")
