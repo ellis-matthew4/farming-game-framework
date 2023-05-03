@@ -2,8 +2,6 @@ extends CharacterBody2D
 
 enum DIRS { DOWN, UP, LEFT, RIGHT, NONE }
 var facing = DIRS.DOWN
-var vertical = DIRS.DOWN
-var horizontal = DIRS.RIGHT
 
 var snap = Globals.map_grid_size
 var snap_point
@@ -39,11 +37,14 @@ func _physics_process(delta):
 			if _snapped():
 				global_position = snap_point
 				emit_signal("reached")
-				if _parse_movement() == last_movement_accepted:
-					print(_parse_movement())
+				var input = _parse_movement()
+				if input == last_movement_accepted:
+					if Input.is_action_pressed("ux_modify"):
+						snap_point = _snap(input)
+					else:
+						snap_point = _snap()
 					emit_signal("walk")
 				else:
-					print("stopping")
 					velocity = Vector2(0,0)
 			else:
 				velocity = _get_snap_vector() * Globals.WALK_SPEED
@@ -75,10 +76,15 @@ func _parse_movement():
 		return DIRS.NONE
 
 func _handle_walk(input):
-	emit_signal("turn", input)
-	await get_tree().create_timer(0.05).timeout
-	if _parse_movement() == input:
-		emit_signal("walk")
+	if Input.is_action_pressed("ux_modify"):
+		snap_point = _snap(input)
+		moving = true
+	else:
+		emit_signal("turn", input)
+		await get_tree().create_timer(0.05).timeout
+		snap_point = _snap()
+		if _parse_movement() == input:
+			emit_signal("walk")
 		
 func get_direction():
 	match(facing):
@@ -124,7 +130,9 @@ func _snap(dir = null):
 	var y = int(global_position.y)
 	var step_x = snappedi(x, snap)
 	var step_y = snappedi(y, snap)
-	dir = facing if not is_instance_valid(dir) else dir
+	if dir == null:
+		dir = facing
+	print(str(x,' ', y,' ', step_x,' ', step_y,' ',snap, ' ', dir))
 	match(dir):
 		DIRS.UP:
 			step_y = step_y if step_y < y else step_y - snap
@@ -134,6 +142,7 @@ func _snap(dir = null):
 			step_x = step_x if step_x < x else step_x - snap
 		DIRS.RIGHT:
 			step_x = step_x if step_x > x else step_x + snap
+	print(str(Vector2(step_x, step_y)))
 	return Vector2(step_x, step_y)
 	
 func _force_realign():
@@ -153,14 +162,9 @@ func _turn(dir):
 	}
 	$AnimatedSprite2D.play(animation_keys[dir])
 	facing = dir
-	if dir in [DIRS.LEFT, DIRS.RIGHT]:
-		horizontal = dir
-	elif dir in [DIRS.UP, DIRS.DOWN]:
-		vertical = dir
 	_align_interact_pivot(facing)
 	
 func _walk():
-	snap_point = _snap()
 	moving = true
 	
 func _reached():
