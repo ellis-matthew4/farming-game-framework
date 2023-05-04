@@ -39,6 +39,7 @@ func _populate():
 			get_node("HBoxContainer/ColorRect" + str(i + 1)).get_children()[0].texture = inv[i].texture
 			get_node("HBoxContainer/ColorRect" + str(i + 1)).get_children()[1].text = str(inv[i].quantity) if inv[i].quantity > 1 else ""
 		else:
+			get_node("HBoxContainer/ColorRect" + str(i + 1)).get_children()[0].texture = null
 			get_node("HBoxContainer/ColorRect" + str(i + 1)).get_children()[1].text = ""
 
 func _depopulate():

@@ -106,8 +106,11 @@ func _interact():
 		if n.is_in_group("Bed"):
 			Globals.sleep()
 			return
-		if n.is_in_group("Door"):
+		elif n.is_in_group("Door"):
 			n.enter(self)
+			return
+		elif n is GroundItem:
+			n.interact()
 			return
 	var currently_held_item = Globals.get_held_item()
 	if currently_held_item is Tool:
@@ -115,6 +118,9 @@ func _interact():
 		var animation = currently_held_item.animation_key + DIRS.keys()[facing].to_lower()
 		print("Tool: " + tool + "/" + animation)
 		# Play an animation and perform an action
+	elif currently_held_item is Food:
+		currently_held_item.consume()
+		Globals.repopulate_quick_inventory()
 	
 func _cancel():
 	pass
@@ -132,7 +138,6 @@ func _snap(dir = null):
 	var step_y = snappedi(y, snap)
 	if dir == null:
 		dir = facing
-	print(str(x,' ', y,' ', step_x,' ', step_y,' ',snap, ' ', dir))
 	match(dir):
 		DIRS.UP:
 			step_y = step_y if step_y < y else step_y - snap
@@ -142,7 +147,6 @@ func _snap(dir = null):
 			step_x = step_x if step_x < x else step_x - snap
 		DIRS.RIGHT:
 			step_x = step_x if step_x > x else step_x + snap
-	print(str(Vector2(step_x, step_y)))
 	return Vector2(step_x, step_y)
 	
 func _force_realign():
@@ -181,3 +185,6 @@ func _align_interact_pivot(dir):
 			n.position = Vector2(-16, 0)
 		DIRS.RIGHT:
 			n.position = Vector2(16, 0)
+
+func _on_pick_up_area_body_entered(body):
+	body.interact()

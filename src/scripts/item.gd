@@ -15,4 +15,6 @@ func _init(n: String, v: int, tx_path: String):
 
 func set_quantity(new):
 	quantity = new
+	if quantity <= 0:
+		Globals.remove_from_inventory(self)
 	Globals.repopulate_quick_inventory()

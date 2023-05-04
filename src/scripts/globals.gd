@@ -15,6 +15,10 @@ var day = 0
 var inventory = []
 var map_grid_size = 16
 var farmland_state = {}
+var shipping_inventory = []
+var max_stamina = 100
+var stamina = 100
+var money = 0
 
 # Instances - Important dynamically-loaded "singletons"
 var player
@@ -38,7 +42,8 @@ func get_state():
 		'device': 'keyboard' if keyboard else 'controller',
 		'time stopped?': time_stopped,
 		'in-game day': day,
-		'inventory': get_serialized_inventory()
+		'stamina': str("Max: ", max_stamina, " Current: ", stamina),
+		'money': money
 	}
 	
 func get_serialized_inventory():
@@ -60,6 +65,26 @@ func try_add_inventory(item, quantity = 1):
 	item.quantity = quantity
 	inventory.append(item)
 	return true
+
+func remove_from_inventory(item):
+	var idx = 0
+	for k in inventory:
+		if k.item_name == item.item_name:
+			inventory.remove_at(idx)
+		idx += 1
+		
+func try_purchase(amount):
+	if amount > money:
+		return false
+	money -= amount
+	return true
+	
+func try_decrease_stamina(amount):
+	stamina = max(0, stamina - amount)
+	return stamina > 0
+	
+func increase_stamina(amount):
+	stamina = min(max_stamina, stamina + amount)
 	
 func lookup_inventory(item):
 	for k in inventory:

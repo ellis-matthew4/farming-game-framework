@@ -173,6 +173,9 @@ func increment():
 			if r < 20:
 				tilled[i] = false
 				match(r % 3):
+					# This needs to be reworked to add collision shapes to these objects.
+					# Potentially spawn an object in the DynamicLayer instead of using the crops array
+					# In any case, this will be done inside render()
 					0:
 						crops[i] = 1 # spawn weed
 					1:
