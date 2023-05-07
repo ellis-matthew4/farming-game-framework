@@ -15,6 +15,8 @@ func _init(n: String, v: int, tx_path: String, stages: int, prd: int, rh: bool =
 	product_id = prd
 	reharvestable = rh
 	reharvest_stage = rhs
+		
+func _ready():
 	description = str("Seeds to grow ", get_product().item_name, ". Takes ", max_stages, " days to grow.")
 	if reharvestable:
 		description += " Regrows after harvesting."

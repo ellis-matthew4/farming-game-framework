@@ -10,6 +10,9 @@ var stage = 0
 var quality = 1
 @onready var soil_txt = preload("res://assets/soil.png")
 @onready var soil_txt_w = preload("res://assets/soil_watered.png")
+@onready var float_item = preload("res://scenes/float_item.tscn")
+
+var snap = Globals.MAP_GRID_SIZE
 
 func _ready():
 	$Sprite.offset = Vector2(Globals.MAP_GRID_SIZE / 2, Globals.MAP_GRID_SIZE / 2)
@@ -65,7 +68,9 @@ func sickle():
 	else:
 		if stage == crop.max_stages:
 			var item_to_drop = crop.get_product()
-			Globals.try_add_inventory(item_to_drop) # replace with ground item
+			var floater = float_item.instantiate()
+			floater.create(item_to_drop)
+			Globals.add_to_dynamic_layer(floater, global_position + Vector2(snap/2, snap/2))
 		set_crop_texture(null)
 		crop = null
 		crop_sprite = null

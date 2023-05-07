@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bfq56xy2562sw"]
+[gd_scene load_steps=13 format=3 uid="uid://bfq56xy2562sw"]
 
 [ext_resource type="PackedScene" uid="uid://cc81lp1slmt20" path="res://scenes/player.tscn" id="1_2d27c"]
 [ext_resource type="Texture2D" uid="uid://deuegakx8gbpk" path="res://assets/free.png" id="1_w3cr0"]
@@ -6,8 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cd3mhn3w2hbvj" path="res://assets/bed.png" id="4_i01w8"]
 [ext_resource type="Texture2D" uid="uid://c3tc3mhlvstk0" path="res://assets/soil.png" id="5_qrcum"]
 [ext_resource type="PackedScene" uid="uid://b6tvsetr2bnre" path="res://scenes/door.tscn" id="6_y20lb"]
-[ext_resource type="PackedScene" uid="uid://bw64w3uaj5tu4" path="res://scenes/ground_item.tscn" id="7_ya8v8"]
-[ext_resource type="PackedScene" uid="uid://dnh5amf2a28hi" path="res://scenes/float_item.tscn" id="8_a6pqm"]
+[ext_resource type="Script" path="res://scripts/dynamic_layer.gd" id="7_mdgsm"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3hg2n"]
 texture = ExtResource("1_w3cr0")
@@ -297,10 +296,4 @@ position = Vector2(0, -80)
 counterpart = NodePath("../Door")
 
 [node name="DynamicLayer" type="Node2D" parent="."]
-
-[node name="GroundItem" parent="DynamicLayer" instance=ExtResource("7_ya8v8")]
-position = Vector2(-48, 48)
-item_id = 9
-
-[node name="FloatItem" parent="DynamicLayer" instance=ExtResource("8_a6pqm")]
-item_id = 9
+script = ExtResource("7_mdgsm")

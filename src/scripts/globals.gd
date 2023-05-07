@@ -26,6 +26,7 @@ var player
 var camera
 var clock
 var calendar
+var dynamicLayer
 
 # Preloads - Important classes to keep a base in memory at all times
 var map = preload("res://scenes/map.tscn")
@@ -120,6 +121,10 @@ func increment_day():
 func repopulate_quick_inventory():
 	if is_instance_valid(menuLayer):
 		menuLayer.emit_signal("repopulate_qi")
+		
+func add_to_dynamic_layer(node: Node, pos: Vector2):
+	dynamicLayer.add_child(node)
+	node.global_position = pos
 
 # Global processes
 func _ready():
