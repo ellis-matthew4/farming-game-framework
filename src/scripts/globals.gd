@@ -43,35 +43,41 @@ func get_state():
 		'time stopped?': time_stopped,
 		'in-game day': day,
 		'stamina': str("Max: ", max_stamina, " Current: ", stamina),
-		'money': money
+		'money': money,
+		'inventory': get_serialized_inventory()
 	}
 	
 func get_serialized_inventory():
 	var result = ""
 	for i in range(0, unlocked_inventory_slots):
-		if i < len(inventory):
+		if inventory[i] != null:
 			result += str(ItemDatabase.get_idx(inventory[i]), ",")
 		else:
 			result += str(-1, ",")
 	return result
 	
 func try_add_inventory(item, quantity = 1):
-	var existing = lookup_inventory(item)
-	if is_instance_valid(existing):
+	var idx = lookup_inventory(item)
+	if idx != null:
+		var existing = inventory[idx]
 		existing.quantity += quantity
 		return true
-	if len(inventory) >= unlocked_inventory_slots:
+	if first_empty_inventory_slot() >= unlocked_inventory_slots:
 		return false
 	item.quantity = quantity
-	inventory.append(item)
+	inventory[first_empty_inventory_slot()] = item
 	return true
+	
+func first_empty_inventory_slot():
+	for i in range(len(inventory)):
+		if inventory[i] == null:
+			return i
+	return max_inventory_slots + 1
 
 func remove_from_inventory(item):
-	var idx = 0
-	for k in inventory:
-		if k.item_name == item.item_name:
-			inventory.remove_at(idx)
-		idx += 1
+	var idx = lookup_inventory(item)
+	if idx != null:
+		inventory[idx] = null
 		
 func try_purchase(amount):
 	if amount > money:
@@ -87,8 +93,10 @@ func increase_stamina(amount):
 	stamina = min(max_stamina, stamina + amount)
 	
 func lookup_inventory(item):
-	for k in inventory:
-		if k.item_name == item.item_name:
+	for k in range(len(inventory)):
+		if inventory[k] == null:
+			continue
+		if inventory[k].item_name == item.item_name:
 			return k
 	return null
 	
@@ -119,6 +127,10 @@ func _ready():
 	randomize()
 	game_seed = randi()
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	
+	# Pre-populate inventory
+	for i in range(max_inventory_slots):
+		inventory.append(null)
 	try_add_inventory(ItemDatabase.get_item(0))
 	try_add_inventory(ItemDatabase.get_item(1))
 	try_add_inventory(ItemDatabase.get_item(2))

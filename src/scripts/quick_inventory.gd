@@ -35,7 +35,7 @@ func _get_current():
 func _populate():
 	var inv = Globals.inventory
 	for i in range(0, 10):
-		if i < len(inv):
+		if i < len(inv) and inv[i] != null:
 			get_node("HBoxContainer/ColorRect" + str(i + 1)).get_children()[0].texture = inv[i].texture
 			get_node("HBoxContainer/ColorRect" + str(i + 1)).get_children()[1].text = str(inv[i].quantity) if inv[i].quantity > 1 else ""
 		else:

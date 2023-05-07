@@ -25,6 +25,7 @@ func create(i: Item):
 
 func interact():
 	if Globals.try_add_inventory(item):
+		Globals.repopulate_quick_inventory()
 		queue_free()
 
 func _on_animation_player_animation_finished(anim_name):
