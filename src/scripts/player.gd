@@ -3,7 +3,7 @@ extends CharacterBody2D
 enum DIRS { DOWN, UP, LEFT, RIGHT, NONE }
 var facing = DIRS.DOWN
 
-var snap = Globals.map_grid_size
+var snap = Globals.MAP_GRID_SIZE
 var snap_point
 var moving = false
 var last_movement_accepted = DIRS.NONE
@@ -18,12 +18,20 @@ func _ready():
 	self.turn.connect(_turn)
 	self.walk.connect(_walk)
 	self.reached.connect(_reached)
+	emit_signal("turn", facing)
 
 func _physics_process(delta):
 	if not Globals.movement_blocked:
 		if Input.is_action_just_pressed("player_interact"):
 			velocity = Vector2(0,0)
-			_interact()
+			var held = false
+			if Globals.get_held_item() is Tool:
+				await get_tree().create_timer(0.1).timeout
+				if Input.is_action_pressed("player_interact"):
+					await get_tree().create_timer(0.1).timeout
+					if Input.is_action_pressed("player_interact"):
+						held = true
+			_interact(held)
 		elif Input.is_action_just_pressed("player_cancel"):
 			Globals.increment_day()
 		elif Input.is_action_just_pressed("ux_menu"):
@@ -100,7 +108,10 @@ func get_direction():
 func get_real_position():
 	return $InteractPivot.global_position
 	
-func _interact():
+func _interact(held):
+	if held:
+		_set_tool_interact_area_size(held)
+		await get_tree().create_timer(0.05).timeout
 	var li = get_node("InteractPivot/InteractionArea").get_overlapping_bodies()
 	for n in li:
 		if n.is_in_group("Bed"):
@@ -118,9 +129,39 @@ func _interact():
 		var animation = currently_held_item.animation_key + DIRS.keys()[facing].to_lower()
 		print("Tool: " + tool + "/" + animation)
 		# Play an animation and perform an action
+		for n in li:
+			if n is Soil:
+				if "hoe" in tool:
+					n.hoe()
+				elif "sickle" in tool:
+					n.sickle()
+				elif "watering_can" in tool:
+					n.water()
+				elif "hammer" in tool:
+					n.hammer()
+				elif "axe" in tool:
+					n.axe()
+				print("interacting with soil")
+		await get_tree().create_timer(0.25).timeout
+		_set_tool_interact_area_size(false)
 	elif currently_held_item is Food:
 		currently_held_item.consume()
 		Globals.repopulate_quick_inventory()
+	elif currently_held_item is Seeds:
+		print("seeds")
+		for n in li:
+			if n is Soil and n.tilled:
+				print("sowing")
+				n.sow(currently_held_item)
+				currently_held_item.consume()
+	elif currently_held_item is Consumable:
+		if currently_held_item.item_name == "Fertilizer":
+			for n in li:
+				if n is Soil and n.tilled:
+					n.fertilize()
+					currently_held_item.consume()
+	else:
+		print(currently_held_item.item_name)
 	
 func _cancel():
 	pass
@@ -175,16 +216,37 @@ func _reached():
 	moving = false
 
 func _align_interact_pivot(dir):
-	var n = get_node("InteractPivot/InteractionArea")
+	var n = get_node("InteractPivot")
 	match(dir):
 		DIRS.DOWN:
-			n.position = Vector2(0, 16)
+			n.rotation_degrees = 180
 		DIRS.UP:
-			n.position = Vector2(0, -16)
+			n.rotation_degrees = 0
 		DIRS.LEFT:
-			n.position = Vector2(-16, 0)
+			n.rotation_degrees = 270
 		DIRS.RIGHT:
-			n.position = Vector2(16, 0)
+			n.rotation_degrees = 90
+
+func _set_tool_interact_area_size(held = false):
+	var t = Globals.get_held_item()
+	var n = $InteractPivot/InteractionArea/CollisionShape2D
+	if held and t is Tool and t.level > 1:
+		match(t.level):
+			2:
+				n.shape.size = Vector2(snap-1, snap-1)
+				n.position = Vector2(0, -snap * 1.5)
+			3:
+				n.shape.size = Vector2(snap-1,snap*2-1)
+				n.position = Vector2(0, -snap * 2)
+			4:
+				n.shape.size = Vector2(snap*2-1,snap*2-1)
+				n.position = Vector2(0, -snap * 2)
+			5:
+				n.shape.size = Vector2(snap*2-1,snap*3-1)
+				n.position = Vector2(0, -snap * 2.5)
+	else:
+				n.shape.size = Vector2(snap / 2, snap / 2)
+				n.position = Vector2(0, -snap)
 
 func _on_pick_up_area_body_entered(body):
 	body.interact()

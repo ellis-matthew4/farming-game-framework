@@ -2,6 +2,7 @@ extends Node
 
 # Constants - Global values that never change
 const WALK_SPEED = 140
+const MAP_GRID_SIZE = 16
 
 # Variables - Global values that can change at any time
 var can_accept_mw_input = true
@@ -13,7 +14,6 @@ var game_seed = 0
 var time_stopped = false
 var day = 0
 var inventory = []
-var map_grid_size = 16
 var farmland_state = {}
 var shipping_inventory = []
 var max_stamina = 100

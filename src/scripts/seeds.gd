@@ -21,7 +21,7 @@ func get_texture_as_sprite2D(stage):
 	var tx = Sprite2D.new()
 	tx.texture = texture
 	tx.region_enabled = true
-	tx.region_rect = Rect2(stage * Globals.map_grid_size, 0, Globals.map_grid_size, Globals.map_grid_size)
+	tx.region_rect = Rect2(stage * Globals.MAP_GRID_SIZE, 0, Globals.MAP_GRID_SIZE, Globals.MAP_GRID_SIZE)
 	tx.centered = true
 	return tx
 

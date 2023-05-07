@@ -15,7 +15,6 @@ func _ready():
 		
 func _process(delta):
 	if item == null and item_id > -1:
-		print(item_id)
 		item = ItemDatabase.get_item(item_id)
 		create(item)
 

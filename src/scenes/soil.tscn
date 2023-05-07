@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://clpbd5t7au5p8"]
+[gd_scene load_steps=3 format=3 uid="uid://clpbd5t7au5p8"]
 
 [ext_resource type="Script" path="res://scripts/soil.gd" id="1_gxwmj"]
 
-[node name="Soil" type="Sprite2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0ukgx"]
+size = Vector2(16, 16)
+
+[node name="Soil" type="StaticBody2D"]
+collision_layer = 16
+collision_mask = 0
 script = ExtResource("1_gxwmj")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_0ukgx")

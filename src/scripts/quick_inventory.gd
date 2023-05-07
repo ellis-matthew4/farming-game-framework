@@ -2,6 +2,8 @@ extends Control
 
 var grid = Grid.new(1, 10)
 
+signal focus_change
+
 func _ready():
 	_populate()
 	focus(_get_current(), 0.01)
@@ -56,6 +58,7 @@ func _wait_and_reset(timeout):
 func focus(node, timeout):
 	node.color = Color.YELLOW
 	_wait_and_reset(timeout)
+	emit_signal("focus_change")
 	
 func defocus(node):
 	node.color = Color.from_string("#959595", Color.DARK_GRAY)
