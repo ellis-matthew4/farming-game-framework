@@ -1,11 +1,14 @@
 extends Control
 
 var grid = Grid.new(1, 10)
+@onready var SlotScene = preload("res://scenes/Menus/InventorySlot.tscn")
 
 signal focus_change
+signal populated
 
 func _ready():
 	_populate()
+	await self.populated
 	focus(_get_current(), 0.01)
 
 func _process(delta):
@@ -26,29 +29,27 @@ func _process(delta):
 				focus(_get_next(), 0.125)
 
 func _get_next():
-	return get_node("HBoxContainer/ColorRect" + str(grid.get_next()))
+	return $HBoxContainer.get_child(grid.get_next() - 1)
 	
 func _get_prev():
-	return get_node("HBoxContainer/ColorRect" + str(grid.get_previous()))
+	return $HBoxContainer.get_child(grid.get_previous() - 1)
 	
 func _get_current():
-	return get_node("HBoxContainer/ColorRect" + str(grid.get_current()))
+	return $HBoxContainer.get_child(grid.get_current() - 1)
 	
 func _populate():
+	_depopulate()
 	var inv = Globals.inventory
 	for i in range(0, 10):
-		if i < len(inv) and inv[i] != null:
-			get_node("HBoxContainer/ColorRect" + str(i + 1)).get_children()[0].texture = inv[i].texture
-			get_node("HBoxContainer/ColorRect" + str(i + 1)).get_children()[1].text = str(inv[i].quantity) if inv[i].quantity > 1 else ""
-		else:
-			get_node("HBoxContainer/ColorRect" + str(i + 1)).get_children()[0].texture = null
-			get_node("HBoxContainer/ColorRect" + str(i + 1)).get_children()[1].text = ""
+		var slot = SlotScene.instantiate()
+		$HBoxContainer.add_child(slot)
+		slot.from_item(Globals.inventory[i])
+	emit_signal("populated")
 
 func _depopulate():
-	for i in range(1, 11):
-		var n = get_node("HBoxContainer/ColorRect" + str(i))
-		var c = n.get_children()[0]
-		n.remove_child(c)
+	for c in $HBoxContainer.get_children():
+		$HBoxContainer.remove_child(c)
+		c.queue_free()
 
 func _wait_and_reset(timeout):
 	Globals.can_accept_mw_input = false
@@ -56,12 +57,12 @@ func _wait_and_reset(timeout):
 	Globals.can_accept_mw_input = true
 
 func focus(node, timeout):
-	node.color = Color.YELLOW
+	node.focus()
 	_wait_and_reset(timeout)
 	emit_signal("focus_change")
 	
 func defocus(node):
-	node.color = Color.from_string("#959595", Color.DARK_GRAY)
+	node.defocus()
 
 func focused_index():
 	return grid.get_i()

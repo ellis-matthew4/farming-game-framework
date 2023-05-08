@@ -3,13 +3,23 @@ extends Control
 enum { UP, DOWN, LEFT, RIGHT, SELF }
 @onready var InventoryGrid = get_node('ColorRect/VBoxContainer/Inventory/VBoxContainer/Grid')
 @onready var MenuSelection = get_node('ColorRect/VBoxContainer/MenuSelection')
+@onready var SlotScene = preload("res://scenes/Menus/InventorySlot.tscn")
 var can_hide = false
 var focused_menu = 0
 var can_change_focus = true
 var menu_grid = Grid.new(1, 3)
-var inv_grid = Grid.new(Globals.max_inventory_slots / 10, 10)
+var inv_grid = Grid.new(Globals.unlocked_inventory_slots / 10, 10)
 
 func _ready():
+	# load inventory
+	var idx = 0
+	for i in Globals.inventory:
+		var slot = SlotScene.instantiate()
+		InventoryGrid.add_child(slot)
+		slot.from_item(i)
+		if idx > Globals.unlocked_inventory_slots - 1:
+			slot.lock()
+		idx += 1
 	_change_focus_menu(1, 1)
 	await get_tree().create_timer(0.1).timeout
 	can_hide = true
@@ -64,11 +74,11 @@ func _get_neighbor_menu(direction):
 func _change_focus_inventory(old, new):
 	if new > Globals.unlocked_inventory_slots or new < 1:
 		if new == -1:
-			InventoryGrid.get_child(old - 1).color = Color.WHITE
+			InventoryGrid.get_child(old - 1).defocus()
 			return
 		print("ERR: INVALID INDEX _change_focus_inventory")
-	InventoryGrid.get_child(old - 1).color = Color.WHITE
-	InventoryGrid.get_child(new - 1).color = Color.GRAY
+	InventoryGrid.get_child(old - 1).defocus()
+	InventoryGrid.get_child(new - 1).focus()
 	_wait_and_reset(0.125)
 
 func _change_focus_menu(old, new):
