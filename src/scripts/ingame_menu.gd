@@ -79,6 +79,7 @@ func _change_focus_inventory(old, new):
 		print("ERR: INVALID INDEX _change_focus_inventory")
 	InventoryGrid.get_child(old - 1).defocus()
 	InventoryGrid.get_child(new - 1).focus()
+	$ColorRect/VBoxContainer/Inventory/VBoxContainer/Description/Label.text = InventoryGrid.get_child(new - 1).get_description()
 	_wait_and_reset(0.125)
 
 func _change_focus_menu(old, new):

@@ -7,16 +7,14 @@ var product_id: int
 var reharvestable: bool
 var reharvest_stage: int
 
-func _init(n: String, v: int, tx_path: String, stages: int, prd: int, rh: bool = false, rhs: int = 1):
+func _init(n: String, v: int, tx_path: String, stages: int, prd: String, rh: bool = false, rhs: int = 1):
 	item_name = n
 	value = v
 	texture = load(tx_path)
 	max_stages = stages
-	product_id = prd
+	product_id = ItemDatabase.get_index_by_name(prd)
 	reharvestable = rh
 	reharvest_stage = rhs
-		
-func _ready():
 	description = str("Seeds to grow ", get_product().item_name, ". Takes ", max_stages, " days to grow.")
 	if reharvestable:
 		description += " Regrows after harvesting."

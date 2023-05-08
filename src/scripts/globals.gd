@@ -141,8 +141,8 @@ func _ready():
 	try_add_inventory(ItemDatabase.get_item(2))
 	try_add_inventory(ItemDatabase.get_item(3))
 	try_add_inventory(ItemDatabase.get_item(4))
-	try_add_inventory(ItemDatabase.get_item(8), 9)
-	try_add_inventory(ItemDatabase.get_item(9))
+	try_add_inventory(ItemDatabase.get_item(8))
+	try_add_inventory(ItemDatabase.get_item(9), 9)
 	try_add_inventory(ItemDatabase.get_item(10))
 	add_child(menuLayer)
 

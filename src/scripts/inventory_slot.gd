@@ -17,6 +17,12 @@ func set_texture(tx: Texture):
 func set_label(tx: String):
 	$Label.text = tx
 	
+func get_description():
+	if item == null:
+		return ""
+	else:
+		return item.description
+	
 func focus():
 	color = Color.YELLOW
 	
