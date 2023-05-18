@@ -15,7 +15,7 @@ var time_stopped = false
 var day = 0
 var inventory = []
 var farmland_state = {}
-var shipping_inventory = []
+var shipping_cache = 0
 var max_stamina = 100
 var stamina = 100
 var money = 0
@@ -45,6 +45,7 @@ func get_state():
 		'in-game day': day,
 		'stamina': str("Max: ", max_stamina, " Current: ", stamina),
 		'money': money,
+		'shipping_cache': shipping_cache,
 		'inventory': get_serialized_inventory()
 	}
 	
@@ -68,6 +69,14 @@ func try_add_inventory(item, quantity = 1):
 	item.quantity = quantity
 	inventory[first_empty_inventory_slot()] = item
 	return true
+	
+func swap(i, j):
+	var item1 = inventory[i]
+	var item2 = inventory[j]
+	var temp = item1
+	inventory[i] = item2
+	inventory[j] = temp
+	print("swapped")
 	
 func first_empty_inventory_slot():
 	for i in range(len(inventory)):
@@ -115,7 +124,10 @@ func sleep():
 	menuLayer.transition("fade_in")
 	
 func increment_day():
+	money += shipping_cache
+	shipping_cache = 0
 	day += 1
+	clock.time = 360
 	calendar.parse_day(day)
 	
 func repopulate_quick_inventory():
@@ -125,13 +137,21 @@ func repopulate_quick_inventory():
 func add_to_dynamic_layer(node: Node, pos: Vector2):
 	dynamicLayer.add_child(node)
 	node.global_position = pos
+	
+func ship(item: Item):
+	shipping_cache += item.value
+	item.quantity -= 1
 
 # Global processes
 func _ready():
-	# Generate seed. This should be moved to the game start
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_child(menuLayer)
+	_game_start()
+	
+func _game_start():
+	# Generate seed
 	randomize()
 	game_seed = randi()
-	process_mode = Node.PROCESS_MODE_ALWAYS
 	
 	# Pre-populate inventory
 	for i in range(max_inventory_slots):
@@ -144,7 +164,6 @@ func _ready():
 	try_add_inventory(ItemDatabase.get_item(8))
 	try_add_inventory(ItemDatabase.get_item(9), 9)
 	try_add_inventory(ItemDatabase.get_item(10))
-	add_child(menuLayer)
 
 func _input(event):
 	if (event is InputEventKey):

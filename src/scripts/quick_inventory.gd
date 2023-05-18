@@ -44,6 +44,7 @@ func _populate():
 		var slot = SlotScene.instantiate()
 		$HBoxContainer.add_child(slot)
 		slot.from_item(Globals.inventory[i])
+		slot.context = "quick"
 	emit_signal("populated")
 
 func _depopulate():

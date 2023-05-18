@@ -10,5 +10,3 @@ func _init(n: String, v: int, tx_path: String, d: String):
 
 func consume():
 	quantity -= 1
-	if quantity <= 0:
-		queue_free()

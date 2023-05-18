@@ -120,6 +120,11 @@ func _interact(held):
 		elif n.is_in_group("Door"):
 			n.enter(self)
 			return
+		elif n.is_in_group("ShippingBox"):
+			var held_item = Globals.get_held_item()
+			if not held_item is Tool:
+				Globals.ship(held_item)
+			return
 		elif n is GroundItem:
 			n.interact()
 			return
@@ -161,7 +166,8 @@ func _interact(held):
 					n.fertilize()
 					currently_held_item.consume()
 	else:
-		print(currently_held_item.item_name)
+		if currently_held_item != null:
+			print(currently_held_item.item_name)
 	
 func _cancel():
 	pass

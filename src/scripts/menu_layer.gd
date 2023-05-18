@@ -42,6 +42,7 @@ func menu_hide(menu):
 	Globals.movement_blocked = false
 	$quick_inventory.show()
 	menu.queue_free()
+	emit_signal("repopulate_qi")
 
 func reset(timeout):
 	reset_timer = true

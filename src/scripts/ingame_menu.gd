@@ -1,66 +1,36 @@
 extends Control
 
 enum { UP, DOWN, LEFT, RIGHT, SELF }
-@onready var InventoryGrid = get_node('ColorRect/VBoxContainer/Inventory/VBoxContainer/Grid')
 @onready var MenuSelection = get_node('ColorRect/VBoxContainer/MenuSelection')
-@onready var SlotScene = preload("res://scenes/Menus/InventorySlot.tscn")
+@onready var inventoryScene = preload("res://scenes/Menus/inventoryMenu.tscn")
+@onready var MenuContainer = get_node('ColorRect/VBoxContainer')
 var can_hide = false
-var focused_menu = 0
+var focused_menu = true
 var can_change_focus = true
 var menu_grid = Grid.new(1, 3)
-var inv_grid = Grid.new(Globals.unlocked_inventory_slots / 10, 10)
+
+var instanced_menu
+var menu_id = 1
 
 func _ready():
-	# load inventory
-	var idx = 0
-	for i in Globals.inventory:
-		var slot = SlotScene.instantiate()
-		InventoryGrid.add_child(slot)
-		slot.from_item(i)
-		if idx > Globals.unlocked_inventory_slots - 1:
-			slot.lock()
-		idx += 1
-	_change_focus_menu(1, 1)
+	instanced_menu = inventoryScene.instantiate()
+	MenuContainer.add_child(instanced_menu)
+	instanced_menu.cancel.connect(self._reclaim_focus)
+	MenuSelection.get_child(0).color = Color.YELLOW
 	await get_tree().create_timer(0.1).timeout
 	can_hide = true
 	
 func _process(delta):
-	if focused_menu == 0:
-		if Input.is_action_just_pressed("player_interact"):
-			focused_menu = 1
-			if _get_neighbor_menu(SELF) == 1:
-				_change_focus_inventory(1, 1)
+	if focused_menu:
+		if Input.is_action_just_pressed("ux_select"):
+			instanced_menu.focus()
+			focused_menu = false
 		elif Input.is_action_just_pressed("ux_left"):
-			_change_focus_menu(_get_neighbor_menu(SELF), _get_neighbor_menu(LEFT))
+			_change_focus_menu(_get_neighbor_menu(LEFT))
 		elif Input.is_action_just_pressed("ux_right"):
-			_change_focus_menu(_get_neighbor_menu(SELF), _get_neighbor_menu(RIGHT))
+			_change_focus_menu(_get_neighbor_menu(RIGHT))
 		elif can_hide and (Input.is_action_just_pressed("ux_menu") or Input.is_action_just_pressed("player_cancel")):
-			Globals.close_menu(self)
-	if focused_menu == 1:
-		if Input.is_action_just_pressed("ux_left"):
-			_change_focus_inventory(_get_neighbor(SELF), _get_neighbor(LEFT))
-		elif Input.is_action_just_pressed("ux_right"):
-			_change_focus_inventory(_get_neighbor(SELF), _get_neighbor(RIGHT))
-		elif Input.is_action_just_pressed("ux_up"):
-			_change_focus_inventory(_get_neighbor(SELF), _get_neighbor(UP))
-		elif Input.is_action_just_pressed("ux_down"):
-			_change_focus_inventory(_get_neighbor(SELF), _get_neighbor(DOWN))
-		elif Input.is_action_just_pressed("player_cancel"):
-			focused_menu = 0
-			_change_focus_inventory(_get_neighbor(SELF), -1)
-		
-func _get_neighbor(direction):
-	match(direction):
-		UP:
-			return inv_grid.get_previous_row()
-		DOWN:
-			return inv_grid.get_next_row()
-		LEFT:
-			return inv_grid.get_previous()
-		RIGHT:
-			return inv_grid.get_next()
-		SELF:
-			return inv_grid.get_current()
+			Globals.menuLayer.menu_hide(self)
 
 func _get_neighbor_menu(direction):
 	match(direction):
@@ -71,36 +41,29 @@ func _get_neighbor_menu(direction):
 		SELF:
 			return menu_grid.get_current()
 
-func _change_focus_inventory(old, new):
-	if new > Globals.unlocked_inventory_slots or new < 1:
-		if new == -1:
-			InventoryGrid.get_child(old - 1).defocus()
-			return
-		print("ERR: INVALID INDEX _change_focus_inventory")
-	InventoryGrid.get_child(old - 1).defocus()
-	InventoryGrid.get_child(new - 1).focus()
-	$ColorRect/VBoxContainer/Inventory/VBoxContainer/Description/Label.text = InventoryGrid.get_child(new - 1).get_description()
-	_wait_and_reset(0.125)
-
-func _change_focus_menu(old, new):
-	if new > 3 or new < 1:
+func _change_focus_menu(id):
+	if id > 3 or id < 1:
 		print("ERR: INVALID INDEX _change_focus_menu")
-	MenuSelection.get_child(old - 1).color = Color('#8f8f32')
-	MenuSelection.get_child(new - 1).color = Color.YELLOW
-	match(new):
+	for c in MenuSelection.get_children():
+		c.color = Color('#8f8f32')
+	MenuSelection.get_child(id - 1).color = Color.YELLOW
+	MenuContainer.remove_child(instanced_menu)
+	instanced_menu.queue_free()
+	match(id):
 		1:
-			$ColorRect/VBoxContainer/Inventory.show()
-			$ColorRect/VBoxContainer/Stats.hide()
-			$ColorRect/VBoxContainer/Friendship.hide()
+			instanced_menu = inventoryScene.instantiate()
 		2:
-			$ColorRect/VBoxContainer/Inventory.hide()
-			$ColorRect/VBoxContainer/Stats.show()
-			$ColorRect/VBoxContainer/Friendship.hide()
+			instanced_menu = inventoryScene.instantiate()
 		3:
-			$ColorRect/VBoxContainer/Inventory.hide()
-			$ColorRect/VBoxContainer/Stats.hide()
-			$ColorRect/VBoxContainer/Friendship.show()
+			instanced_menu = inventoryScene.instantiate()
+	MenuContainer.add_child(instanced_menu)
+	instanced_menu.cancel.connect(self._reclaim_focus)
+	menu_id = id
 	_wait_and_reset(0.125)
+	
+func _reclaim_focus():
+	instanced_menu.defocus()
+	focused_menu = true
 	
 func _wait_and_reset(timeout):
 	can_change_focus = false
