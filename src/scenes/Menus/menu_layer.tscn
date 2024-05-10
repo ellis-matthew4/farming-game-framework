@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://bwehqhews1spy"]
+[gd_scene load_steps=16 format=3 uid="uid://bwehqhews1spy"]
 
 [ext_resource type="Script" path="res://scripts/menu_layer.gd" id="1_umgjm"]
 [ext_resource type="PackedScene" uid="uid://ydgkkqqwkjhb" path="res://scenes/Menus/quick_inventory.tscn" id="2_j2ln7"]
+[ext_resource type="Shader" path="res://assets/shaders/weather_effect.gdshader" id="2_xppdk"]
 
 [sub_resource type="Animation" id="Animation_gdtri"]
 length = 0.001
@@ -48,6 +49,38 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(0.819608, 0.32549, 0, 0.192157), Color(0.0196078, 0, 0.054902, 0.588235)]
+}
+
+[sub_resource type="Animation" id="Animation_aiu80"]
+resource_name = "fade_in"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_0laoq"]
+resource_name = "fade_out"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_x6g0n"]
@@ -97,38 +130,6 @@ tracks/0/keys = {
 "values": [Color(0.0196078, 0, 0.054902, 0.588235), Color(0.807843, 0.662745, 1, 0.0784314)]
 }
 
-[sub_resource type="Animation" id="Animation_0laoq"]
-resource_name = "fade_out"
-length = 1.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_aiu80"]
-resource_name = "fade_in"
-length = 1.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("AnimationPlayer/DayNightCycle:color")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_70si5"]
 _data = {
 "RESET": SubResource("Animation_gdtri"),
@@ -140,6 +141,82 @@ _data = {
 "morning_to_day": SubResource("Animation_2fgxf"),
 "night_to_morning": SubResource("Animation_cap8d")
 }
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3otwr"]
+shader = ExtResource("2_xppdk")
+shader_parameter/count = 60
+shader_parameter/slant = -0.01
+shader_parameter/speed = 2.0
+shader_parameter/blur = 0.002
+shader_parameter/colour = Color(1, 1, 1, 1)
+shader_parameter/size = Vector2(0.02, 0.01)
+
+[sub_resource type="Shader" id="Shader_3qy2m"]
+code = "// simple rain/snow shader
+// useful learning resources:
+// https://www.ronja-tutorials.com/post/034-2d-sdf-basics/#circle
+// https://iquilezles.org/articles/distfunctions2d/
+
+shader_type canvas_item;
+
+// can make snow by adjusting values
+uniform int count: hint_range(0, 2000) = 150;
+uniform float slant: hint_range(-0.1, 0.1) = -0.01;
+uniform float speed: hint_range(0.0, 100.0) = 50.0;
+uniform float blur: hint_range(0.0005, 0.1) = 0.002;
+uniform vec4 colour: source_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec2 size = vec2(0.005, 0.2);
+
+float line_sdf(vec2 p, vec2 s) {
+    vec2 d = abs(p) - s;
+    return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
+}
+
+float Hash(float x) {
+    return fract(sin(x * 18.34) * 51.78);
+}
+
+float Hash2(float x) {
+    return fract(sin(x * 25.42) * 21.24);
+}
+
+void fragment() {
+	// inspector issue with tiny vec 2
+    vec2 s = size * 0.1;
+	// to work at the start
+    float time = TIME + 1000.0;
+    vec2 uv = UV;
+	// slant each line left or right
+    uv.x += uv.y * slant;
+    float output = 0.0;
+    
+    for (int i = 1; i <= count; i++) {
+        float h1 = Hash(float(i));
+        float h2 = Hash2(float(i));
+		// make it so the lines move in the direction of the slant as well
+		// otherwise they would go directly down no matter what slant is
+        float sl = h1 * uv.y * -slant;
+		// compute random x position of line, multiply by 1.2 to cover the far edges more predictably
+        float pos_mod_x = h1 * 1.2;
+		// there is probably better way to do this, to prevent line from moving too slow compared to other lines
+        float pos_mod_y = max(h2 * speed, pos_mod_x * speed);
+		// wrap y values around to loop the anim
+        vec2 position = vec2(pos_mod_x + sl, -mod(-pos_mod_y * time * 0.1, -1.));
+        float sdf = line_sdf(uv - position, s);
+        output += clamp(- sdf / blur, 0.0, 1.0);
+    }
+
+    COLOR = vec4(colour.rgb, output);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0hdul"]
+shader = SubResource("Shader_3qy2m")
+shader_parameter/count = 100
+shader_parameter/slant = -0.046
+shader_parameter/speed = 25.0
+shader_parameter/blur = 0.002
+shader_parameter/colour = Color(1, 1, 1, 1)
+shader_parameter/size = Vector2(0.005, 0.2)
 
 [node name="MenuLayer" type="CanvasLayer"]
 process_mode = 3
@@ -156,5 +233,21 @@ custom_minimum_size = Vector2(1152, 648)
 offset_right = 1152.0
 offset_bottom = 648.0
 color = Color(0.0196078, 0, 0.054902, 0.588235)
+
+[node name="SnowEffect" type="ColorRect" parent="AnimationPlayer"]
+visible = false
+material = SubResource("ShaderMaterial_3otwr")
+custom_minimum_size = Vector2(1152, 648)
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.513726, 0.00392157, 0.831373, 1)
+
+[node name="RainEffect" type="ColorRect" parent="AnimationPlayer"]
+visible = false
+material = SubResource("ShaderMaterial_0hdul")
+custom_minimum_size = Vector2(1152, 648)
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.501961, 0.00392157, 0.807843, 1)
 
 [node name="quick_inventory" parent="." instance=ExtResource("2_j2ln7")]

@@ -26,6 +26,18 @@ func debug_menu():
 			debugging = true
 			add_child(debug.instantiate())
 			reset(0.125)
+			
+func set_weather():
+	hide_weather()
+	var w = Globals.weather
+	if w == 'rain':
+		$AnimationPlayer/RainEffect.visible = true
+	if w == 'snow':
+		$AnimationPlayer/SnowEffect.visible = true
+		
+func hide_weather():
+	$AnimationPlayer/RainEffect.visible = false
+	$AnimationPlayer/SnowEffect.visible = false
 
 func ig_menu():
 	menu_show(ingame_menu.instantiate())

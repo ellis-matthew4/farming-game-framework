@@ -19,6 +19,7 @@ var shipping_cache = 0
 var max_stamina = 100
 var stamina = 100
 var money = 0
+var weather = 'sunny'
 
 # Instances - Important dynamically-loaded "singletons"
 var player
@@ -126,6 +127,14 @@ func sleep():
 func increment_day():
 	money += shipping_cache
 	shipping_cache = 0
+	if weather == 'sunny':
+		weather = 'rain'
+	elif weather == 'rain':
+		weather = 'snow'
+	elif weather == 'snow':
+		weather = 'severe'
+	elif weather == 'severe':
+		weather = 'sunny'
 	day += 1
 	clock.time = 360
 	calendar.parse_day(day)
@@ -145,8 +154,8 @@ func ship(item: Item):
 # Global processes
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	add_child(menuLayer)
 	_game_start()
+	add_child(menuLayer)
 	
 func _game_start():
 	# Generate seed

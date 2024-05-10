@@ -50,6 +50,8 @@ func render(state): # draw from freshly loaded state
 		soil.quality = int(encoded.substr(0, 1))
 		if encoded.substr(1, 1) == '1':
 			soil.hoe()
+		if Globals.weather in ['rain', 'severe']:
+			soil.water()
 		var stage = int(encoded.substr(2, 1))
 		var crop_id = int(encoded.substr(3, -1))
 		if crop_id > -1:

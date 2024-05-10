@@ -294,10 +294,12 @@ centered = false
 [node name="Door" parent="StaticLayer" instance=ExtResource("6_y20lb")]
 position = Vector2(0, -240)
 counterpart = NodePath("../Door2")
+weather_restricted = true
 
 [node name="Door2" parent="StaticLayer" instance=ExtResource("6_y20lb")]
 position = Vector2(0, -80)
 counterpart = NodePath("../Door")
+exterior = true
 
 [node name="ShippingBox" type="Sprite2D" parent="StaticLayer"]
 position = Vector2(64, -48)

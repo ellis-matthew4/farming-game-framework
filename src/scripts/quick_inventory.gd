@@ -43,7 +43,7 @@ func _populate():
 	for i in range(0, 10):
 		var slot = SlotScene.instantiate()
 		$HBoxContainer.add_child(slot)
-		slot.from_item(Globals.inventory[i])
+		slot.from_item(inv[i])
 		slot.context = "quick"
 	emit_signal("populated")
 
