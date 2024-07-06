@@ -30,40 +30,46 @@ func _ready():
     
 func focus():
   _change_focus_inventory(1, 1)
+  for slot in InventoryGrid.get_children():
+    if not slot.locked:
+      slot.context = "focused_inventory"
   await get_tree().create_timer(0.1).timeout
   focused = true
   
 func defocus():
   _change_focus_inventory(grid.get_current(), -1)
+  for slot in InventoryGrid.get_children():
+    if not slot.locked:
+      slot.context = "inventory"
   focused = false
 
 func _process(delta):
-  if Input.is_action_just_pressed("ux_left"):
-    mouse_activity = false
-    Cursor.mouse_active = false
-    _change_focus_inventory(_get_neighbor(SELF), _get_neighbor(LEFT))
-  elif Input.is_action_just_pressed("ux_right"):
-    mouse_activity = false
-    Cursor.mouse_active = false
-    _change_focus_inventory(_get_neighbor(SELF), _get_neighbor(RIGHT))
-  elif Input.is_action_just_pressed("ux_up"):
-    mouse_activity = false
-    Cursor.mouse_active = false
-    _change_focus_inventory(_get_neighbor(SELF), _get_neighbor(UP))
-  elif Input.is_action_just_pressed("ux_down"):
-    mouse_activity = false
-    Cursor.mouse_active = false
-    _change_focus_inventory(_get_neighbor(SELF), _get_neighbor(DOWN))
-  elif Input.is_action_just_pressed("player_cancel"):
-    if Cursor.holding:
-      var n = InventoryGrid.get_child(held_index)
-      n.from_item(Cursor.item)
-      Cursor.clear()
-      held_index = -1
-    else:
-      emit_signal("cancel")
-  elif (mouse_activity and Input.is_action_just_pressed("ux_left_click")) or Input.is_action_just_pressed("ux_select"):
-    if focused:
+  if focused:
+    if Input.is_action_just_pressed("ux_left"):
+      mouse_activity = false
+      Cursor.mouse_active = false
+      _change_focus_inventory(_get_neighbor(SELF), _get_neighbor(LEFT))
+    elif Input.is_action_just_pressed("ux_right"):
+      mouse_activity = false
+      Cursor.mouse_active = false
+      _change_focus_inventory(_get_neighbor(SELF), _get_neighbor(RIGHT))
+    elif Input.is_action_just_pressed("ux_up"):
+      mouse_activity = false
+      Cursor.mouse_active = false
+      _change_focus_inventory(_get_neighbor(SELF), _get_neighbor(UP))
+    elif Input.is_action_just_pressed("ux_down"):
+      mouse_activity = false
+      Cursor.mouse_active = false
+      _change_focus_inventory(_get_neighbor(SELF), _get_neighbor(DOWN))
+    elif Input.is_action_just_pressed("player_cancel"):
+      if Cursor.holding:
+        var n = InventoryGrid.get_child(held_index)
+        n.from_item(Cursor.item)
+        Cursor.clear()
+        held_index = -1
+      else:
+        emit_signal("cancel")
+    elif (mouse_activity and Input.is_action_just_pressed("ux_left_click")) or Input.is_action_just_pressed("ux_select"):
       var idx = grid.get_current() - 1
       var n = InventoryGrid.get_child(idx)
       var item = n.item
@@ -85,7 +91,7 @@ func _change_focus_inventory(old, new):
   InventoryGrid.get_child(old - 1).defocus()
   InventoryGrid.get_child(new - 1).focus()
   Cursor.align(InventoryGrid.get_child(new - 1))
-  $VBoxContainer/Description/Label.text = InventoryGrid.get_child(new - 1).get_description()
+  $VBoxContainer/Description/Label.text = str(InventoryGrid.get_child(new - 1).get_description())
   _wait_and_reset(0.125)
   
 func defocus_current():

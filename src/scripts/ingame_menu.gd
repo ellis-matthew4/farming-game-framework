@@ -17,6 +17,7 @@ func _ready():
   MenuContainer.add_child(instanced_menu)
   instanced_menu.cancel.connect(self._reclaim_focus)
   MenuSelection.get_child(0).color = Color.YELLOW
+  instanced_menu.focus()
   await get_tree().create_timer(0.1).timeout
   can_hide = true
   

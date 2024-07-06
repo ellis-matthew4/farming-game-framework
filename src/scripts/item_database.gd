@@ -14,11 +14,13 @@ func _ready():
     'weed': Item.new("Weed", 1, "res://assets/items/sickle.png", "A weed. Not very useful."),
     'generic_crop': Food.new("Sample Crop", 50, "res://assets/product.png", 10, "A fruit of some kind."),
     'generic_seeds': Seeds.new("Sample Seeds", 20, "res://assets/crop.png", 3, "generic_crop"),
-    'fertilizer': Consumable.new("Fertilizer", 40, "res://assets/fertilizer.png", "A mix of high-grade animal manures guaranteed to make your fields more fertile."),
+    'fertilizer': Consumable.new("Fertilizer", 40, "res://assets/fertilizer.png", "A mix of high-grade animal manure guaranteed to make your fields more fertile."),
     'generic_sapling': Sapling.new("Sample Sapling", 100, "res://assets/sapling.png", 30, "generic_crop", 1, 28)
   }
   for k in items.keys():
     items[k].key = k
+    if items[k] is Sapling or items[k] is Seeds:
+      items[k].prepare_rendered_data()
 
 func get_item(id) -> Item:
   return items[id]

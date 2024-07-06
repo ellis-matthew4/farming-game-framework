@@ -16,7 +16,7 @@ func _init(n: String, v: int, tx_path: String, stages: int, prd: String, rh: boo
   reharvestable = rh
   reharvest_stage = rhs
     
-func _ready():
+func prepare_rendered_data():
   description = str("Seeds to grow ", get_product().item_name, ". Takes ", max_stages, " days to grow.")
   if reharvestable:
     description += " Regrows after harvesting."

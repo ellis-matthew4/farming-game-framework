@@ -18,8 +18,8 @@ func _init(n: String, v: int, tx_path: String, stages: int, prd: String, sesn: i
   reharvest_stage = rhs
   season = sesn
     
-func _ready():
-  description = str("Sapling that grows to produce ", get_product().item_name, "s. Takes ", max_stages, " days to grow.")
+func prepare_rendered_data():
+  description = str("Seeds to grow ", get_product().item_name, ". Takes ", max_stages, " days to grow.")
   if reharvestable:
     description += " Regrows after harvesting."
 

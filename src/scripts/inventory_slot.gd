@@ -43,10 +43,10 @@ func lock():
   color = Color.DARK_SLATE_GRAY
 
 func _on_area_2d_mouse_entered():
-  if !locked and context == 'inventory':
+  if !locked and context == 'focused_inventory':
     focus()
     emit_signal('mouse_activity')
     
 func _on_area_2d_mouse_exited():
-  if !locked and context == 'inventory':
+  if !locked and context == 'focused_inventory':
     defocus()
