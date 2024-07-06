@@ -63,7 +63,7 @@ func render(state): # draw from freshly loaded state
 func increment():
   for c in get_children():
     if c is Soil:
-      if c.watered:
+      if c.watered or c.crop is Sapling:
         c.increment_stage()
       if c.crop == null:
         var r = randi() % 100

@@ -5,7 +5,7 @@ enum { UP, DOWN, LEFT, RIGHT, SELF }
 @onready var inventoryScene = preload("res://scenes/Menus/inventoryMenu.tscn")
 @onready var MenuContainer = get_node('ColorRect/VBoxContainer')
 var can_hide = false
-var focused_menu = true
+var focused_menu = false
 var can_change_focus = true
 var menu_grid = Grid.new(1, 3)
 

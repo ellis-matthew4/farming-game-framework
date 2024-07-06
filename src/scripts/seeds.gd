@@ -21,7 +21,7 @@ func prepare_rendered_data():
   if reharvestable:
     description += " Regrows after harvesting."
   
-
+# TODO: Ignore image_stage 0, let that be the held item sprite
 func get_texture_as_sprite2D(stage):
   stage = max(0, stage - 1)
   var max_image_stages = texture.get_width() / Globals.MAP_GRID_SIZE
@@ -31,9 +31,12 @@ func get_texture_as_sprite2D(stage):
   tx.texture = texture
   tx.offset = Vector2(Globals.MAP_GRID_SIZE/2, Globals.MAP_GRID_SIZE/2)
   tx.region_enabled = true
-  tx.region_rect = Rect2(image_stage * Globals.MAP_GRID_SIZE, 0, Globals.MAP_GRID_SIZE, Globals.MAP_GRID_SIZE)
+  tx.region_rect = render_region(image_stage)
   tx.centered = true
   return tx
+  
+func render_region(stage: int):
+  return Rect2(stage * Globals.MAP_GRID_SIZE, 0, Globals.MAP_GRID_SIZE, Globals.MAP_GRID_SIZE)
 
 func get_product():
   return ItemDatabase.get_item(product_id)

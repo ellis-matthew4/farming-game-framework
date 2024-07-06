@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cwdsj3gxhnelb"]
+[gd_scene load_steps=4 format=3 uid="uid://cwdsj3gxhnelb"]
 
 [ext_resource type="Script" path="res://scripts/inventory_slot.gd" id="1_acp5w"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lb40j"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e4ajj"]
 size = Vector2(64, 64)
@@ -24,6 +26,7 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+texture = SubResource("AtlasTexture_lb40j")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1

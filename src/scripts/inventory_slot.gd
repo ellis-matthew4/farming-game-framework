@@ -11,17 +11,28 @@ func from_item(i: Item):
     clear()
     return
   item = i
-  set_texture(i.texture)
+  var texture = i.texture
+  set_texture(texture, get_region_rect())
   var text = "" if item.quantity <= 1 else str(item.quantity)
   set_label(text)
+  
+func get_region_rect():
+  if item.has_method("render_region"):
+    return item.render_region(0)
+  else:
+    var dim = item.texture.get_width()
+    return Rect2(0,0,dim, dim)
   
 func clear():
   set_texture(null)
   set_label("")
   item = null
 
-func set_texture(tx: Texture):
-  $TextureRect.texture = tx
+func set_texture(tx: Texture, r: Rect2 = Rect2(0, 0, Globals.MAP_GRID_SIZE, Globals.MAP_GRID_SIZE)):
+  var atlas = AtlasTexture.new()
+  atlas.atlas = tx
+  atlas.region = r
+  $TextureRect.texture = atlas
   
 func set_label(tx: String):
   $Label.text = tx

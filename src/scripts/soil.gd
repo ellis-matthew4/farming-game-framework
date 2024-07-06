@@ -46,6 +46,7 @@ func sow(i, s: int = 1):
       print("ERR: MISSING_CROP")
     if crop is Sapling:
       solid()
+      set_soil_texture(null)
 
 func hammer():
   set_soil_texture(null)
@@ -59,7 +60,7 @@ func fertilize():
 func interact():
   if crop is Sapling:
     # assume reharvestable
-    if stage >= crop.reharvest_stage:
+    if stage >= crop.max_stages:
       set_crop_texture(null)
       set_crop_texture(crop.get_texture_as_sprite2D(crop.reharvest_stage))
       stage = crop.reharvest_stage
@@ -125,4 +126,7 @@ func spawn_branch():
   pass
 
 func spawn_weed():
+  pass
+
+func spawn_sapling():
   pass
