@@ -33,6 +33,9 @@ var dynamicLayer
 var map = preload("res://scenes/map.tscn")
 var ml_scene = preload("res://scenes/Menus/menu_layer.tscn")
 
+# Variables for cheats
+var player_position
+
 # Methods - Global functions that need to be called outside the context of the game objects
 func get_state():
   return {
@@ -137,6 +140,8 @@ func increment_day():
     weather = 'sunny'
   day += 1
   clock.time = 360
+  weather = 'rain' # debug
+  print("Setting weather to ", weather)
   calendar.parse_day(day)
   
 func repopulate_quick_inventory():
@@ -173,6 +178,7 @@ func _game_start():
   try_add_inventory(ItemDatabase.get_item('generic_crop'))
   try_add_inventory(ItemDatabase.get_item('generic_seeds'), 9)
   try_add_inventory(ItemDatabase.get_item('fertilizer'))
+  try_add_inventory(ItemDatabase.get_item('generic_sapling'))
 
 func _input(event):
   if (event is InputEventKey):

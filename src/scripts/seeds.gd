@@ -24,10 +24,14 @@ func _ready():
 
 func get_texture_as_sprite2D(stage):
   stage = max(0, stage - 1)
+  var max_image_stages = texture.get_width() / Globals.MAP_GRID_SIZE
+  var image_stage_percentage = (stage * 1.0) / max_image_stages
+  var image_stage = max_image_stages * image_stage_percentage
   var tx = Sprite2D.new()
   tx.texture = texture
+  tx.offset = Vector2(Globals.MAP_GRID_SIZE/2, Globals.MAP_GRID_SIZE/2)
   tx.region_enabled = true
-  tx.region_rect = Rect2(stage * Globals.MAP_GRID_SIZE, 0, Globals.MAP_GRID_SIZE, Globals.MAP_GRID_SIZE)
+  tx.region_rect = Rect2(image_stage * Globals.MAP_GRID_SIZE, 0, Globals.MAP_GRID_SIZE, Globals.MAP_GRID_SIZE)
   tx.centered = true
   return tx
 

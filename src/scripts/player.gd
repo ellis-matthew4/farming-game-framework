@@ -15,6 +15,8 @@ signal reached
 func _ready():
   Globals.player = self
   Globals.camera = get_node("Camera2D")
+  if Globals.player_position != null:
+    global_position = Globals.player_position
   self.turn.connect(_turn)
   self.walk.connect(_walk)
   self.reached.connect(_reached)
@@ -33,7 +35,8 @@ func _physics_process(delta):
             held = true
       _interact(held)
     elif Input.is_action_just_pressed("player_cancel"):
-      Globals.increment_day()
+      Globals.player_position = global_position
+      Globals.sleep()
     elif Input.is_action_just_pressed("ux_menu"):
       Globals.menuLayer.ig_menu()
     elif Input.is_action_just_pressed("ux_pause"):
@@ -115,6 +118,7 @@ func _interact(held):
   var li = get_node("InteractPivot/InteractionArea").get_overlapping_bodies()
   for n in li:
     if n.is_in_group("Bed"):
+      Globals.player_position = null
       Globals.sleep()
       return
     elif n.is_in_group("Door"):
@@ -128,6 +132,10 @@ func _interact(held):
     elif n is GroundItem:
       n.interact()
       return
+    elif n is Soil:
+      var interacted = n.interact()
+      if interacted:
+        return
   var currently_held_item = Globals.get_held_item()
   if currently_held_item is Tool:
     var tool = currently_held_item.item_name.to_snake_case()
@@ -152,7 +160,7 @@ func _interact(held):
   elif currently_held_item is Food:
     currently_held_item.consume()
     Globals.repopulate_quick_inventory()
-  elif currently_held_item is Seeds:
+  elif currently_held_item is Seeds or currently_held_item is Sapling:
     print("seeds")
     for n in li:
       if n is Soil and n.tilled:

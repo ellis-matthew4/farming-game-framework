@@ -25,7 +25,6 @@ func set_crop_texture(spr: Sprite2D):
   if is_instance_valid(spr):
     add_child(spr)
     crop_sprite = spr
-    spr.offset = Vector2(Globals.MAP_GRID_SIZE / 2, Globals.MAP_GRID_SIZE / 2)
   else:
     crop_sprite.queue_free()
 
@@ -38,13 +37,15 @@ func water():
     set_soil_texture(soil_txt_w)
     watered = true
   
-func sow(i: Seeds, s: int = 1):
+func sow(i, s: int = 1):
   if tilled:
     set_crop_texture(i.get_texture_as_sprite2D(s))
     crop = i
     stage = s
     if crop == null:
       print("ERR: MISSING_CROP")
+    if crop is Sapling:
+      solid()
 
 func hammer():
   set_soil_texture(null)
@@ -55,11 +56,34 @@ func axe():
 func fertilize():
   quality = min(4, quality + 1)
   
+func interact():
+  if crop is Sapling:
+    # assume reharvestable
+    if stage >= crop.reharvest_stage:
+      set_crop_texture(null)
+      set_crop_texture(crop.get_texture_as_sprite2D(crop.reharvest_stage))
+      stage = crop.reharvest_stage
+      var count_to_drop = (randi() % 3) + 1
+      var item_to_drop = crop.get_product()
+      var origin = Vector2(snap/2, snap/2)
+      var offsets = [
+        origin + Vector2(Globals.MAP_GRID_SIZE, 0), 
+        origin + Vector2(-Globals.MAP_GRID_SIZE, 0), 
+        Vector2(0, Globals.MAP_GRID_SIZE)
+      ]
+      for i in range(0, count_to_drop):
+        var floater = float_item.instantiate()
+        floater.create(item_to_drop)
+        Globals.add_to_dynamic_layer(floater, global_position + offsets[i])
+        floater.z_index = Globals.player.z_index + 1
+      return true
+  return false
+      
 func sickle():
-  if crop == null:
+  if crop == null or crop is Sapling:
     return
   if crop.reharvestable:
-    if stage > crop.reharvest_stage:
+    if stage >= crop.reharvest_stage:
       set_crop_texture(crop.get_texture_as_sprite2D(crop.reharvest_stage))
       stage = crop.reharvest_stage
     else:
@@ -87,6 +111,12 @@ func crop_idx():
     return crop.key
   else:
     return ''
+    
+func solid():
+  set_collision_layer_value(2, true)
+
+func nonsolid():
+  set_collision_layer_value(2, false)
   
 func spawn_rock():
   pass

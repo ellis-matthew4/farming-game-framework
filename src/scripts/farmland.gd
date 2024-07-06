@@ -37,23 +37,24 @@ func get_state():
   var state = []
   for c in get_children():
     if c is Soil:
-      var encoded = str(c.quality, "1" if c.tilled else "0", c.stage, c.crop_idx())
+      var encoded = str(c.quality, "1" if c.tilled else "0", '.', c.stage, '.', c.crop_idx())
       state.append(encoded)
   return state
 
 func render(state): # draw from freshly loaded state
   var i = 0
   for encoded in state:
+    var k = encoded.split('.')
     var soil = soil_scene.instantiate()
     add_child(soil)
     soil.position = _get_coordinates(i)
-    soil.quality = int(encoded.substr(0, 1))
-    if encoded.substr(1, 1) == '1':
+    soil.quality = int(k[0].substr(0, 1))
+    if k[0].substr(1, 1) == '1':
       soil.hoe()
     if Globals.weather in ['rain', 'severe']:
       soil.water()
-    var stage = int(encoded.substr(2, 1))
-    var crop_id = encoded.substr(3, -1)
+    var stage = int(k[1])
+    var crop_id = k[2]
     if crop_id != '':
       var crop = ItemDatabase.get_item(crop_id)
       soil.sow(crop, stage)
