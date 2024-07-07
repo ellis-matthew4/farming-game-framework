@@ -1,8 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://bwehqhews1spy"]
+[gd_scene load_steps=17 format=3 uid="uid://bwehqhews1spy"]
 
 [ext_resource type="Script" path="res://scripts/menu_layer.gd" id="1_umgjm"]
 [ext_resource type="PackedScene" uid="uid://ydgkkqqwkjhb" path="res://scenes/Menus/quick_inventory.tscn" id="2_j2ln7"]
 [ext_resource type="Shader" path="res://assets/shaders/weather_effect.gdshader" id="2_xppdk"]
+[ext_resource type="PackedScene" uid="uid://beegtvyc7d17t" path="res://xdl/Display.tscn" id="4_6d05k"]
 
 [sub_resource type="Animation" id="Animation_gdtri"]
 length = 0.001
@@ -251,3 +252,6 @@ offset_bottom = 648.0
 color = Color(0.501961, 0.00392157, 0.807843, 1)
 
 [node name="quick_inventory" parent="." instance=ExtResource("2_j2ln7")]
+
+[node name="xdl" parent="." instance=ExtResource("4_6d05k")]
+visible = false

@@ -1,0 +1,80 @@
+[gd_scene load_steps=4 format=3 uid="uid://beegtvyc7d17t"]
+
+[ext_resource type="Script" path="res://Display.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b0mh4q4ryfen3" path="res://xdl/assets/textbox.png" id="22"]
+[ext_resource type="Texture2D" uid="uid://dimd3gcqqx8p4" path="res://xdl/assets/namebox.png" id="23"]
+
+[node name="root" type="CanvasLayer"]
+process_mode = 2
+script = ExtResource("1")
+
+[node name="Characters" type="Node2D" parent="."]
+
+[node name="Scenes" type="Node2D" parent="."]
+z_index = -1
+
+[node name="TextBox" type="Sprite2D" parent="."]
+position = Vector2(640, 598)
+texture = ExtResource("22")
+
+[node name="Namebox" type="Sprite2D" parent="TextBox"]
+position = Vector2(-296.562, -84.3432)
+texture = ExtResource("23")
+
+[node name="TextControl" type="Control" parent="TextBox"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Dialogue" type="Label" parent="TextBox/TextControl"]
+layout_mode = 0
+offset_left = -352.0
+offset_top = -44.0
+offset_right = 354.0
+offset_bottom = 59.0
+text = "This is sample text"
+
+[node name="Name" type="Label" parent="TextBox/TextControl"]
+layout_mode = 0
+offset_left = -373.0
+offset_top = -99.0
+offset_right = -181.0
+offset_bottom = -64.0
+text = "Name of character go here"
+
+[node name="Menu" type="VBoxContainer" parent="."]
+visible = false
+custom_minimum_size = Vector2(790, 35)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -395.0
+offset_top = -204.0
+offset_right = 395.0
+offset_bottom = -169.0
+alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="Centered" type="Label" parent="."]
+custom_minimum_size = Vector2(720, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -40.0
+offset_right = 360.0
+offset_bottom = 8.0
+
+[node name="Positions" type="Node2D" parent="."]
+
+[node name="left" type="Marker2D" parent="Positions"]
+position = Vector2(384, 432)
+
+[node name="right" type="Marker2D" parent="Positions"]
+position = Vector2(896, 432)
