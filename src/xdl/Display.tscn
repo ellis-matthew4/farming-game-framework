@@ -14,7 +14,7 @@ script = ExtResource("1")
 z_index = -1
 
 [node name="TextBox" type="Sprite2D" parent="."]
-position = Vector2(640, 598)
+position = Vector2(586, 546)
 texture = ExtResource("22")
 
 [node name="Namebox" type="Sprite2D" parent="TextBox"]
@@ -37,10 +37,10 @@ text = "This is sample text"
 
 [node name="Name" type="Label" parent="TextBox/TextControl"]
 layout_mode = 0
-offset_left = -373.0
-offset_top = -99.0
-offset_right = -181.0
-offset_bottom = -64.0
+offset_left = -402.0
+offset_top = -102.0
+offset_right = -195.0
+offset_bottom = -67.0
 text = "Name of character go here"
 
 [node name="Menu" type="VBoxContainer" parent="."]
