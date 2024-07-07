@@ -23,6 +23,9 @@ func _ready():
   emit_signal("turn", facing)
 
 func _physics_process(delta):
+  if !moving:
+    $AnimatedSprite2D.frame = 0
+    $AnimatedSprite2D.stop()
   if not Globals.movement_blocked:
     if Input.is_action_just_pressed("player_interact"):
       velocity = Vector2(0,0)
@@ -214,12 +217,13 @@ func _force_realign():
   
 func _turn(dir):
   var animation_keys = {
-    DIRS.LEFT: 'left',
+    DIRS.LEFT: 'side',
     DIRS.DOWN: 'down',
     DIRS.UP: 'up',
-    DIRS.RIGHT: 'right'
+    DIRS.RIGHT: 'side'
   }
   $AnimatedSprite2D.play(animation_keys[dir])
+  $AnimatedSprite2D.flip_h = true if dir == DIRS.RIGHT else false
   facing = dir
   _align_interact_pivot(facing)
   

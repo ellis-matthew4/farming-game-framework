@@ -20,7 +20,7 @@ var line
 var TEXT_SPEED = 10
 var AUTO_SPEED = 2
 
-var path_to_folder = "res://output/" # Change this!
+var path_to_folder = "res://xdl/output/" # Change this!
 var currentScript
 var currentScene
 
