@@ -46,6 +46,8 @@ func _physics_process(delta):
       Globals.menuLayer.pause_menu()
     elif Input.is_action_just_pressed("ux_debug"):
       Globals.menuLayer.debug_menu()
+    elif Input.is_action_just_pressed("debug_talk"):
+      Globals.npc_talk('npc')
   
     if moving:
       if _snapped():

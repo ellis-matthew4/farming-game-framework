@@ -1,0 +1,11 @@
+label sample_npc_interact1
+    npc "What it do, big guy? Haven't seen you in ages. How have you been? How are your kids? What's the deal? What's the airspeed velocity of an unladen swallow?"
+    return
+
+label sample_npc_interact2
+    npc "What's poppin, b?"
+    return
+
+label sample_npc_interact3
+    npc "Need something?"
+    return

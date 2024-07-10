@@ -13,6 +13,8 @@ var skip = false
 var auto = false
 var working = false
 var able = true
+var rendering_line = false
+var rendering_index = 1
 
 var tempSave = null
 
@@ -64,24 +66,15 @@ func getCharacterStates():
   return d
 
 func _ready():
-  read("script1.json")
-  _call("start")
-  set_process(true)
+  read("sample.json")
   
-func _process(delta):
-  if Input.is_action_just_pressed("ui_page_up"):
-    tempSave = serialize()
-  if Input.is_action_just_pressed("ui_page_down"):
-    if tempSave != null:
-      deserialize(tempSave)
+func _physics_process(delta):
   if active:
     if len(stack) > 0: #Triggers upon calling or jumping
-      # get_tree().call_group("playable_characters", "hideGUI") #My games' command to hide the HUD
-      get_tree().paused = true #Remove this to disable pausing upon dialogue load
       get_node("TextBox").visible = true
       if len(stack[0]) == 0:
         stack.pop_front()
-      if Input.is_action_just_pressed("ui_select"):
+      if Input.is_action_just_pressed("ux_select"):
         nextLine()
       elif skip:
         if len(stack) > 0:
@@ -89,7 +82,7 @@ func _process(delta):
             nextLine()
         else:
           end()
-    elif Input.is_action_just_pressed("ui_select") and working:
+    elif Input.is_action_just_pressed("ux_select") and working:
       end()
       # get_tree().call_group("playable_characters", "showGUI") #My games' command to show the HUD
   if Input.is_key_pressed(KEY_CTRL):
@@ -111,14 +104,18 @@ func read(filename):
   currentScript = filename
 
 func nextLine():
-  if stack[0]["index"] >= len(labels[stack[0]["label"]]):
-    stack.pop_front()
-  if len(stack) == 0:
-    return
-  var cLabel = labels[stack[0]["label"]]
-  line = cLabel[stack[0]["index"]]
-  stack[0]["index"] += 1
-  statement()
+  if rendering_line:
+    rendering_index = len(line["String"])
+  else:
+    if stack[0]["index"] >= len(labels[stack[0]["label"]]):
+      stack.pop_front()
+    if len(stack) == 0:
+      end()
+      return
+    var cLabel = labels[stack[0]["label"]]
+    line = cLabel[stack[0]["index"]]
+    stack[0]["index"] += 1
+    statement()
 
 func statement():
   if $Centered.text != "":
@@ -200,13 +197,15 @@ func dialogue(): # Displays a line of dialogue
   nameBox.visible = true
   nameBox.text = line["char"].capitalize()
   line["String"] = line["String"].format(variables)
-  rollingDisplay(1)
+  rendering_index = 1
+  rollingDisplay()
 
 func adialogue():
   $TextBox/Namebox.visible = false
   nameBox.visible = false
   line["String"] = line["String"].format(variables)
-  rollingDisplay(1)
+  rendering_index = 1
+  rollingDisplay()
   
 func centered(index):
   if line["action"] == "centered":
@@ -217,13 +216,19 @@ func centered(index):
     else:
       emit_signal("lineFinished")
   
-func rollingDisplay(index):
+func rollingDisplay():
+  if line == {}:
+    return
   if line["action"] in ["dialogue", "adialogue"]:
-    if index <= len(line["String"]):
-      textBox.text = line["String"].substr(0,index)
+    if rendering_index <= len(line["String"]):
+      rendering_line = true
+      textBox.text = line["String"].substr(0,rendering_index)
       await get_tree().create_timer(pow(10,-TEXT_SPEED)).timeout
-      rollingDisplay(index + 1)
+      rendering_index += 1
+      rollingDisplay()
     else:
+      rendering_line = false
+      textBox.text = line["String"]
       emit_signal("lineFinished")
   
 func Scene(): # Changes the backdrop to the current scene
@@ -240,7 +245,6 @@ func loadScene(s): # Changes the backdrop to a given string
     
 func end():
   line = {}
-  get_tree().paused = false
   hideAll()
   working = false
   emit_signal("done")

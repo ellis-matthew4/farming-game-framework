@@ -28,6 +28,7 @@ var camera
 var clock
 var calendar
 var dynamicLayer
+var dialog_stack = DialogDatabase.base_stack
 
 # Preloads - Important classes to keep a base in memory at all times
 var map = preload("res://scenes/map.tscn")
@@ -155,6 +156,13 @@ func add_to_dynamic_layer(node: Node, pos: Vector2):
 func ship(item: Item):
   shipping_cache += item.value
   item.quantity -= 1
+  
+func npc_talk(name):
+  movement_blocked = true
+  var label = dialog_stack[name][0].pop_front() if len(dialog_stack[name][0]) > 1 else dialog_stack[name][0][0]
+  menuLayer.xdl_call(label)
+  await menuLayer.xdl_done
+  movement_blocked = false
 
 # Global processes
 func _ready():

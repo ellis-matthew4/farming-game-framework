@@ -1,0 +1,49 @@
+# include "script2.txt"
+
+label start:
+	scene school
+	show harry neutral at left
+	show kayla neutral at right
+	harry "This is a test."
+	kayla happy "So it is."
+	var k = 1
+	if k + 1 == 2 call next
+	harry sad "It's pretty boring though."
+	kayla sad "So it is."
+	"This is a test of an anonymous message."
+	centered "This is a test of a centered message."
+	call next
+	return
+#poo poo pee pee
+label next:
+	harry "This is another scene"
+	jump final
+	return
+	
+label final:
+	kayla "This is the final scene"
+	harry "Did you like this demo?"
+	menu:
+		option "Yes" call finalc1
+		option "No" jump finalc2
+	window hide
+	var num = 5
+	var bool = true
+	var float = 5.3221
+	var str = "meme"
+	action meme
+	action keyword "memes"
+	window show
+	play screenShake
+	harry "Test to see if variables are being skipped properly."
+	return
+	
+label finalc1:
+	kayla "That's good."
+	harry "I didn't."
+	return
+	
+label finalc2:
+	harry "I told you."
+	kayla "I see..."
+	return

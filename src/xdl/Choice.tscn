@@ -1,54 +1,23 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://bg36d6dj7pk36"]
 
-[ext_resource path="res://assets/choice_idle_background.png" type="Texture2D" id=1]
-[ext_resource path="res://assets/choice_hover_background.png" type="Texture2D" id=2]
-[ext_resource path="res://Choice.gd" type="Script" id=3]
+[ext_resource type="Texture2D" uid="uid://o4uitgn1fid8" path="res://xdl/assets/choice_idle_background.png" id="1_66b4b"]
+[ext_resource type="Script" path="res://xdl/Choice.gd" id="1_ktpi7"]
+[ext_resource type="Texture2D" uid="uid://djk5xocimrw4y" path="res://xdl/assets/choice_hover_background.png" id="2_ycuni"]
 
 [node name="Choice" type="TextureButton"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
 offset_right = 790.0
 offset_bottom = 35.0
-pivot_offset = Vector2( 0, 0 )
-clip_contents = false
-focus_mode = 2
-mouse_filter = 0
-mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
-size_flags_vertical = 1
-toggle_mode = false
-focus_mode = 2
-shortcut = null
-group = null
-texture_normal = ExtResource( 1 )
-texture_hover = ExtResource( 2 )
-texture_focused = ExtResource( 2 )
-script = ExtResource( 3 )
+texture_normal = ExtResource("1_66b4b")
+texture_hover = ExtResource("2_ycuni")
+script = ExtResource("1_ktpi7")
 
-[node name="Label" type="Label" parent="." index="0"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
 offset_right = 790.0
 offset_bottom = 35.0
-pivot_offset = Vector2( 0, 0 )
-clip_contents = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 4
 text = "Sample Choice"
-align = 1
-valign = 1
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="." to="." method="_on_Choice_pressed"]
-
-

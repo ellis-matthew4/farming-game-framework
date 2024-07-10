@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dimd3gcqqx8p4" path="res://xdl/assets/namebox.png" id="23"]
 
 [node name="root" type="CanvasLayer"]
-process_mode = 2
+process_mode = 3
 script = ExtResource("1_a216y")
 
 [node name="Characters" type="Node2D" parent="."]
@@ -34,6 +34,7 @@ offset_top = -44.0
 offset_right = 354.0
 offset_bottom = 59.0
 text = "This is sample text"
+autowrap_mode = 2
 
 [node name="Name" type="Label" parent="TextBox/TextControl"]
 layout_mode = 0

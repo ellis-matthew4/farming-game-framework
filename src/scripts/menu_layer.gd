@@ -7,11 +7,13 @@ var debug = preload("res://scenes/Menus/debug.tscn")
 var time_display = preload("res://scenes/Menus/time_display.tscn")
 var debugging = false
 var reset_timer = false
+var time_display_inst
 
 signal repopulate_qi
+signal xdl_done
 
 func _ready():
-  var time_display_inst = time_display.instantiate()
+  time_display_inst = time_display.instantiate()
   add_child(time_display_inst)
   $AnimationPlayer/DayNightCycle.show()
   repopulate_qi.connect($quick_inventory._populate)
@@ -68,3 +70,18 @@ func transition(ts):
   if ts == "fade_in":
     await $AnimationPlayer.animation_finished
     $quick_inventory.show()
+
+func xdl_call(label):
+  if not $xdl.able:
+    await get_tree().create_timer(0.2).timeout
+    return await xdl_call(label)
+  time_display_inst.hide()
+  $quick_inventory.hide()
+  $xdl.show()
+  $xdl._call(label)
+  await $xdl.done
+  print("XDL Finished ", label)
+  $quick_inventory.show()
+  time_display_inst.show()
+  $xdl.hide()
+  emit_signal("xdl_done")
