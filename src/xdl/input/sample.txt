@@ -9,3 +9,17 @@ label sample_npc_interact2
 label sample_npc_interact3
     npc "Need something?"
     return
+
+label sample_npc_branching
+    npc "Which branch?"
+    menu:
+        option "1" call sample_npc_interact1
+        option "2" call sample_npc_interact2
+        option "3" call sample_npc_interact3
+    action pass
+    npc "Anyway, it was nice talking to you."
+    return
+
+label npc_gift_liked
+    npc "Hey, thanks!"
+    return

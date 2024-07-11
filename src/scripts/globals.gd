@@ -163,6 +163,12 @@ func npc_talk(name):
   menuLayer.xdl_call(label)
   await menuLayer.xdl_done
   movement_blocked = false
+  
+func npc_talk_label(label):
+  movement_blocked = true
+  menuLayer.xdl_call(label)
+  await menuLayer.xdl_done
+  movement_blocked = false
 
 # Global processes
 func _ready():

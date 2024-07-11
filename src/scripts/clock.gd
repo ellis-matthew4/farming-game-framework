@@ -8,6 +8,7 @@ var increment = 1
 enum { MORNING, DAY, EVENING, NIGHT }
 
 signal day_change
+signal tick
 
 func _ready():
   Globals.clock = self
@@ -34,6 +35,7 @@ func _increment_time():
       emit_signal("day_change")
     elif time == 0:
       Globals.increment_day()
+    emit_signal('tick')
   _increment_time()
 
 func _format(num):

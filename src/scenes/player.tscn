@@ -75,7 +75,7 @@ size = Vector2(8, 8)
 
 [node name="player" type="CharacterBody2D"]
 z_index = 5
-collision_mask = 2
+collision_mask = 34
 script = ExtResource("1_5rxtb")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

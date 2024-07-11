@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bfq56xy2562sw"]
+[gd_scene load_steps=16 format=3 uid="uid://bfq56xy2562sw"]
 
 [ext_resource type="PackedScene" uid="uid://cc81lp1slmt20" path="res://scenes/player.tscn" id="1_2d27c"]
 [ext_resource type="Texture2D" uid="uid://deuegakx8gbpk" path="res://assets/free.png" id="1_w3cr0"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://b6tvsetr2bnre" path="res://scenes/door.tscn" id="6_y20lb"]
 [ext_resource type="Script" path="res://scripts/dynamic_layer.gd" id="7_mdgsm"]
 [ext_resource type="Texture2D" uid="uid://dorn8beys0l0k" path="res://assets/shipping_box.png" id="7_tdd76"]
+[ext_resource type="PackedScene" uid="uid://emayxhoa48w5" path="res://scenes/npc.tscn" id="9_xx7rh"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3hg2n"]
 texture = ExtResource("1_w3cr0")
@@ -256,6 +257,10 @@ position = Vector2(32, -272)
 [node name="Camera2D" type="Camera2D" parent="ActorLayer/player"]
 offset = Vector2(8, 24)
 zoom = Vector2(4, 4)
+
+[node name="NPC" parent="ActorLayer" instance=ExtResource("9_xx7rh")]
+position = Vector2(-64, 0)
+npc_name = "npc"
 
 [node name="StaticLayer" type="Node2D" parent="."]
 

@@ -47,7 +47,7 @@ func _physics_process(delta):
     elif Input.is_action_just_pressed("ux_debug"):
       Globals.menuLayer.debug_menu()
     elif Input.is_action_just_pressed("debug_talk"):
-      Globals.npc_talk('npc')
+      Globals.npc_talk_label('sample_npc_branching')
   
     if moving:
       if _snapped():
@@ -121,6 +121,7 @@ func _interact(held):
     _set_tool_interact_area_size(held)
     await get_tree().create_timer(0.05).timeout
   var li = get_node("InteractPivot/InteractionArea").get_overlapping_bodies()
+  var currently_held_item = Globals.get_held_item()
   for n in li:
     if n.is_in_group("Bed"):
       Globals.player_position = null
@@ -141,7 +142,13 @@ func _interact(held):
       var interacted = n.interact()
       if interacted:
         return
-  var currently_held_item = Globals.get_held_item()
+    elif n is NPC:
+      var npc_name = n.npc_name
+      if currently_held_item is Consumable:
+        var like_level = n.gift(currently_held_item)
+        Globals.npc_talk_label(str(npc_name, "_gift_", like_level))
+      else:
+        Globals.npc_talk(npc_name)
   if currently_held_item is Tool:
     var tool = currently_held_item.item_name.to_snake_case()
     var animation = currently_held_item.animation_key + DIRS.keys()[facing].to_lower()
