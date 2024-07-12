@@ -18,6 +18,7 @@ var snap_point: Vector2
 var moving: bool
 var in_dialog = false
 
+var origin
 # target represents the next space on the grid to move to
 var target
 # destination represents the actual coordinates the npc is traveling to
@@ -34,6 +35,7 @@ signal walk
 signal reached
 
 func _ready():
+  origin = global_position
   var path = str("res://assets/schedules/", npc_name, ".json")
   var file = FileAccess.open(path, FileAccess.READ)
   var data = file.get_as_text()
@@ -60,6 +62,14 @@ func _parse(data):
       positions.append(Vector3(pos['x'], pos['y'], pos['z']))
     result[key] = positions
   return result
+
+func teleport_based_on_schedule():
+  for t in schedule.keys():
+    if t > Globals.clock.time:
+      var pos = schedule[t].last
+      global_position = Vector2(pos.x, pos.y)
+      return
+  global_position = origin
 
 func navigate_to_point(point):
   if point == null:
