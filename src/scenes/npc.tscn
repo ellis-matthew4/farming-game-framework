@@ -68,11 +68,12 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v7rki"]
 size = Vector2(16, 16)
 
-[node name="NPC" type="CharacterBody2D"]
+[node name="NPC" type="CharacterBody2D" groups=["NPC"]]
 z_index = 2
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("1_4uill")
+birthday = "0/2"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 modulate = Color(1, 0.431373, 0.556863, 1)

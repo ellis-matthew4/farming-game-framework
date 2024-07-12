@@ -20,6 +20,26 @@ label sample_npc_branching
     npc "Anyway, it was nice talking to you."
     return
 
+label npc_gift_worst
+    npc "Is this a joke? Get that out of my face."
+    return
+
+label npc_gift_hated
+    npc "Hey, I know you mean well, but I hate those."
+    return
+
+label npc_gift_disliked
+    npc "Oh. Uh, thanks?"
+    return
+
 label npc_gift_liked
     npc "Hey, thanks!"
+    return
+
+label npc_gift_loved
+    npc "Wow, thanks! I love this!"
+    return
+
+label npc_gift_best
+    npc "I don't know how you knew, but I really, REALLY love these. Thank you so much!"
     return

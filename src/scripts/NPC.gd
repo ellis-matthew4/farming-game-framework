@@ -3,6 +3,12 @@ extends CharacterBody2D
 class_name NPC
 
 @export var npc_name: String
+@export var can_marry: bool
+@export var spouse: bool
+@export var birthday: String # expects SEASON/DAY
+
+var birth_month
+var birth_day
 
 enum DIRS { DOWN, UP, LEFT, RIGHT, NONE }
 var facing = DIRS.DOWN
@@ -10,6 +16,7 @@ var facing = DIRS.DOWN
 var snap = Globals.MAP_GRID_SIZE
 var snap_point: Vector2
 var moving: bool
+var in_dialog = false
 
 # target represents the next space on the grid to move to
 var target
@@ -18,6 +25,9 @@ var destination: Vector2
 
 var travel_stack = []
 var schedule
+
+var buffered_anim
+var buffered_flip
 
 signal turn(dir)
 signal walk
@@ -39,6 +49,8 @@ func _ready():
   var dow = str(Globals.calendar.dow)
   schedule = _parse(data[dow])
   Globals.clock.tick.connect(_on_clock_tick)
+  birth_month = int(birthday.split('/')[0])
+  birth_day = int(birthday.split('/')[1])
   
 func _parse(data):
   var result = {}
@@ -62,17 +74,15 @@ func navigate_to_point(point):
   elif method == 0:
     var current_direction = dir_to_vec(facing)
     var new_direction = (point2d - global_position).normalized()
-    if new_direction.x < 0:
-      turn_anim(DIRS.LEFT)
-    elif new_direction.x > 0:
-      turn_anim(DIRS.RIGHT)
-    elif new_direction.y > 0:
-      turn_anim(DIRS.DOWN)
-    elif new_direction.y < 0:
-      turn_anim(DIRS.UP)
+    handle_turn(new_direction)
     target = point2d
   
 func _physics_process(delta):
+  if in_dialog:
+    velocity = Vector2(0,0)
+    $AnimatedSprite2D.stop()
+    move_and_slide()
+    return
   set_collision_layer_value(2, !moving)
   var player = Globals.player
   if is_instance_valid(player):
@@ -103,6 +113,13 @@ func _on_clock_tick():
 
 func target_vec():
   return (target - global_position).normalized()
+  
+func turn_to_player():
+  in_dialog = true
+  var vec = (Globals.player.global_position - global_position).normalized()
+  buffered_anim = $AnimatedSprite2D.animation
+  buffered_flip = $AnimatedSprite2D.flip_h
+  handle_turn(vec)
 
 func dir_to_vec(dir):
   match(dir):
@@ -117,6 +134,16 @@ func dir_to_vec(dir):
     _:
       print("INVALID NPC DIRECTION ", dir)
       
+func handle_turn(new_direction):
+  if new_direction.x < 0:
+    turn_anim(DIRS.LEFT)
+  elif new_direction.x > 0:
+    turn_anim(DIRS.RIGHT)
+  elif new_direction.y > 0:
+    turn_anim(DIRS.DOWN)
+  elif new_direction.y < 0:
+    turn_anim(DIRS.UP)
+      
 func turn_anim(dir):
   $AnimatedSprite2D.flip_h = (dir == DIRS.RIGHT)
   match(dir):
@@ -129,6 +156,14 @@ func turn_anim(dir):
     _:
       print("BAD ANIM KEY", dir)
 
-func gift(item: Consumable):
-  item.consume()
-  return "liked"
+func gift(item: Item):
+  item.quantity -= 1
+  return Globals.affection_manager.gift_affection(self, ItemDatabase.get_id(item))
+
+func is_birthday():
+  return Globals.calendar.season == birth_month and Globals.calendar.day == birth_day
+
+func end_dialog():
+  in_dialog = false
+  $AnimatedSprite2D.play(buffered_anim)
+  $AnimatedSprite2D.flip_h = buffered_flip

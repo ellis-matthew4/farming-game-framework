@@ -144,10 +144,12 @@ func _interact(held):
         return
     elif n is NPC:
       var npc_name = n.npc_name
-      if currently_held_item is Consumable:
+      n.turn_to_player()
+      if not currently_held_item is Tool:
         var like_level = n.gift(currently_held_item)
         Globals.npc_talk_label(str(npc_name, "_gift_", like_level))
       else:
+        Globals.affection_manager.talk_affection(n)
         Globals.npc_talk(npc_name)
   if currently_held_item is Tool:
     var tool = currently_held_item.item_name.to_snake_case()

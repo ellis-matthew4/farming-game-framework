@@ -28,7 +28,8 @@ var camera
 var clock
 var calendar
 var dynamicLayer
-var dialog_stack = DialogDatabase.base_stack
+var dialog_stack
+var affection_manager
 
 # Preloads - Important classes to keep a base in memory at all times
 var map = preload("res://scenes/map.tscn")
@@ -121,6 +122,7 @@ func get_held_item():
     return inventory[index]
   
 func sleep():
+  affection_manager.increment_day()
   menuLayer.transition("fade_out")
   await menuLayer.get_node("AnimationPlayer").animation_finished
   get_tree().change_scene_to_packed(map)
@@ -144,6 +146,7 @@ func increment_day():
   weather = 'rain' # debug
   print("Setting weather to ", weather)
   calendar.parse_day(day)
+  dialog_stack = DialogDatabase.get_stack()
   
 func repopulate_quick_inventory():
   if is_instance_valid(menuLayer):
@@ -159,16 +162,22 @@ func ship(item: Item):
   
 func npc_talk(name):
   movement_blocked = true
-  var label = dialog_stack[name][0].pop_front() if len(dialog_stack[name][0]) > 1 else dialog_stack[name][0][0]
+  var label = dialog_stack[name].pop_front() if len(dialog_stack[name]) > 1 else dialog_stack[name][0]
   menuLayer.xdl_call(label)
   await menuLayer.xdl_done
   movement_blocked = false
+  get_tree().call_group('NPC', 'end_dialog')
   
 func npc_talk_label(label):
   movement_blocked = true
   menuLayer.xdl_call(label)
   await menuLayer.xdl_done
   movement_blocked = false
+  
+func find_npc(id):
+  for n in get_tree().get_nodes_in_group('NPC'):
+    if n.npc_name == 'id':
+      return n
 
 # Global processes
 func _ready():
@@ -193,6 +202,8 @@ func _game_start():
   try_add_inventory(ItemDatabase.get_item('generic_seeds'), 9)
   try_add_inventory(ItemDatabase.get_item('fertilizer'))
   try_add_inventory(ItemDatabase.get_item('generic_sapling'))
+  affection_manager = AffectionManager.new()
+  dialog_stack = DialogDatabase.get_stack()
 
 func _input(event):
   if (event is InputEventKey):

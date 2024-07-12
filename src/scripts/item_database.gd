@@ -24,3 +24,6 @@ func _ready():
 
 func get_item(id) -> Item:
   return items[id]
+
+func get_id(item: Item):
+  return items.find_key(item)
