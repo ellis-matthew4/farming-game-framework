@@ -20,6 +20,7 @@ var max_stamina = 100
 var stamina = 100
 var money = 0
 var weather = 'sunny'
+var just_entered_door = false
 
 # Instances - Important dynamically-loaded "singletons"
 var player
@@ -216,3 +217,14 @@ func _input(event):
     keyboard = false
   elif (event is InputEventJoypadMotion):
     keyboard = false
+
+func change_camera_constraints(zone: LoadingZone):
+  var rect: Rect2 = zone.camera_constraints()
+  var cam: Camera2D = player.get_node("Camera2D")
+  var minimum = rect.position
+  var maximum = rect.position + rect.size
+  print("Changing camera bounds to ", str(minimum, maximum))
+  cam.limit_left = minimum.x
+  cam.limit_right = maximum.x
+  cam.limit_top = minimum.y
+  cam.limit_bottom = maximum.y

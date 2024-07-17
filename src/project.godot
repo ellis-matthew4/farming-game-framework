@@ -21,6 +21,10 @@ ItemDatabase="*res://scripts/item_database.gd"
 DialogDatabase="*res://scripts/dialog_database.gd"
 Globals="*res://scripts/globals.gd"
 
+[display]
+
+window/stretch/mode="viewport"
+
 [input]
 
 ui_accept={

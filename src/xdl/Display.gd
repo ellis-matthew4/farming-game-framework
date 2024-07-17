@@ -89,6 +89,9 @@ func _physics_process(delta):
     skip = true
   else:
     skip = false
+    
+func unload():
+  labels = {}
   
 func read(filename):
   var file = FileAccess.open(path_to_folder + filename, FileAccess.READ)

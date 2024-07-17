@@ -11,6 +11,8 @@ var time_display_inst
 
 signal repopulate_qi
 signal xdl_done
+signal fadein
+signal fadeout
 
 func _ready():
   time_display_inst = time_display.instantiate()
@@ -64,12 +66,15 @@ func reset(timeout):
   reset_timer = false
 
 func transition(ts):
+  $AnimationPlayer.play(ts)
   if ts == "fade_out":
     $quick_inventory.hide()
-  $AnimationPlayer.play(ts)
+    await $AnimationPlayer.animation_finished
+    emit_signal("fadeout")
   if ts == "fade_in":
     await $AnimationPlayer.animation_finished
     $quick_inventory.show()
+    emit_signal("fadein")
 
 func xdl_call(label):
   if not $xdl.able:

@@ -18,7 +18,10 @@ var snap_point: Vector2
 var moving: bool
 var in_dialog = false
 
+var wandering = false
 var origin
+var rto_tick = 360
+var bounds
 # target represents the next space on the grid to move to
 var target
 # destination represents the actual coordinates the npc is traveling to
@@ -65,11 +68,17 @@ func _parse(data):
 
 func teleport_based_on_schedule():
   for t in schedule.keys():
-    if t > Globals.clock.time:
+    if int(t) > Globals.clock.time:
       var pos = schedule[t].last
       global_position = Vector2(pos.x, pos.y)
       return
   global_position = origin
+  
+func return_to_origin_tick():
+  var prev
+  for t in schedule.keys():
+    if int(t) > Globals.clock.time:
+      return int(t) - 10
 
 func navigate_to_point(point):
   if point == null:
@@ -97,32 +106,88 @@ func _physics_process(delta):
   var player = Globals.player
   if is_instance_valid(player):
     z_index = player.z_index + 1 if global_position.y > player.global_position.y else player.z_index - 1
+    z_index = 100
   if !moving:
-    $AnimatedSprite2D.play("down")
     $AnimatedSprite2D.stop()
   else:
     if target == null:
       if len(travel_stack) > 0:
         navigate_to_point(travel_stack.pop_front())
-      else:
-        moving = false
     elif global_position.distance_to(target) <= 4:
       global_position = target
       moving = false
       velocity = Vector2(0,0)
-      navigate_to_point(travel_stack.pop_front())
+      if travel_stack.size() > 0:
+        navigate_to_point(travel_stack.pop_front())
+      else:
+        if !wandering:
+          $AnimatedSprite2D.play("down")
+          wandering = true
+          origin = global_position
+          _set_bounds()
+          rto_tick = return_to_origin_tick()
     else:
       velocity = target_vec() * Globals.WALK_SPEED / 2
     move_and_slide()
+  
+func _set_bounds():
+    bounds = [
+      Vector2(origin.x - Globals.MAP_GRID_SIZE, global_position.y - Globals.MAP_GRID_SIZE),
+      Vector2(origin.x + Globals.MAP_GRID_SIZE, global_position.y + Globals.MAP_GRID_SIZE),
+    ]
     
 func _on_clock_tick():
   var time = str(Globals.clock.time)
   if schedule.has(time):
     travel_stack.append_array(schedule[time])
     moving = true
+    wandering = false
+  if rto_tick == int(time):
+    if global_position == origin:
+      return
+    var v
+    if origin.x > global_position.x:
+      v = (global_position + (Vector2.RIGHT * Globals.MAP_GRID_SIZE))
+    elif origin.x < global_position.x:
+      v = (global_position + (Vector2.LEFT * Globals.MAP_GRID_SIZE))
+    elif origin.y > global_position.y:
+      v = (global_position + (Vector2.DOWN * Globals.MAP_GRID_SIZE))
+    elif origin.y < global_position.y:
+      v = (global_position + (Vector2.UP * Globals.MAP_GRID_SIZE))
+    travel_stack.append(Vector3(v.x, v.y, 0))
+    if v != origin:
+      travel_stack.append(Vector3(origin.x, origin.y, 0))
+    moving = true
+  else:
+    if rto_tick != null:
+      if int(time) > rto_tick:
+        return
+    if int(time) % 5 == 0:
+      wander()
+      
+func wander():
+  var dir = [Vector2.RIGHT, Vector2.LEFT, Vector2.UP, Vector2.DOWN][randi() % 4]
+  var dest = global_position + (dir * Globals.MAP_GRID_SIZE)
+  if is_in_bounds(dest):
+    var pos = Vector3(dest.x, dest.y, 0)
+    travel_stack.append(pos)
+    moving = true
 
 func target_vec():
   return (target - global_position).normalized()
+  
+func is_in_bounds(vec):
+  if bounds == null:
+    return false
+  if vec.x < bounds[0].x:
+    return false
+  if vec.y < bounds[0].y:
+    return false
+  if vec.x > bounds[1].x:
+    return false
+  if vec.y > bounds[1].y:
+    return false
+  return true
   
 func turn_to_player():
   in_dialog = true

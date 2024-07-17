@@ -43,3 +43,7 @@ label npc_gift_loved
 label npc_gift_best
     npc "I don't know how you knew, but I really, REALLY love these. Thank you so much!"
     return
+
+label severe_weather
+    "Whoa! It's really storming today. Better stay inside."
+    return
