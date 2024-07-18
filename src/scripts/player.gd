@@ -8,6 +8,9 @@ var snap_point
 var moving = false
 var last_movement_accepted = DIRS.NONE
 
+@onready var dummy = Globals.find_npc('player')
+var follow_dummy = false
+
 signal turn(dir)
 signal walk
 signal reached
@@ -23,6 +26,9 @@ func _ready():
   emit_signal("turn", facing)
 
 func _physics_process(delta):
+  if follow_dummy:
+    global_position = dummy.global_position
+    return
   if !moving:
     $AnimatedSprite2D.frame = 0
     $AnimatedSprite2D.stop()

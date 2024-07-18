@@ -66,6 +66,7 @@ func reset(timeout):
   reset_timer = false
 
 func transition(ts):
+  Globals.transitioning = true
   $AnimationPlayer.play(ts)
   if ts == "fade_out":
     $quick_inventory.hide()
@@ -75,6 +76,7 @@ func transition(ts):
     await $AnimationPlayer.animation_finished
     $quick_inventory.show()
     emit_signal("fadein")
+    Globals.transitioning = false
 
 func xdl_call(label):
   if not $xdl.able:

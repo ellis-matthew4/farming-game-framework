@@ -26,6 +26,8 @@ var path_to_folder = "res://xdl/output/" # Change this!
 var currentScript
 var currentScene
 
+var npc_cache = []
+
 signal done
 signal lineFinished
 
@@ -71,7 +73,6 @@ func _ready():
 func _physics_process(delta):
   if active:
     if len(stack) > 0: #Triggers upon calling or jumping
-      get_node("TextBox").visible = true
       if len(stack[0]) == 0:
         stack.pop_front()
       if Input.is_action_just_pressed("ux_select"):
@@ -151,14 +152,62 @@ func statement():
       play()
     "if":
       condition()
+    "show_npc":
+      show_npc()
+    "hide_player":
+      hide_player()
+    "hide_all_npcs":
+      hide_all_npcs()
+    "cleanup_after_event":
+      cleanup_after_event()
     _:
       print(line)
       nextLine()
+      
+func show_npc():
+  var args = line['args']
+  var n = Globals.find_npc(args[0])
+  if args[0] == 'player':
+    Globals.player.follow_dummy = true
+  n.show()
+  if args[4] == 'teleport':
+    n.global_position = Vector2(int(args[0]), int(args[1]))
+  elif args[4] == 'walk':
+    n.travel_stack.append(Vector3(args[1],args[2],0))
+    var dir = _direction(args[3])
+    n.travel_stack.append(Vector3(dir.x, dir.y, 2))
+  await n.finished_traveling
+  Globals.player.follow_dummy = false
+  nextLine()
+  
+func hide_player():
+  var p = Globals.player
+  p.hide()
+  nextLine()
+  
+func _direction(string):
+  match(string):
+    'left': return Vector2.LEFT
+    'up': return Vector2.UP
+    'down': return Vector2.DOWN
+    'right': return Vector2.RIGHT
+  
+func hide_all_npcs():
+  get_tree().call_group('NPC', 'hide')
+  nextLine()
+  
+func cleanup_after_event():
+  get_tree().call_group('NPC', 'show')
+  get_tree().call_group('NPC', 'teleport_based_on_schedule')
+  var p = Globals.player
+  p.show()
+  nextLine()
   
 func _call(label):
   if able:
     working = true
     push(label)
+    $TextBox.visible = true
     nextLine()
   
 func jump(label):
@@ -288,14 +337,16 @@ func menu_interact(o):
   nextLine()
   
 func window():
+  var tb = get_node("TextBox")
   if line["value"] == "hide":
-    $TextBox.visible = false
+    tb.visible = false
   else:
-    $TextBox.visible = true
+    tb.visible = true
   nextLine()
-    
+     
 func play():
   $AnimationPlayer.play(line["anim"])
+  await $AnimationPlayer.animation_finished
   nextLine()
   
 func condition():

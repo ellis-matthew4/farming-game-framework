@@ -47,3 +47,16 @@ label npc_gift_best
 label severe_weather
     "Whoa! It's really storming today. Better stay inside."
     return
+
+label sample_event
+    window hide
+    play fadeout
+    action hide_all_npcs
+    action hide_player
+    action show_npc npc 688 64 left teleport
+    action show_npc player -544 16 left teleport
+    play fadein
+    window show
+    "Nice cock, bro."
+    action cleanup_after_event
+    return

@@ -28,7 +28,7 @@ var target
 var destination: Vector2
 
 var travel_stack = []
-var schedule
+var schedule = {}
 
 var buffered_anim
 var buffered_flip
@@ -36,26 +36,28 @@ var buffered_flip
 signal turn(dir)
 signal walk
 signal reached
+signal finished_traveling
 
 func _ready():
   origin = global_position
   var path = str("res://assets/schedules/", npc_name, ".json")
   var file = FileAccess.open(path, FileAccess.READ)
-  var data = file.get_as_text()
-  file.close()
-  var json = JSON.new()
-  var error = json.parse(data)
-  if error != OK:
-    print("FAILED TO READ FILE " + path)
-    return
-  data = json.data
-  # for now only care about day of week
-  # TODO: expand to care about season
-  var dow = str(Globals.calendar.dow)
-  schedule = _parse(data[dow])
-  Globals.clock.tick.connect(_on_clock_tick)
-  birth_month = int(birthday.split('/')[0])
-  birth_day = int(birthday.split('/')[1])
+  if file != null:
+    var data = file.get_as_text()
+    file.close()
+    var json = JSON.new()
+    var error = json.parse(data)
+    if error != OK:
+      print("FAILED TO READ FILE " + path)
+      return
+    data = json.data
+    # for now only care about day of week
+    # TODO: expand to care about season
+    var dow = str(Globals.calendar.dow)
+    schedule = _parse(data[dow])
+    Globals.clock.tick.connect(_on_clock_tick)
+    birth_month = int(birthday.split('/')[0])
+    birth_day = int(birthday.split('/')[1])
   
 func _parse(data):
   var result = {}
@@ -69,7 +71,7 @@ func _parse(data):
 func teleport_based_on_schedule():
   for t in schedule.keys():
     if int(t) > Globals.clock.time:
-      var pos = schedule[t].last
+      var pos = schedule[t].back()
       global_position = Vector2(pos.x, pos.y)
       return
   global_position = origin
@@ -95,6 +97,8 @@ func navigate_to_point(point):
     var new_direction = (point2d - global_position).normalized()
     handle_turn(new_direction)
     target = point2d
+  elif method == 2:
+    handle_turn((point2d))
   
 func _physics_process(delta):
   if in_dialog:
@@ -121,7 +125,7 @@ func _physics_process(delta):
         navigate_to_point(travel_stack.pop_front())
       else:
         if !wandering:
-          $AnimatedSprite2D.play("down")
+          emit_signal('finished_traveling')
           wandering = true
           origin = global_position
           _set_bounds()

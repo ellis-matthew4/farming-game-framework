@@ -7,12 +7,14 @@ class_name LoadingZone
 signal player_entered(zone)
 signal player_exited(zone)
 
+func ready_to_show_event():
+  print("Should not see this.")
+
 func _ready():
   self.body_entered.connect(_on_body_entered)
+  self.player_entered.connect(_on_player_entered)
   self.body_exited.connect(_on_body_exited)
   self.player_entered.connect(Globals.change_camera_constraints)
-
-# def ready_to_show_event()
 
 func _on_body_entered(body):
   if body == Globals.player:
@@ -21,6 +23,13 @@ func _on_body_entered(body):
 func _on_body_exited(body):
   if body == Globals.player:
     emit_signal("player_exited", self)
+    
+func _on_player_entered(zone):
+  var event_id = ready_to_show_event()
+  if event_id != null:
+    await Globals.transition_queue_clear
+    Globals.npc_talk_label(event_id)
+  
 
 func overlapping_npcs():
   var result = []
@@ -35,7 +44,6 @@ func camera_constraints():
   var polygon: PackedVector2Array = $CollisionPolygon2D.polygon
   var v = get_viewport().get_visible_rect()
   var viewport = Rect2(v.position / 4, v.size / 4)
-  print(str(polygon))
   for vec in polygon:
     xValues.append(vec.x)
     yValues.append(vec.y)
@@ -52,7 +60,6 @@ func camera_constraints():
     new_pos.x = rect.position.x - size_offsets.x
     new_pos.y = rect.position.y - size_offsets.y + 8 # center vertically, then adjust for hotbar
     viewport.position = new_pos
-    print("VP", viewport)
     return viewport
   # adjust the positions for optimal camera alignment
   minX -= (Globals.MAP_GRID_SIZE * 2)

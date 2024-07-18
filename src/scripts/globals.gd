@@ -21,6 +21,10 @@ var stamina = 100
 var money = 0
 var weather = 'sunny'
 var just_entered_door = false
+var transitioning = false:
+  set(value):
+    if value == false:
+      emit_signal('transition_queue_clear')
 
 # Instances - Important dynamically-loaded "singletons"
 var player
@@ -38,6 +42,9 @@ var ml_scene = preload("res://scenes/Menus/menu_layer.tscn")
 
 # Variables for cheats
 var player_position
+
+# Signals
+signal transition_queue_clear
 
 # Methods - Global functions that need to be called outside the context of the game objects
 func get_state():
@@ -177,7 +184,7 @@ func npc_talk_label(label):
   
 func find_npc(id):
   for n in get_tree().get_nodes_in_group('NPC'):
-    if n.npc_name == 'id':
+    if n.npc_name == id:
       return n
 
 # Global processes
@@ -223,8 +230,21 @@ func change_camera_constraints(zone: LoadingZone):
   var cam: Camera2D = player.get_node("Camera2D")
   var minimum = rect.position
   var maximum = rect.position + rect.size
-  print("Changing camera bounds to ", str(minimum, maximum))
   cam.limit_left = minimum.x
   cam.limit_right = maximum.x
   cam.limit_top = minimum.y
   cam.limit_bottom = maximum.y
+
+func _serialize_game_state():
+  var save = {
+    'seed': game_seed,
+    'day': day,
+    'farmland_state': farmland_state,
+    'max_stam': max_stamina,
+    'money': money
+  }
+  save['lz'] = {}
+  for zone in get_tree().get_nodes_in_group('LZ'):
+    save['lz'][zone.get_name()] = zone.already_seen_events
+  # TODO: serialize inventory
+  return save
