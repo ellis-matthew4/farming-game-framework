@@ -69,7 +69,7 @@ func _process(delta):
         held_index = -1
       else:
         emit_signal("cancel")
-    elif (mouse_activity and Input.is_action_just_pressed("ux_left_click")) or Input.is_action_just_pressed("ux_select"):
+    elif (mouse_activity and Input.is_action_just_pressed("ux_left_click")) or Input.is_action_just_pressed("player_interact"):
       var idx = grid.get_current() - 1
       var n = InventoryGrid.get_child(idx)
       var item = n.item

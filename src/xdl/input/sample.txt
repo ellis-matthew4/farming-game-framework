@@ -53,10 +53,18 @@ label sample_event
     play fadeout
     action hide_all_npcs
     action hide_player
-    action show_npc npc 688 64 left teleport
+    action show_npc npc -688 64 left teleport
     action show_npc player -544 16 left teleport
     play fadein
     window show
-    "Nice cock, bro."
+    npc "Nice cock, bro."
+    window hide
+    action show_npc npc -576 64 right walk
+    action show_npc npc -576 16 right walk
+    window show
+    npc "Mine's bigger."
+    window hide
+    play fadeout
     action cleanup_after_event
+    play fadein
     return

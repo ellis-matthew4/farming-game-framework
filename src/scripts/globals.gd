@@ -25,6 +25,7 @@ var transitioning = false:
   set(value):
     if value == false:
       emit_signal('transition_queue_clear')
+var last_event_at = 0
 
 # Instances - Important dynamically-loaded "singletons"
 var player
@@ -155,6 +156,7 @@ func increment_day():
   print("Setting weather to ", weather)
   calendar.parse_day(day)
   dialog_stack = DialogDatabase.get_stack()
+  last_event_at = 0
   
 func repopulate_quick_inventory():
   if is_instance_valid(menuLayer):
@@ -174,6 +176,7 @@ func npc_talk(name):
   menuLayer.xdl_call(label)
   await menuLayer.xdl_done
   movement_blocked = false
+  time_stopped = false
   get_tree().call_group('NPC', 'end_dialog')
   
 func npc_talk_label(label):
@@ -181,6 +184,7 @@ func npc_talk_label(label):
   menuLayer.xdl_call(label)
   await menuLayer.xdl_done
   movement_blocked = false
+  time_stopped = false
   
 func find_npc(id):
   for n in get_tree().get_nodes_in_group('NPC'):

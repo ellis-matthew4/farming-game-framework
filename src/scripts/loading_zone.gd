@@ -25,10 +25,14 @@ func _on_body_exited(body):
     emit_signal("player_exited", self)
     
 func _on_player_entered(zone):
+  if Globals.clock.time < Globals.last_event_at + 180:
+    return
   var event_id = ready_to_show_event()
   if event_id != null:
     await Globals.transition_queue_clear
+    Globals.last_event_at = Globals.clock.time
     Globals.npc_talk_label(event_id)
+    Globals.time_stopped = true
   
 
 func overlapping_npcs():

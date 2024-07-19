@@ -75,7 +75,7 @@ func _physics_process(delta):
     if len(stack) > 0: #Triggers upon calling or jumping
       if len(stack[0]) == 0:
         stack.pop_front()
-      if Input.is_action_just_pressed("ux_select"):
+      if Input.is_action_just_pressed("player_interact"):
         nextLine()
       elif skip:
         if len(stack) > 0:
@@ -83,7 +83,7 @@ func _physics_process(delta):
             nextLine()
         else:
           end()
-    elif Input.is_action_just_pressed("ux_select") and working:
+    elif Input.is_action_just_pressed("player_interact") and working:
       end()
       # get_tree().call_group("playable_characters", "showGUI") #My games' command to show the HUD
   if Input.is_key_pressed(KEY_CTRL):
@@ -167,16 +167,25 @@ func statement():
 func show_npc():
   var args = line['args']
   var n = Globals.find_npc(args[0])
+  n.travel_stack = []
+  n.velocity = Vector2(0,0)
+  n.moving = false
+  n.set_event_mode(true)
   if args[0] == 'player':
+    print('moving player')
     Globals.player.follow_dummy = true
   n.show()
   if args[4] == 'teleport':
-    n.global_position = Vector2(int(args[0]), int(args[1]))
+    n.travel_stack.append(Vector3(int(args[1]),int(args[2]),1))
   elif args[4] == 'walk':
-    n.travel_stack.append(Vector3(args[1],args[2],0))
-    var dir = _direction(args[3])
-    n.travel_stack.append(Vector3(dir.x, dir.y, 2))
-  await n.finished_traveling
+    n.travel_stack.append(Vector3(int(args[1]),int(args[2]),0))
+  var dir = _direction(args[3])
+  n.travel_stack.append(Vector3(dir.x, dir.y, 2))
+  n.moving = true
+  if n.moving:
+    print('waiting for ', args[0])
+    await n.finished_traveling
+    print('done waiting for ', args[0])
   Globals.player.follow_dummy = false
   nextLine()
   
@@ -199,8 +208,10 @@ func hide_all_npcs():
 func cleanup_after_event():
   get_tree().call_group('NPC', 'show')
   get_tree().call_group('NPC', 'teleport_based_on_schedule')
+  get_tree().call_group('NPC', 'set_event_mode', false)
   var p = Globals.player
   p.show()
+  Globals.movement_blocked = false
   nextLine()
   
 func _call(label):
@@ -347,6 +358,7 @@ func window():
 func play():
   $AnimationPlayer.play(line["anim"])
   await $AnimationPlayer.animation_finished
+  print("Finished ", line["anim"])
   nextLine()
   
 func condition():

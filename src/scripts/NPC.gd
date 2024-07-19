@@ -32,6 +32,7 @@ var schedule = {}
 
 var buffered_anim
 var buffered_flip
+var event_mode = false
 
 signal turn(dir)
 signal walk
@@ -58,6 +59,9 @@ func _ready():
     Globals.clock.tick.connect(_on_clock_tick)
     birth_month = int(birthday.split('/')[0])
     birth_day = int(birthday.split('/')[1])
+    
+func set_event_mode(mode):
+  event_mode = mode
   
 func _parse(data):
   var result = {}
@@ -69,10 +73,14 @@ func _parse(data):
   return result
 
 func teleport_based_on_schedule():
+  travel_stack = []
+  velocity = Vector2(0,0)
+  moving = false
   for t in schedule.keys():
     if int(t) > Globals.clock.time:
       var pos = schedule[t].back()
       global_position = Vector2(pos.x, pos.y)
+      origin = global_position
       return
   global_position = origin
   
@@ -126,9 +134,10 @@ func _physics_process(delta):
       else:
         if !wandering:
           emit_signal('finished_traveling')
-          wandering = true
-          origin = global_position
-          _set_bounds()
+          if not event_mode:
+            wandering = true
+            origin = global_position
+            _set_bounds()
           rto_tick = return_to_origin_tick()
     else:
       velocity = target_vec() * Globals.WALK_SPEED / 2
@@ -140,12 +149,16 @@ func _set_bounds():
       Vector2(origin.x + Globals.MAP_GRID_SIZE, global_position.y + Globals.MAP_GRID_SIZE),
     ]
     
+func _already_there(pos):
+  return global_position == Vector2(pos.x, pos.y)
+    
 func _on_clock_tick():
   var time = str(Globals.clock.time)
   if schedule.has(time):
-    travel_stack.append_array(schedule[time])
-    moving = true
-    wandering = false
+    if not _already_there(schedule[time].back()):
+      travel_stack.append_array(schedule[time])
+      moving = true
+      wandering = false
   if rto_tick == int(time):
     if global_position == origin:
       return

@@ -23,7 +23,7 @@ func _ready():
   
 func _process(delta):
   if focused_menu:
-    if Input.is_action_just_pressed("ux_select"):
+    if Input.is_action_just_pressed("player_interact"):
       instanced_menu.focus()
       focused_menu = false
     elif Input.is_action_just_pressed("ux_left"):
