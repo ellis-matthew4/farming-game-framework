@@ -14,7 +14,7 @@ var base_stack = {
 var special = {}
 
 # Will reduce the base stack to structure stack[name] -> []
-func get_stack():
+func get_dialog_stack():
   var stack = {}
   for n in base_stack.keys():
     var level = Globals.affection_manager.get_affection_level(n)

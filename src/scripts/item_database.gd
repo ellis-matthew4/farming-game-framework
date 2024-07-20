@@ -23,7 +23,7 @@ func _ready():
       items[k].prepare_rendered_data()
 
 func get_item(id) -> Item:
-  return items[id]
+  return items[id] if id != null else null
 
 func get_id(item: Item):
   return items.find_key(item)

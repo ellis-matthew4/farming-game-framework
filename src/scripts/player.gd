@@ -33,10 +33,12 @@ func _physics_process(delta):
     $AnimatedSprite2D.frame = 0
     $AnimatedSprite2D.stop()
   if not Globals.movement_blocked:
+    var currently_held_item_id = Globals.get_held_item()[0] if Globals.get_held_item() != null else null
+    var currently_held_item = ItemDatabase.get_item(currently_held_item_id)
     if Input.is_action_just_pressed("player_interact"):
       velocity = Vector2(0,0)
       var held = false
-      if Globals.get_held_item() is Tool:
+      if currently_held_item is Tool:
         await get_tree().create_timer(0.1).timeout
         if Input.is_action_pressed("player_interact"):
           await get_tree().create_timer(0.1).timeout
@@ -52,8 +54,6 @@ func _physics_process(delta):
       Globals.menuLayer.pause_menu()
     elif Input.is_action_just_pressed("ux_debug"):
       Globals.menuLayer.debug_menu()
-    elif Input.is_action_just_pressed("debug_talk"):
-      Globals.npc_talk_label('sample_npc_branching')
   
     if moving:
       if _snapped():
@@ -127,7 +127,8 @@ func _interact(held):
     _set_tool_interact_area_size(held)
     await get_tree().create_timer(0.05).timeout
   var li = get_node("InteractPivot/InteractionArea").get_overlapping_bodies()
-  var currently_held_item = Globals.get_held_item()
+  var currently_held_item_id = Globals.get_held_item()[0] if Globals.get_held_item() != null else null
+  var currently_held_item = ItemDatabase.get_item(currently_held_item_id)
   for n in li:
     if n.is_in_group("Bed"):
       Globals.player_position = null
@@ -137,9 +138,8 @@ func _interact(held):
       n.enter(self)
       return
     elif n.is_in_group("ShippingBox"):
-      var held_item = Globals.get_held_item()
-      if not held_item is Tool:
-        Globals.ship(held_item)
+      if not currently_held_item is Tool:
+        Globals.ship(currently_held_item_id, 1)
       return
     elif n is GroundItem:
       n.interact()
@@ -150,6 +150,7 @@ func _interact(held):
         return
     elif n is NPC:
       var npc_name = n.npc_name
+      print('interacting with ', npc_name)
       n.turn_to_player()
       if not currently_held_item is Tool:
         var like_level = n.gift(currently_held_item)
@@ -157,6 +158,7 @@ func _interact(held):
       else:
         Globals.affection_manager.talk_affection(n)
         Globals.npc_talk(npc_name)
+      return
   if currently_held_item is Tool:
     var tool = currently_held_item.item_name.to_snake_case()
     var animation = currently_held_item.animation_key + DIRS.keys()[facing].to_lower()
@@ -178,7 +180,7 @@ func _interact(held):
     await get_tree().create_timer(0.25).timeout
     _set_tool_interact_area_size(false)
   elif currently_held_item is Food:
-    currently_held_item.consume()
+    Globals.remove_from_inventory(currently_held_item_id, 1)
     Globals.repopulate_quick_inventory()
   elif currently_held_item is Seeds or currently_held_item is Sapling:
     print("seeds")
@@ -186,13 +188,13 @@ func _interact(held):
       if n is Soil and n.tilled:
         print("sowing")
         n.sow(currently_held_item)
-        currently_held_item.consume()
+        Globals.remove_from_inventory(currently_held_item_id, 1)
   elif currently_held_item is Consumable:
     if currently_held_item.item_name == "Fertilizer":
       for n in li:
         if n is Soil and n.tilled:
           n.fertilize()
-          currently_held_item.consume()
+          Globals.remove_from_inventory(currently_held_item_id, 1)
   else:
     if currently_held_item != null:
       print(currently_held_item.item_name)

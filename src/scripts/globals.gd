@@ -61,29 +61,40 @@ func get_state():
     'stamina': str("Max: ", max_stamina, " Current: ", stamina),
     'money': money,
     'shipping_cache': shipping_cache,
-    'inventory': get_serialized_inventory()
+    'inventory': inventory
   }
   
-func get_serialized_inventory():
-  var result = ""
-  for i in range(0, unlocked_inventory_slots):
-    if inventory[i] != null:
-      result += str(inventory[i].key, ",")
-    else:
-      result += str(-1, ",")
-  return result
-  
+func get_held_item():
+  var index = menuLayer.get_node("quick_inventory").focused_index() - 1
+  if index < len(inventory):
+    return inventory[index]
+    
 func try_add_inventory(item, quantity = 1):
   var idx = lookup_inventory(item)
   if idx != null:
     var existing = inventory[idx]
-    existing.quantity += quantity
+    existing[1] += quantity
     return true
-  if first_empty_inventory_slot() >= unlocked_inventory_slots:
+  var empty_slot = first_empty_inventory_slot()
+  if empty_slot >= unlocked_inventory_slots:
     return false
-  item.quantity = quantity
-  inventory[first_empty_inventory_slot()] = item
+  inventory[empty_slot] = [item, quantity]
   return true
+  
+func remove_from_inventory(item, quantity = 1):
+  var idx = lookup_inventory(item)
+  if idx != null:
+    inventory[idx][1] -= 1
+    if inventory[idx][1] <= 0:
+      inventory[idx] = null
+  
+func lookup_inventory(item):
+  for k in range(len(inventory)):
+    if inventory[k] == null:
+      continue
+    if inventory[k][0] == item:
+      return k
+  return null
   
 func swap(i, j):
   var item1 = inventory[i]
@@ -98,11 +109,6 @@ func first_empty_inventory_slot():
     if inventory[i] == null:
       return i
   return max_inventory_slots + 1
-
-func remove_from_inventory(item):
-  var idx = lookup_inventory(item)
-  if idx != null:
-    inventory[idx] = null
     
 func try_purchase(amount):
   if amount > money:
@@ -116,19 +122,6 @@ func try_decrease_stamina(amount):
   
 func increase_stamina(amount):
   stamina = min(max_stamina, stamina + amount)
-  
-func lookup_inventory(item):
-  for k in range(len(inventory)):
-    if inventory[k] == null:
-      continue
-    if inventory[k].item_name == item.item_name:
-      return k
-  return null
-  
-func get_held_item():
-  var index = menuLayer.get_node("quick_inventory").focused_index() - 1
-  if index < len(inventory):
-    return inventory[index]
   
 func sleep():
   affection_manager.increment_day()
@@ -155,7 +148,7 @@ func increment_day():
   weather = 'rain' # debug
   print("Setting weather to ", weather)
   calendar.parse_day(day)
-  dialog_stack = DialogDatabase.get_stack()
+  dialog_stack = DialogDatabase.get_dialog_stack()
   last_event_at = 0
   
 func repopulate_quick_inventory():
@@ -166,13 +159,18 @@ func add_to_dynamic_layer(node: Node, pos: Vector2):
   dynamicLayer.add_child(node)
   node.global_position = pos
   
-func ship(item: Item):
-  shipping_cache += item.value
-  item.quantity -= 1
+func ship(item: String, quantity: int):
+  var inv_idx = lookup_inventory(item)
+  if not inv_idx == null:
+    var inst_item: Item = ItemDatabase.get_item(item)
+    shipping_cache += inst_item.value * quantity
+    remove_from_inventory(item, quantity)
   
-func npc_talk(name):
+func npc_talk(npc_name):
+  if not menuLayer.xdl_able():
+    return
   movement_blocked = true
-  var label = dialog_stack[name].pop_front() if len(dialog_stack[name]) > 1 else dialog_stack[name][0]
+  var label = dialog_stack[npc_name].pop_front() if len(dialog_stack[npc_name]) > 1 else dialog_stack[npc_name][0]
   menuLayer.xdl_call(label)
   await menuLayer.xdl_done
   movement_blocked = false
@@ -180,6 +178,8 @@ func npc_talk(name):
   get_tree().call_group('NPC', 'end_dialog')
   
 func npc_talk_label(label):
+  if not menuLayer.xdl_able():
+    return
   movement_blocked = true
   menuLayer.xdl_call(label)
   await menuLayer.xdl_done
@@ -205,17 +205,17 @@ func _game_start():
   # Pre-populate inventory
   for i in range(max_inventory_slots):
     inventory.append(null)
-  try_add_inventory(ItemDatabase.get_item('hoe'))
-  try_add_inventory(ItemDatabase.get_item('sickle'))
-  try_add_inventory(ItemDatabase.get_item('watering_can'))
-  try_add_inventory(ItemDatabase.get_item('hammer'))
-  try_add_inventory(ItemDatabase.get_item('axe'))
-  try_add_inventory(ItemDatabase.get_item('generic_crop'))
-  try_add_inventory(ItemDatabase.get_item('generic_seeds'), 9)
-  try_add_inventory(ItemDatabase.get_item('fertilizer'))
-  try_add_inventory(ItemDatabase.get_item('generic_sapling'))
+  try_add_inventory('hoe')
+  try_add_inventory('sickle')
+  try_add_inventory('watering_can')
+  try_add_inventory('hammer')
+  try_add_inventory('axe')
+  try_add_inventory('generic_crop')
+  try_add_inventory('generic_seeds', 9)
+  try_add_inventory('fertilizer')
+  try_add_inventory('generic_sapling')
   affection_manager = AffectionManager.new()
-  dialog_stack = DialogDatabase.get_stack()
+  dialog_stack = DialogDatabase.get_dialog_stack()
 
 func _input(event):
   if (event is InputEventKey):

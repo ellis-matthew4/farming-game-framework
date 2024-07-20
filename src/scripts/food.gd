@@ -11,7 +11,3 @@ func _init(n: String, v: int, tx_path: String, stam: int, d: String):
   stamina = stam
   description = d
   
-func consume():
-  stamina = stamina # fix this later
-  quantity -= 1
-

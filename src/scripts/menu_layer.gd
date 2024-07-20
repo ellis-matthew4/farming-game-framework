@@ -79,9 +79,6 @@ func transition(ts):
     Globals.transitioning = false
 
 func xdl_call(label):
-  if not $xdl.able:
-    await get_tree().create_timer(0.2).timeout
-    return await xdl_call(label)
   time_display_inst.hide()
   $quick_inventory.hide()
   $xdl.show()
@@ -92,3 +89,6 @@ func xdl_call(label):
   time_display_inst.show()
   $xdl.hide()
   emit_signal("xdl_done")
+
+func xdl_able():
+  return $xdl.able

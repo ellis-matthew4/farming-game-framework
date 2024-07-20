@@ -5,6 +5,7 @@ var grid = Grid.new(1, 10)
 
 signal focus_change
 signal populated
+signal empty
 
 func _ready():
   _populate()
@@ -39,18 +40,21 @@ func _get_current():
   
 func _populate():
   _depopulate()
+  await self.empty
   var inv = Globals.inventory
   for i in range(0, 10):
     var slot = SlotScene.instantiate()
-    $HBoxContainer.add_child(slot)
-    slot.from_item(inv[i])
+    $HBoxContainer.call_deferred("add_child", slot)
+    slot.from_index(i)
     slot.context = "quick"
+  await get_tree().process_frame
   emit_signal("populated")
 
 func _depopulate():
   for c in $HBoxContainer.get_children():
     $HBoxContainer.remove_child(c)
     c.queue_free()
+  emit_signal('empty')
 
 func _wait_and_reset(timeout):
   Globals.can_accept_mw_input = false

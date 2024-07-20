@@ -24,7 +24,7 @@ func _on_body_exited(body):
   if body == Globals.player:
     emit_signal("player_exited", self)
     
-func _on_player_entered(zone):
+func _on_player_entered(_zone):
   if Globals.clock.time < Globals.last_event_at + 180:
     return
   var event_id = ready_to_show_event()

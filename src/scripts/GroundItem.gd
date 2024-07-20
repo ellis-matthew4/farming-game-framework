@@ -13,20 +13,22 @@ func _ready():
       ap = c
   if ap != null:
     ap.play("float")
-  await get_tree().create_timer(0.5).timeout
+  await get_tree().create_timer(0.25).timeout
+  if self in Globals.player.get_node('PickUpArea').get_overlapping_bodies():
+    interact()
   can_interact = true
     
 func _process(delta):
   if item == null and item_id != '':
-    item = ItemDatabase.get_item(item_id)
-    create(item)
+    create(item_id)
 
-func create(i: Item):
-  item = i
+func create(i: String):
+  item_id = i
+  item = ItemDatabase.get_item(i)
   $Sprite2D.texture = item.texture
 
 func interact():
-  if can_interact and Globals.try_add_inventory(item):
+  if can_interact and Globals.try_add_inventory(item_id):
     Globals.repopulate_quick_inventory()
     queue_free()
 

@@ -257,5 +257,6 @@ func is_birthday():
 
 func end_dialog():
   in_dialog = false
-  $AnimatedSprite2D.play(buffered_anim)
-  $AnimatedSprite2D.flip_h = buffered_flip
+  if buffered_anim:
+    $AnimatedSprite2D.play(buffered_anim)
+  $AnimatedSprite2D.flip_h = buffered_flip or false

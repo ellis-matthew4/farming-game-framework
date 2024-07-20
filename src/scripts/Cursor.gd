@@ -7,16 +7,19 @@ var holding = false
 func _process(delta):
   if mouse_active:
     global_position = get_global_mouse_position()
-
-func from_item(i: Item):
-  if i == null:
+  
+func from_index(i: int):
+  var i_item = Globals.inventory[i]
+  if i == null or i_item == null:
     clear()
     return
-  item = i
-  set_texture(i.texture)
-  var text: String = "" if item.quantity <= 1 else str(item.quantity)
+  item = ItemDatabase.get_item(i_item[0])
+  var quantity = i_item[1]
+  set_texture(item.texture)
+  var text: String = "" if quantity <= 1 else str(quantity)
   set_label(text)
   holding = true
+
   
 func clear():
   set_texture(null)

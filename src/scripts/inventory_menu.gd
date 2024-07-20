@@ -16,17 +16,15 @@ signal cancel
 
 func _ready():
   # load inventory
-  var idx = 0
-  for i in Globals.inventory:
+  for i in len(Globals.inventory):
     var slot = SlotScene.instantiate()
     InventoryGrid.add_child(slot)
-    slot.from_item(i)
+    slot.from_index(i)
     slot.context = "inventory"
-    if idx > Globals.unlocked_inventory_slots - 1:
+    if i > Globals.unlocked_inventory_slots - 1:
       slot.lock()
     else:
       slot.mouse_activity.connect(self.defocus_current)
-    idx += 1
     
 func focus():
   _change_focus_inventory(1, 1)
@@ -77,8 +75,8 @@ func _process(delta):
         held_index = idx
       else:
         Globals.swap(idx, held_index)
-      n.from_item(Cursor.item)
-      Cursor.from_item(item)
+      n.from_index(idx)
+      Cursor.from_index(held_index)
 
 func _change_focus_inventory(old, new):
   if old == -1 and new != 1:

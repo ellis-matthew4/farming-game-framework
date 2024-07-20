@@ -5,15 +5,17 @@ var locked = false
 var context
 
 signal mouse_activity
-
-func from_item(i: Item):
-  if i == null:
+  
+func from_index(i: int):
+  var i_item = Globals.inventory[i]
+  if i == null or i_item == null:
     clear()
     return
-  item = i
-  var texture = i.texture
+  item = ItemDatabase.get_item(i_item[0])
+  var quantity = i_item[1]
+  var texture = item.texture
   set_texture(texture, get_region_rect())
-  var text = "" if item.quantity <= 1 else str(item.quantity)
+  var text = "" if quantity <= 1 else str(quantity)
   set_label(text)
   
 func get_region_rect():

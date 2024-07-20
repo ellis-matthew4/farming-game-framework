@@ -94,7 +94,7 @@ func sickle():
       stage = 0
   else:
     if stage == crop.max_stages:
-      var item_to_drop = crop.get_product()
+      var item_to_drop = crop.product_id
       var floater = float_item.instantiate()
       floater.create(item_to_drop)
       Globals.add_to_dynamic_layer(floater, global_position + Vector2(snap/2, snap/2))
