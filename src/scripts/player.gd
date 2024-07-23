@@ -1,38 +1,24 @@
-extends CharacterBody2D
+extends Actor
 
-enum DIRS { DOWN, UP, LEFT, RIGHT, NONE }
-var facing = DIRS.DOWN
-
-var snap = Globals.MAP_GRID_SIZE
-var snap_point
-var moving = false
 var last_movement_accepted = DIRS.NONE
 
 @onready var dummy = Globals.find_npc('player')
 var follow_dummy = false
 
-signal turn(dir)
-signal walk
-signal reached
-
 func _ready():
+  speed_mod = 32
   Globals.player = self
   Globals.camera = get_node("Camera2D")
   if Globals.player_position != null:
     global_position = Globals.player_position
-  self.turn.connect(_turn)
-  self.walk.connect(_walk)
-  self.reached.connect(_reached)
-  emit_signal("turn", facing)
+  connect("state_change", _on_state_change)
 
 func _physics_process(delta):
   if follow_dummy:
     global_position = dummy.global_position
     return
-  if !moving:
-    $AnimatedSprite2D.frame = 0
-    $AnimatedSprite2D.stop()
   if not Globals.movement_blocked:
+    super(delta)
     var currently_held_item_id = Globals.get_held_item()[0] if Globals.get_held_item() != null else null
     var currently_held_item = ItemDatabase.get_item(currently_held_item_id)
     if Input.is_action_just_pressed("player_interact"):
@@ -54,59 +40,51 @@ func _physics_process(delta):
       Globals.menuLayer.pause_menu()
     elif Input.is_action_just_pressed("ux_debug"):
       Globals.menuLayer.debug_menu()
-  
-    if moving:
-      if _snapped():
-        global_position = snap_point
-        emit_signal("reached")
-        var input = _parse_movement()
-        if input == last_movement_accepted:
-          if Input.is_action_pressed("ux_modify"):
-            snap_point = _snap(input)
-          else:
-            snap_point = _snap()
-          emit_signal("walk")
-        else:
-          velocity = Vector2(0,0)
-      else:
-        velocity = _get_snap_vector() * Globals.WALK_SPEED
-    else:
+    
+    if state == states.IDLE:
       var input = _parse_movement()
-      if input != DIRS.NONE:
-        _handle_walk(input)
-        last_movement_accepted = input
-      else:
-        velocity = Vector2(0,0)
+      if input != Vector2(0,0) and travel_stack.size() == 0:
+        input *= Globals.MAP_GRID_SIZE
+        input += global_position
+        travel_stack.append(Vector3(
+          input.x,
+          input.y,
+          0 # walk
+        ))
+    elif state == states.MOVING:
+      if _distance_to_target() <= 5:
+        var input = _parse_movement()
+        if input != Vector2(0,0) and travel_stack.size() == 0:
+          input *= Globals.MAP_GRID_SIZE
+          input += target
+          travel_stack.append(Vector3(
+            input.x,
+            input.y,
+            0 # walk
+          ))
         
-    # The constant here should be as small as possible to prevent jitter.
-    var test_vector = velocity.normalized() * 1
-    if test_move(transform, test_vector):
-      _force_realign()
-    else:
-      move_and_slide()
+func _on_state_change(new_state):
+  match(new_state):
+    states.IDLE:
+      $AnimatedSprite2D.stop()
+    states.MOVING:
+      pass
+    states.NEXT:
+      pass
+    states.FINISHED:
+      pass
 
 func _parse_movement():
   if Input.is_action_pressed("move_right"):
-    return DIRS.RIGHT
+    return Vector2.RIGHT
   elif Input.is_action_pressed("move_left"):
-    return DIRS.LEFT
+    return Vector2.LEFT
   elif Input.is_action_pressed("move_down"):
-    return DIRS.DOWN
+    return Vector2.DOWN
   elif Input.is_action_pressed("move_up"):
-    return DIRS.UP
+    return Vector2.UP
   else:
-    return DIRS.NONE
-
-func _handle_walk(input):
-  if Input.is_action_pressed("ux_modify"):
-    snap_point = _snap(input)
-    moving = true
-  else:
-    emit_signal("turn", input)
-    await get_tree().create_timer(0.05).timeout
-    snap_point = _snap()
-    if _parse_movement() == input:
-      emit_signal("walk")
+    return Vector2(0,0)
     
 func get_direction():
   match(facing):
@@ -202,59 +180,17 @@ func _interact(held):
 func _cancel():
   pass
   
-func _snapped():
-  return global_position.distance_to(snap_point) < 4
-  
-func _get_snap_vector():
-  return global_position.direction_to(snap_point)
-  
-func _snap(dir = null):
-  var x = int(global_position.x)
-  var y = int(global_position.y)
-  var step_x = snappedi(x, snap)
-  var step_y = snappedi(y, snap)
-  if dir == null:
-    dir = facing
-  match(dir):
-    DIRS.UP:
-      step_y = step_y if step_y < y else step_y - snap
-    DIRS.DOWN:
-      step_y = step_y if step_y > y else step_y + snap
-    DIRS.LEFT:
-      step_x = step_x if step_x < x else step_x - snap
-    DIRS.RIGHT:
-      step_x = step_x if step_x > x else step_x + snap
-  return Vector2(step_x, step_y)
-  
-func _force_realign():
-  moving = false
-  var x = int(global_position.x)
-  var y = int(global_position.y)
-  var step_x = snappedi(x, snap)
-  var step_y = snappedi(y, snap)
-  return Vector2(step_x, step_y)
-  
-func _turn(dir):
-  var animation_keys = {
-    DIRS.LEFT: 'side',
-    DIRS.DOWN: 'down',
-    DIRS.UP: 'up',
-    DIRS.RIGHT: 'side'
-  }
-  $AnimatedSprite2D.play(animation_keys[dir])
-  $AnimatedSprite2D.flip_h = true if dir == DIRS.RIGHT else false
-  facing = dir
-  _align_interact_pivot(facing)
-  
-func _walk():
-  moving = true
-  
-func _reached():
-  moving = false
+func turn_anim(anim):
+  if Input.is_action_pressed("ux_modify"):
+    $AnimatedSprite2D.play()
+    return
+  else:
+    super(anim)
+    _align_interact_pivot()
 
-func _align_interact_pivot(dir):
+func _align_interact_pivot():
   var n = get_node("InteractPivot")
-  match(dir):
+  match(facing):
     DIRS.DOWN:
       n.rotation_degrees = 180
     DIRS.UP:
@@ -267,6 +203,7 @@ func _align_interact_pivot(dir):
 func _set_tool_interact_area_size(held = false):
   var t = Globals.get_held_item()
   var n = $InteractPivot/InteractionArea/CollisionShape2D
+  var snap = Globals.MAP_GRID_SIZE
   if held and t is Tool and t.level > 1:
     match(t.level):
       2:

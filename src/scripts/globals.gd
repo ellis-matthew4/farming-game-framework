@@ -23,6 +23,7 @@ var weather = 'sunny'
 var just_entered_door = false
 var transitioning = false:
   set(value):
+    transitioning = value
     if value == false:
       emit_signal('transition_queue_clear')
 var last_event_at = 0
@@ -167,14 +168,13 @@ func ship(item: String, quantity: int):
     remove_from_inventory(item, quantity)
   
 func npc_talk(npc_name):
-  if not menuLayer.xdl_able():
-    return
-  movement_blocked = true
-  var label = dialog_stack[npc_name].pop_front() if len(dialog_stack[npc_name]) > 1 else dialog_stack[npc_name][0]
-  menuLayer.xdl_call(label)
-  await menuLayer.xdl_done
-  movement_blocked = false
-  time_stopped = false
+  if menuLayer.xdl_able():
+    movement_blocked = true
+    var label = dialog_stack[npc_name].pop_front() if len(dialog_stack[npc_name]) > 1 else dialog_stack[npc_name][0]
+    menuLayer.xdl_call(label)
+    await menuLayer.xdl_done
+    movement_blocked = false
+    time_stopped = false
   get_tree().call_group('NPC', 'end_dialog')
   
 func npc_talk_label(label):

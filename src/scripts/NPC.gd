@@ -13,8 +13,6 @@ var birth_day
 enum DIRS { DOWN, UP, LEFT, RIGHT, NONE }
 var facing = DIRS.DOWN
 
-var snap = Globals.MAP_GRID_SIZE
-var snap_point: Vector2
 var moving: bool
 var in_dialog = false
 
@@ -24,8 +22,6 @@ var rto_tick = 360
 var bounds
 # target represents the next space on the grid to move to
 var target
-# destination represents the actual coordinates the npc is traveling to
-var destination: Vector2
 
 var travel_stack = []
 var schedule = {}
