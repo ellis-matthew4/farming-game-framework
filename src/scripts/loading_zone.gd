@@ -4,7 +4,7 @@ class_name LoadingZone
 
 # already_seen_events = []
 
-signal player_entered(zone)
+signal player_entered(zone, player)
 signal player_exited(zone)
 
 func ready_to_show_event():
@@ -17,14 +17,14 @@ func _ready():
   self.player_entered.connect(Globals.change_camera_constraints)
 
 func _on_body_entered(body):
-  if body == Globals.player:
-    emit_signal("player_entered", self)
+  if body.is_in_group("Player"):
+    emit_signal("player_entered", self, body)
     
 func _on_body_exited(body):
-  if body == Globals.player:
+  if body.is_in_group("Player"):
     emit_signal("player_exited", self)
     
-func _on_player_entered(_zone):
+func _on_player_entered(_zone, player):
   if Globals.clock.time < Globals.last_event_at + 180:
     return
   var event_id = ready_to_show_event()

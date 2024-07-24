@@ -2,10 +2,18 @@ extends CharacterBody2D
 
 class_name Actor
 
-@onready var origin = global_position
+@onready var origin = global_position:
+  set(new):
+    origin = new
+    _set_bounds()
+var bounds
 @export var speed_mod = 16
+@export var care_about_collision = false
 
-enum states {IDLE, MOVING, NEXT, FINISHED, WANDERING}
+# This value should be as low as possible to avoid jitteriness
+const SNAP_DIST = 1
+
+enum states {IDLE, MOVING, NEXT, FINISHED}
 var state = states.IDLE:
   set(new):
     previous_state = state
@@ -22,37 +30,45 @@ var target
 var travel_stack = []
 
 signal state_change(state)
+signal finished
+
+func _ready():
+  _set_bounds()
+  add_to_group('Actor')
 
 func _physics_process(delta):
-  match(state):
-    states.IDLE:
+  if state == states.IDLE:
+    velocity = Vector2(0,0)
+    if not travel_stack.is_empty():
+      navigate_to_point(travel_stack.pop_front())
+      state = states.MOVING
+  if state == states.MOVING:
+    if _distance_to_target() <= SNAP_DIST:
+      global_position = target
       velocity = Vector2(0,0)
-      if not travel_stack.is_empty():
-        navigate_to_point(travel_stack.pop_front())
-        state = states.MOVING
-    states.MOVING:
-      if _distance_to_target() <= 4:
-        global_position = target
-        velocity = Vector2(0,0)
-        state = states.NEXT
-      else:
-        velocity = target_vec() * Globals.WALK_SPEED * speed_mod * delta
-    states.NEXT:
-      if travel_stack.is_empty():
-        state = states.FINISHED
-      else:
-        navigate_to_point(travel_stack.pop_front())
-        state = states.MOVING
-    states.FINISHED:
-      state = states.IDLE
+      state = states.NEXT
+    else:
+      velocity = target_vec() * Globals.WALK_SPEED * speed_mod * delta
+  if state == states.NEXT:
+    if travel_stack.is_empty():
+      state = states.FINISHED
+    else:
+      navigate_to_point(travel_stack.pop_front())
+      state = states.MOVING
+  if state == states.FINISHED:
+    emit_signal('finished')
+    state = states.IDLE
   
   # Try to move based on velocity
   # The constant here should be as small as possible to prevent jitter.
   var test_vector = velocity.normalized() * 1
-  if test_move(transform, test_vector):
-    _force_realign()
-  else:
-    move_and_slide()
+  if care_about_collision:
+    if test_move(transform, test_vector):
+      travel_stack = []
+      _force_realign()
+      velocity = Vector2(0,0)
+      state = states.IDLE
+  move_and_slide()
     
 func _distance_to_target():
   return global_position.distance_to(target)
@@ -105,3 +121,10 @@ func turn_anim(dir):
 
 func target_vec():
   return (target - global_position).normalized()
+  
+func _set_bounds():
+  bounds = [
+    Vector2(origin.x - Globals.MAP_GRID_SIZE, global_position.y - Globals.MAP_GRID_SIZE),
+    Vector2(origin.x + Globals.MAP_GRID_SIZE, global_position.y + Globals.MAP_GRID_SIZE),
+  ]
+  

@@ -167,13 +167,11 @@ func statement():
 func show_npc():
   var args = line['args']
   var n = Globals.find_npc(args[0])
-  n.travel_stack = []
-  n.velocity = Vector2(0,0)
-  n.moving = false
-  n.set_event_mode(true)
   if args[0] == 'player':
     print('moving player')
-    Globals.player.follow_dummy = true
+    n = Globals.player()
+  else:
+    n.event_mode = true
   n.show()
   if args[4] == 'teleport':
     n.travel_stack.append(Vector3(int(args[1]),int(args[2]),1))
@@ -181,16 +179,13 @@ func show_npc():
     n.travel_stack.append(Vector3(int(args[1]),int(args[2]),0))
   var dir = _direction(args[3])
   n.travel_stack.append(Vector3(dir.x, dir.y, 2))
-  n.moving = true
-  if n.moving:
-    print('waiting for ', args[0])
-    await n.finished_traveling
-    print('done waiting for ', args[0])
-  Globals.player.follow_dummy = false
+  print('waiting for ', args[0])
+  await n.finished
+  print('done waiting for ', args[0])
   nextLine()
   
 func hide_player():
-  var p = Globals.player
+  var p = Globals.player()
   p.hide()
   nextLine()
   
@@ -209,7 +204,7 @@ func cleanup_after_event():
   get_tree().call_group('NPC', 'show')
   get_tree().call_group('NPC', 'teleport_based_on_schedule')
   get_tree().call_group('NPC', 'set_event_mode', false)
-  var p = Globals.player
+  var p = Globals.player()
   p.show()
   Globals.movement_blocked = false
   nextLine()

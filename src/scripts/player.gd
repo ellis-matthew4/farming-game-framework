@@ -6,9 +6,9 @@ var last_movement_accepted = DIRS.NONE
 var follow_dummy = false
 
 func _ready():
+  super()
   speed_mod = 32
-  Globals.player = self
-  Globals.camera = get_node("Camera2D")
+  care_about_collision = true
   if Globals.player_position != null:
     global_position = Globals.player_position
   connect("state_change", _on_state_change)
@@ -17,8 +17,8 @@ func _physics_process(delta):
   if follow_dummy:
     global_position = dummy.global_position
     return
+  super(delta)
   if not Globals.movement_blocked:
-    super(delta)
     var currently_held_item_id = Globals.get_held_item()[0] if Globals.get_held_item() != null else null
     var currently_held_item = ItemDatabase.get_item(currently_held_item_id)
     if Input.is_action_just_pressed("player_interact"):
@@ -52,7 +52,7 @@ func _physics_process(delta):
           0 # walk
         ))
     elif state == states.MOVING:
-      if _distance_to_target() <= 5:
+      if _distance_to_target() <= SNAP_DIST + 1:
         var input = _parse_movement()
         if input != Vector2(0,0) and travel_stack.size() == 0:
           input *= Globals.MAP_GRID_SIZE
@@ -85,20 +85,6 @@ func _parse_movement():
     return Vector2.UP
   else:
     return Vector2(0,0)
-    
-func get_direction():
-  match(facing):
-    DIRS.UP:
-      return Vector2.UP
-    DIRS.DOWN:
-      return Vector2.DOWN
-    DIRS.LEFT:
-      return Vector2.LEFT
-    DIRS.RIGHT:
-      return Vector2.RIGHT
-
-func get_real_position():
-  return $InteractPivot.global_position
   
 func _interact(held):
   if held:

@@ -11,14 +11,13 @@ func enter(n):
   if Globals.weather != 'severe':
     Globals.just_entered_door = true
     Globals.movement_blocked = true
-    n.moving = false
+    n.state = n.states.IDLE
     n.velocity = Vector2(0,0)
     menu_layer.transition("fade_out")
     await menu_layer.fadeout
-    var dir = n.get_direction()
     n.global_position = get_node(counterpart).global_position
-    if dir == Vector2.UP:
-      n.global_position += dir * 32
+    if n.facing == n.DIRS.UP:
+      n.global_position += Vector2.UP * 32
     if exterior:
       menu_layer.hide_weather()
     else:

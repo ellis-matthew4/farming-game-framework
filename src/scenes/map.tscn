@@ -264,10 +264,6 @@ zoom = Vector2(4, 4)
 position = Vector2(-64, 0)
 npc_name = "npc"
 
-[node name="NPC2" parent="ActorLayer" instance=ExtResource("9_xx7rh")]
-position = Vector2(-704, -320)
-npc_name = "player"
-
 [node name="StaticLayer" type="Node2D" parent="."]
 
 [node name="House" type="Sprite2D" parent="StaticLayer"]

@@ -1,7 +1,7 @@
 extends Node
 
 # Constants - Global values that never change
-const WALK_SPEED = 140
+const WALK_SPEED = 200
 const MAP_GRID_SIZE = 16
 
 # Variables - Global values that can change at any time
@@ -29,7 +29,6 @@ var transitioning = false:
 var last_event_at = 0
 
 # Instances - Important dynamically-loaded "singletons"
-var player
 @onready var menuLayer = ml_scene.instantiate()
 var camera
 var clock
@@ -54,7 +53,7 @@ func get_state():
     'seed': game_seed,
     'mw input?': can_accept_mw_input,
     'can_move?': movement_blocked,
-    'player_moving?': player.moving,
+    'player_moving?': player().moving,
     'inventory slots': str(unlocked_inventory_slots) + "/" + str(max_inventory_slots),
     'device': 'keyboard' if keyboard else 'controller',
     'time stopped?': time_stopped,
@@ -64,6 +63,9 @@ func get_state():
     'shipping_cache': shipping_cache,
     'inventory': inventory
   }
+  
+func player():
+  return get_tree().get_nodes_in_group("Player").front()
   
 func get_held_item():
   var index = menuLayer.get_node("quick_inventory").focused_index() - 1
@@ -229,7 +231,7 @@ func _input(event):
   elif (event is InputEventJoypadMotion):
     keyboard = false
 
-func change_camera_constraints(zone: LoadingZone):
+func change_camera_constraints(zone: LoadingZone, player: Actor):
   var rect: Rect2 = zone.camera_constraints()
   var cam: Camera2D = player.get_node("Camera2D")
   var minimum = rect.position

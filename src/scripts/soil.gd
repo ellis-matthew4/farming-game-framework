@@ -76,7 +76,7 @@ func interact():
         var floater = float_item.instantiate()
         floater.create(item_to_drop)
         Globals.add_to_dynamic_layer(floater, global_position + offsets[i])
-        floater.z_index = Globals.player.z_index + 1
+        floater.z_index = Globals.player().z_index + 1
       return true
   return false
       
