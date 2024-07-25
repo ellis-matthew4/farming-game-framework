@@ -138,17 +138,16 @@ func sleep():
 func increment_day():
   money += shipping_cache
   shipping_cache = 0
-  if weather == 'sunny':
-    weather = 'rain'
-  elif weather == 'rain':
-    weather = 'snow'
-  elif weather == 'snow':
-    weather = 'severe'
-  elif weather == 'severe':
+  var new_weather = randi() % 100
+  if new_weather < 60:
     weather = 'sunny'
+  elif new_weather < 95:
+    weather = 'snow' if calendar.season < 3 else 'rain'
+  else:
+    weather = 'severe' if calendar.season in [1,3] else 'rain'
   day += 1
   clock.time = 360
-  weather = 'rain' # debug
+  #weather = 'rain' # debug
   print("Setting weather to ", weather)
   calendar.parse_day(day)
   dialog_stack = DialogDatabase.get_dialog_stack()
@@ -196,8 +195,28 @@ func find_npc(id):
 # Global processes
 func _ready():
   process_mode = Node.PROCESS_MODE_ALWAYS
-  _game_start()
+  time_stopped = true
+  for i in range(max_inventory_slots):
+    inventory.append(null)
   add_child(menuLayer)
+  menuLayer.hide_hud()
+  
+func start_game(save_name):
+  menuLayer.transition('fade_out')
+  await menuLayer.fadeout
+  movement_blocked = true
+  get_tree().change_scene_to_file('res://scenes/map.tscn')
+  print('faded')
+  if save_name == null:
+    _game_start()
+  else:
+    pass
+  menuLayer.emit_signal('repopulate_qi')
+  menuLayer.transition('fade_in')
+  menuLayer.show_hud()
+  await menuLayer.fadein
+  movement_blocked = false
+  time_stopped = false
   
 func _game_start():
   # Generate seed
@@ -205,8 +224,6 @@ func _game_start():
   game_seed = randi()
   
   # Pre-populate inventory
-  for i in range(max_inventory_slots):
-    inventory.append(null)
   try_add_inventory('hoe')
   try_add_inventory('sickle')
   try_add_inventory('watering_can')
@@ -218,6 +235,7 @@ func _game_start():
   try_add_inventory('generic_sapling')
   affection_manager = AffectionManager.new()
   dialog_stack = DialogDatabase.get_dialog_stack()
+  print('started')
 
 func _input(event):
   if (event is InputEventKey):
@@ -247,10 +265,44 @@ func _serialize_game_state():
     'day': day,
     'farmland_state': farmland_state,
     'max_stam': max_stamina,
-    'money': money
+    'money': money,
+    'inventory': inventory
   }
   save['lz'] = {}
   for zone in get_tree().get_nodes_in_group('LZ'):
     save['lz'][zone.get_name()] = zone.already_seen_events
   # TODO: serialize inventory
   return save
+  
+func _deserialize_save(data):
+  game_seed = data['seed']
+  day = data['day']
+  farmland_state = data['farmland_state']
+  max_stamina = data['max_stam']
+  money = data['money']
+  inventory = data['inventory']
+  for zone in get_tree().get_nodes_in_group('LZ'):
+    if data['lz'].has(zone.get_name()):
+      zone.already_seen_events = data['lz'][zone.get_name()]
+
+func save_game(save_name):
+  var save = _serialize_game_state()
+  var path = str("res://saves/", save_name, ".sav")
+  var file = FileAccess.open(path, FileAccess.WRITE)
+  if file != null:
+    file.store_string(save)
+    file.close()
+
+func load_game(save_name):
+  var path = str("res://saves/", save_name, ".sav")
+  var file = FileAccess.open(path, FileAccess.READ)
+  if file != null:
+    var data = file.get_as_text()
+    file.close()
+    var json = JSON.new()
+    var error = json.parse(data)
+    if error != OK:
+      print("FAILED TO READ FILE " + path)
+      return
+    data = json.data
+    _deserialize_save(data)

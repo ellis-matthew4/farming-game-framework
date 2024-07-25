@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1m05qhwb8th3"]
+
+[ext_resource type="Script" path="res://scripts/start_menu.gd" id="1_7mrwq"]
+
+[node name="StartMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7mrwq")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -98.0
+offset_right = 20.0
+offset_bottom = -58.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="new" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "New Game"
+
+[node name="load" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Load Game"
+
+[node name="options" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Options"
+
+[node name="quit" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Quit"
+
+[connection signal="pressed" from="HBoxContainer/new" to="." method="_on_new_pressed"]
+[connection signal="pressed" from="HBoxContainer/load" to="." method="_on_load_pressed"]
+[connection signal="pressed" from="HBoxContainer/options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="HBoxContainer/quit" to="." method="_on_quit_pressed"]

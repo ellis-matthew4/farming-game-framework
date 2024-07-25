@@ -45,7 +45,7 @@ label npc_gift_best
     return
 
 label severe_weather
-    "Whoa! It's really storming today. Better stay inside."
+    "Whoa! The weather is really rough today. Better stay inside."
     return
 
 label sample_event

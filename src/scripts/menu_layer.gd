@@ -17,7 +17,7 @@ signal fadeout
 func _ready():
   time_display_inst = time_display.instantiate()
   add_child(time_display_inst)
-  $AnimationPlayer/DayNightCycle.show()
+  #$AnimationPlayer/DayNightCycle.show()
   repopulate_qi.connect($quick_inventory._populate)
   emit_signal("repopulate_qi")
 
@@ -77,6 +77,14 @@ func transition(ts):
     $quick_inventory.show()
     emit_signal("fadein")
     Globals.transitioning = false
+    
+func hide_hud():
+  $quick_inventory.hide()
+  time_display_inst.hide()
+  
+func show_hud():
+  $quick_inventory.show()
+  time_display_inst.show()
 
 func xdl_call(label):
   time_display_inst.hide()
