@@ -14,3 +14,9 @@ func _init(n: String, v: int, tx_path: String, d: String):
   value = v
   texture = load(tx_path)
   description = d
+
+func get_texture_as_sprite2D(_stage):
+  var tx = Sprite2D.new()
+  tx.texture = texture
+  tx.centered = false
+  return tx

@@ -1,20 +1,20 @@
 [gd_scene load_steps=19 format=3 uid="uid://bfq56xy2562sw"]
 
 [ext_resource type="PackedScene" uid="uid://cc81lp1slmt20" path="res://scenes/player.tscn" id="1_2d27c"]
-[ext_resource type="Texture2D" uid="uid://deuegakx8gbpk" path="res://assets/free.png" id="1_w3cr0"]
+[ext_resource type="Texture2D" uid="uid://deuegakx8gbpk" path="res://assets/tiles/free.png" id="1_buvdu"]
 [ext_resource type="Script" path="res://scripts/farmland.gd" id="2_cxcor"]
-[ext_resource type="Texture2D" uid="uid://cd3mhn3w2hbvj" path="res://assets/bed.png" id="4_i01w8"]
-[ext_resource type="Texture2D" uid="uid://c3tc3mhlvstk0" path="res://assets/soil.png" id="5_qrcum"]
+[ext_resource type="Texture2D" uid="uid://cd3mhn3w2hbvj" path="res://assets/tiles/bed.png" id="5_f0d2u"]
+[ext_resource type="Texture2D" uid="uid://c3tc3mhlvstk0" path="res://assets/tiles/soil.png" id="6_57v4s"]
 [ext_resource type="PackedScene" uid="uid://b6tvsetr2bnre" path="res://scenes/door.tscn" id="6_y20lb"]
 [ext_resource type="Script" path="res://scripts/dynamic_layer.gd" id="7_mdgsm"]
-[ext_resource type="Texture2D" uid="uid://dorn8beys0l0k" path="res://assets/shipping_box.png" id="7_tdd76"]
+[ext_resource type="Texture2D" uid="uid://dorn8beys0l0k" path="res://assets/tiles/shipping_box.png" id="8_wmylu"]
 [ext_resource type="PackedScene" uid="uid://emayxhoa48w5" path="res://scenes/npc.tscn" id="9_xx7rh"]
 [ext_resource type="Script" path="res://scripts/Home1LZ.gd" id="10_l2sha"]
 [ext_resource type="Script" path="res://scripts/Field1LZ.gd" id="11_i75eq"]
 [ext_resource type="Script" path="res://scripts/Field2LZ.gd" id="12_1bbg1"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3hg2n"]
-texture = ExtResource("1_w3cr0")
+texture = ExtResource("1_buvdu")
 0:0/next_alternative_id = 2
 0:0/0 = 0
 0:0/0/terrain_set = 0
@@ -268,7 +268,7 @@ npc_name = "npc"
 
 [node name="House" type="Sprite2D" parent="StaticLayer"]
 position = Vector2(7, -104)
-texture = ExtResource("1_w3cr0")
+texture = ExtResource("1_buvdu")
 region_enabled = true
 region_rect = Rect2(0, 48, 64, 80)
 
@@ -282,7 +282,7 @@ shape = SubResource("RectangleShape2D_pgddh")
 
 [node name="Bed" type="Sprite2D" parent="StaticLayer"]
 position = Vector2(0, -320)
-texture = ExtResource("4_i01w8")
+texture = ExtResource("5_f0d2u")
 centered = false
 
 [node name="StaticBody2D" type="StaticBody2D" parent="StaticLayer/Bed" groups=["Bed"]]
@@ -295,7 +295,7 @@ shape = SubResource("RectangleShape2D_t4dm1")
 
 [node name="Temp-Door" type="Sprite2D" parent="StaticLayer"]
 position = Vector2(0, -240)
-texture = ExtResource("5_qrcum")
+texture = ExtResource("6_57v4s")
 centered = false
 
 [node name="Door" parent="StaticLayer" instance=ExtResource("6_y20lb")]
@@ -310,7 +310,7 @@ exterior = true
 
 [node name="ShippingBox" type="Sprite2D" parent="StaticLayer"]
 position = Vector2(64, -48)
-texture = ExtResource("7_tdd76")
+texture = ExtResource("8_wmylu")
 centered = false
 
 [node name="StaticBody2D" type="StaticBody2D" parent="StaticLayer/ShippingBox" groups=["ShippingBox"]]

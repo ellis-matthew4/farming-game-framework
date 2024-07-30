@@ -76,9 +76,9 @@ func increment():
             0:
               c.spawn_weed()
             1:
-              c.spawn_weed()
+              c.spawn_branch()
             2:
-              c.spawn_weed()
+              c.spawn_rock()
 
 func _on_destroy():
   increment()
