@@ -1,3 +1,9 @@
+label start
+    "What is your name?"
+    action ask_for_name
+    "Welcome to the game, {name}!"
+    return
+
 label sample_npc_interact1
     npc "What it do, big guy? Haven't seen you in ages. How have you been? How are your kids? What's the deal? What's the airspeed velocity of an unladen swallow?"
     return

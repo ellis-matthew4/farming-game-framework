@@ -7,7 +7,7 @@ var player
 func _ready():
   player = Globals.player()
 
-func _process(delta):
+func _process(_delta):
   if player == null:
     player = Globals.player()
   else:

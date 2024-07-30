@@ -5,6 +5,7 @@ const WALK_SPEED = 200
 const MAP_GRID_SIZE = 16
 
 # Variables - Global values that can change at any time
+var player_name = "Dorito"
 var can_accept_mw_input = true
 var movement_blocked = false
 var max_inventory_slots = 30
@@ -27,6 +28,7 @@ var transitioning = false:
     if value == false:
       emit_signal('transition_queue_clear')
 var last_event_at = 0
+var already_seen_events: PackedStringArray = []
 
 # Instances - Important dynamically-loaded "singletons"
 @onready var menuLayer = ml_scene.instantiate()
@@ -46,6 +48,7 @@ var player_position
 
 # Signals
 signal transition_queue_clear
+signal autosave
 
 # Methods - Global functions that need to be called outside the context of the game objects
 func get_state():
@@ -87,7 +90,7 @@ func try_add_inventory(item, quantity = 1):
 func remove_from_inventory(item, quantity = 1):
   var idx = lookup_inventory(item)
   if idx != null:
-    inventory[idx][1] -= 1
+    inventory[idx][1] -= quantity
     if inventory[idx][1] <= 0:
       inventory[idx] = null
   
@@ -130,6 +133,8 @@ func sleep():
   affection_manager.increment_day()
   menuLayer.transition("fade_out")
   await menuLayer.get_node("AnimationPlayer").animation_finished
+  await save_game(player_name)
+  print('done saving')
   get_tree().change_scene_to_packed(map)
   if clock.time >= 360:
     increment_day()
@@ -142,7 +147,7 @@ func increment_day():
   if new_weather < 60:
     weather = 'sunny'
   elif new_weather < 95:
-    weather = 'snow' if calendar.season < 3 else 'rain'
+    weather = 'snow' if calendar.season == 3 else 'rain'
   else:
     weather = 'severe' if calendar.season in [1,3] else 'rain'
   day += 1
@@ -167,6 +172,11 @@ func ship(item: String, quantity: int):
     var inst_item: Item = ItemDatabase.get_item(item)
     shipping_cache += inst_item.value * quantity
     remove_from_inventory(item, quantity)
+  
+func xdl_params():
+  return {
+    'name': player_name
+  }
   
 func npc_talk(npc_name):
   if menuLayer.xdl_able():
@@ -210,7 +220,8 @@ func start_game(save_name):
   if save_name == null:
     _game_start()
   else:
-    pass
+    load_game(save_name)
+    increment_day()
   menuLayer.emit_signal('repopulate_qi')
   menuLayer.transition('fade_in')
   menuLayer.show_hud()
@@ -222,6 +233,7 @@ func _game_start():
   # Generate seed
   randomize()
   game_seed = randi()
+  seed(game_seed)
   
   # Pre-populate inventory
   try_add_inventory('hoe')
@@ -249,9 +261,9 @@ func _input(event):
   elif (event is InputEventJoypadMotion):
     keyboard = false
 
-func change_camera_constraints(zone: LoadingZone, player: Actor):
+func change_camera_constraints(zone: LoadingZone, p: Actor):
   var rect: Rect2 = zone.camera_constraints()
-  var cam: Camera2D = player.get_node("Camera2D")
+  var cam: Camera2D = p.get_node("Camera2D")
   var minimum = rect.position
   var maximum = rect.position + rect.size
   cam.limit_left = minimum.x
@@ -261,40 +273,59 @@ func change_camera_constraints(zone: LoadingZone, player: Actor):
 
 func _serialize_game_state():
   var save = {
+    'player_name': player_name,
     'seed': game_seed,
     'day': day,
     'farmland_state': farmland_state,
     'max_stam': max_stamina,
     'money': money,
-    'inventory': inventory
+    'inventory': inventory,
+    'lz': already_seen_events
   }
-  save['lz'] = {}
-  for zone in get_tree().get_nodes_in_group('LZ'):
-    save['lz'][zone.get_name()] = zone.already_seen_events
-  # TODO: serialize inventory
   return save
   
 func _deserialize_save(data):
+  affection_manager = AffectionManager.new()
+  dialog_stack = DialogDatabase.get_dialog_stack()
   game_seed = data['seed']
+  seed(game_seed)
+  player_name = data['player_name']
   day = data['day']
   farmland_state = data['farmland_state']
   max_stamina = data['max_stam']
   money = data['money']
   inventory = data['inventory']
-  for zone in get_tree().get_nodes_in_group('LZ'):
-    if data['lz'].has(zone.get_name()):
-      zone.already_seen_events = data['lz'][zone.get_name()]
+  already_seen_events = data['lz']
+      
+func get_save_files():
+  DirAccess.make_dir_absolute("user://saves")
+  var dir = DirAccess.open("user://saves")
+  var raw = dir.get_files()
+  var saves = []
+  for f in raw:
+    var fn = f.split('.')
+    if not fn is PackedStringArray:
+      continue
+    if len(fn) != 2:
+      continue
+    if fn[1] != 'sav':
+      continue
+    saves.append(fn[0])
+  return saves
 
 func save_game(save_name):
   var save = _serialize_game_state()
-  var path = str("res://saves/", save_name, ".sav")
+  # TODO: make filenames unique
+  var path = str("user://saves/", save_name, ".sav")
   var file = FileAccess.open(path, FileAccess.WRITE)
   if file != null:
-    file.store_string(save)
+    file.store_string(JSON.stringify(save))
     file.close()
+    print("Saved!")
+    await get_tree().create_timer(0.01).timeout
 
 func load_game(save_name):
-  var path = str("res://saves/", save_name, ".sav")
+  var path = str("user://saves/", save_name, ".sav")
   var file = FileAccess.open(path, FileAccess.READ)
   if file != null:
     var data = file.get_as_text()

@@ -41,7 +41,7 @@ func defocus():
       slot.context = "inventory"
   focused = false
 
-func _process(delta):
+func _process(_delta):
   if focused:
     if Input.is_action_just_pressed("ux_left"):
       mouse_activity = false
@@ -70,7 +70,6 @@ func _process(delta):
     elif (mouse_activity and Input.is_action_just_pressed("ux_left_click")) or Input.is_action_just_pressed("player_interact"):
       var idx = grid.get_current() - 1
       var n = InventoryGrid.get_child(idx)
-      var item = n.item
       if not Cursor.holding:
         held_index = idx
       else:

@@ -24,7 +24,7 @@ func _on_body_exited(body):
   if body.is_in_group("Player"):
     emit_signal("player_exited", self)
     
-func _on_player_entered(_zone, player):
+func _on_player_entered(_zone, _player):
   if Globals.clock.time < Globals.last_event_at + 180:
     return
   var event_id = ready_to_show_event()

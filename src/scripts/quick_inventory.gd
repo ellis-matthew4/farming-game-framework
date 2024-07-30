@@ -12,7 +12,7 @@ func _ready():
   await self.populated
   focus(_get_current(), 0.01)
 
-func _process(delta):
+func _process(_delta):
   if Globals.can_accept_mw_input:
     if Globals.keyboard:
       if Input.is_action_just_released("ux_mwu"):
@@ -41,7 +41,6 @@ func _get_current():
 func _populate():
   _depopulate()
   await self.empty
-  var inv = Globals.inventory
   for i in range(0, 10):
     var slot = SlotScene.instantiate()
     $HBoxContainer.call_deferred("add_child", slot)

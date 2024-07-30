@@ -7,7 +7,7 @@ func _ready():
   get_tree().paused = true
   focus(_get_current(), 0.01)
 
-func _process(delta):
+func _process(_delta):
   if Input.is_action_just_pressed("ux_down"):
     defocus(_get_current())
     focus(_get_next(), 0.125)

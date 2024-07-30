@@ -22,7 +22,7 @@ func _ready():
   await get_tree().create_timer(0.25).timeout
   can_interact = true
     
-func _process(delta):
+func _process(_delta):
   if item == null and item_id != '':
     create(item_id)
 

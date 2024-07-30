@@ -3,10 +3,10 @@ extends Control
 func _ready():
   _refresh()
 
-func _process_text(hash):
+func _process_text(h):
   var result = "fps: " + str(Engine.get_frames_per_second()) + "\n"
-  for key in hash.keys():
-    result += key + ": " + str(hash[key]) + "\n"
+  for key in h.keys():
+    result += key + ": " + str(h[key]) + "\n"
   return result
 
 func _refresh():

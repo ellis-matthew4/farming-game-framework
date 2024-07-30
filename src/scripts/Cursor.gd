@@ -4,7 +4,7 @@ var item: Item
 var mouse_active = false
 var holding = false
 
-func _process(delta):
+func _process(_delta):
   if mouse_active:
     global_position = get_global_mouse_position()
   

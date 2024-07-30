@@ -71,7 +71,6 @@ func teleport_based_on_schedule():
   travel_stack.append(Vector3(origin.x, origin.y, 1))
   
 func return_to_origin_tick():
-  var prev
   for t in schedule.keys():
     if int(t) > Globals.clock.time:
       return int(t) - 10

@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7mrwq")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="Main" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -25,23 +25,37 @@ offset_bottom = -58.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="new" type="Button" parent="HBoxContainer"]
+[node name="new" type="Button" parent="Main"]
 layout_mode = 2
 text = "New Game"
 
-[node name="load" type="Button" parent="HBoxContainer"]
+[node name="load" type="Button" parent="Main"]
 layout_mode = 2
 text = "Load Game"
 
-[node name="options" type="Button" parent="HBoxContainer"]
+[node name="options" type="Button" parent="Main"]
 layout_mode = 2
 text = "Options"
 
-[node name="quit" type="Button" parent="HBoxContainer"]
+[node name="quit" type="Button" parent="Main"]
 layout_mode = 2
 text = "Quit"
 
-[connection signal="pressed" from="HBoxContainer/new" to="." method="_on_new_pressed"]
-[connection signal="pressed" from="HBoxContainer/load" to="." method="_on_load_pressed"]
-[connection signal="pressed" from="HBoxContainer/options" to="." method="_on_options_pressed"]
-[connection signal="pressed" from="HBoxContainer/quit" to="." method="_on_quit_pressed"]
+[node name="Saves" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[connection signal="pressed" from="Main/new" to="." method="_on_new_pressed"]
+[connection signal="pressed" from="Main/load" to="." method="_on_load_pressed"]
+[connection signal="pressed" from="Main/options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="Main/quit" to="." method="_on_quit_pressed"]

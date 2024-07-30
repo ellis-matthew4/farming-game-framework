@@ -21,7 +21,7 @@ func _ready():
   await get_tree().create_timer(0.1).timeout
   can_hide = true
   
-func _process(delta):
+func _process(_delta):
   if focused_menu:
     if Input.is_action_just_pressed("player_interact"):
       instanced_menu.focus()

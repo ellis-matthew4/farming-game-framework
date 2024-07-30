@@ -3,6 +3,7 @@ extends CanvasLayer
 @onready var charNodes = get_node("Characters")
 @onready var textBox = get_node("TextBox/TextControl/Dialogue")
 @onready var nameBox = get_node("TextBox/TextControl/Name")
+@onready var lineEdit = get_node("TextBox/TextControl/LineEdit")
 var choice = preload("res://xdl/Choice.tscn") # Change this!
 
 var labels = {}
@@ -70,7 +71,7 @@ func getCharacterStates():
 func _ready():
   read("sample.json")
   
-func _physics_process(delta):
+func _physics_process(_delta):
   if active:
     if len(stack) > 0: #Triggers upon calling or jumping
       if len(stack[0]) == 0:
@@ -160,9 +161,16 @@ func statement():
       hide_all_npcs()
     "cleanup_after_event":
       cleanup_after_event()
+    "ask_for_name":
+      ask_for_name()
     _:
       print(line)
       nextLine()
+      
+func ask_for_name():
+  textBox.hide()
+  lineEdit.show()
+  lineEdit.grab_focus()
       
 func show_npc():
   var args = line['args']
@@ -254,6 +262,7 @@ func dialogue(): # Displays a line of dialogue
   $TextBox/Namebox.visible = true
   nameBox.visible = true
   nameBox.text = line["char"].capitalize()
+  variables.merge(Globals.xdl_params(), true)
   line["String"] = line["String"].format(variables)
   rendering_index = 1
   rollingDisplay()
@@ -261,6 +270,7 @@ func dialogue(): # Displays a line of dialogue
 func adialogue():
   $TextBox/Namebox.visible = false
   nameBox.visible = false
+  variables.merge(Globals.xdl_params(), true)
   line["String"] = line["String"].format(variables)
   rendering_index = 1
   rollingDisplay()
@@ -314,8 +324,8 @@ func variable():
   variables[line["name"]] = line["value"]
   nextLine()
   
-func _access_internal_variable(variable):
-  return variables[variable]
+func _access_internal_variable(v):
+  return variables[v]
   
 func option(o):
   var c = choice.instantiate()
@@ -412,3 +422,9 @@ func TypeOf(s):
     return empty    
   else :
     return operand  
+
+func _on_line_edit_text_submitted(new_text):
+  Globals.player_name = new_text
+  textBox.show()
+  lineEdit.hide()
+  nextLine()

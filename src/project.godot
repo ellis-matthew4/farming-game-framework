@@ -25,6 +25,10 @@ Globals="*res://scripts/globals.gd"
 
 window/stretch/mode="viewport"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/onscreenkeyboard/plugin.cfg")
+
 [input]
 
 ui_accept={
