@@ -116,8 +116,11 @@ func first_empty_inventory_slot():
       return i
   return max_inventory_slots + 1
     
-func try_purchase(amount):
+func try_purchase(item):
+  var amount = item.retail_value()
   if amount > money:
+    return false
+  if not try_add_inventory(item):
     return false
   money -= amount
   return true

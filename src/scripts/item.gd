@@ -20,3 +20,6 @@ func get_texture_as_sprite2D(_stage):
   tx.texture = texture
   tx.centered = false
   return tx
+
+func retail_value():
+  return snappedi(value * 1.5, 10)

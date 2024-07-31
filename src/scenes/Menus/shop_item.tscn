@@ -1,0 +1,86 @@
+[gd_scene load_steps=5 format=3 uid="uid://dgykyv04atv3w"]
+
+[ext_resource type="Texture2D" uid="uid://cl31kkr0847ql" path="res://assets/items/fertilizer.png" id="1_bwyff"]
+[ext_resource type="Script" path="res://scripts/shop_item.gd" id="1_rcabp"]
+[ext_resource type="Texture2D" uid="uid://djott13by0hmo" path="res://assets/items/coin.png" id="2_nagvu"]
+[ext_resource type="Theme" uid="uid://t2bqp6vscmeh" path="res://scenes/Menus/shop_item_btn_theme.tres" id="4_dqg0m"]
+
+[node name="ShopItem" type="PanelContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_rcabp")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="ItemRectPanel" type="PanelContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+mouse_filter = 1
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/ItemRectPanel"]
+custom_minimum_size = Vector2(68, 68)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("1_bwyff")
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Spacer" type="Control" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+mouse_filter = 1
+
+[node name="NameLabel" type="Label" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(548, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 1
+text = "Fertilizer"
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 6
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/PanelContainer/HBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_nagvu")
+
+[node name="PriceLabel" type="Label" parent="HBoxContainer/PanelContainer/HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 1
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 10
+text = "100"
+
+[node name="Spacer2" type="Control" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+mouse_filter = 1
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("4_dqg0m")
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

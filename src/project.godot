@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 ItemDatabase="*res://scripts/item_database.gd"
 DialogDatabase="*res://scripts/dialog_database.gd"
 Globals="*res://scripts/globals.gd"
+ShopDatabase="*res://scripts/shop_database.gd"
 
 [display]
 
@@ -27,7 +28,7 @@ window/stretch/mode="viewport"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/onscreenkeyboard/plugin.cfg")
+enabled=PackedStringArray()
 
 [input]
 

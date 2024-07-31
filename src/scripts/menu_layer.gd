@@ -100,3 +100,18 @@ func xdl_call(label):
 
 func xdl_able():
   return $xdl.able
+
+func open_shop(context):
+  $Shop.depopulate()
+  if $Shop.working:
+    await $Shop.empty
+  $Shop.populate(context)
+  if $Shop.working:
+    await $Shop.populated
+  hide_hud()
+  $Shop.show()
+
+func close_shop():
+  $Shop.hide()
+  show_hud()
+  $Shop.depopulate()
