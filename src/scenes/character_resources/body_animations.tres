@@ -1,0 +1,65 @@
+[gd_resource type="SpriteFrames" load_steps=10 format=3 uid="uid://vaquunxferva"]
+
+[ext_resource type="Texture2D" uid="uid://kolvgy31sdrg" path="res://assets/char/base/char_down_gs2.png" id="1_xxy53"]
+[ext_resource type="Texture2D" uid="uid://c3krctej0woyh" path="res://assets/char/base/char_down_gs1.png" id="2_ins5t"]
+[ext_resource type="Texture2D" uid="uid://bwcrh1evsd4ss" path="res://assets/char/base/char_down_gs3.png" id="3_fm151"]
+[ext_resource type="Texture2D" uid="uid://dw6a47psfimhx" path="res://assets/char/base/char_side_gs2.png" id="4_uvo0o"]
+[ext_resource type="Texture2D" uid="uid://b0wlq3ssep4j2" path="res://assets/char/base/char_side_gs1.png" id="5_nd7cr"]
+[ext_resource type="Texture2D" uid="uid://rr23bmiywoio" path="res://assets/char/base/char_side_gs3.png" id="6_icj5w"]
+[ext_resource type="Texture2D" uid="uid://c5fsk7nbqk5wx" path="res://assets/char/base/char_up_gs2.png" id="7_56fwh"]
+[ext_resource type="Texture2D" uid="uid://ds2stkc4vo36h" path="res://assets/char/base/char_up_gs1.png" id="8_dcrgt"]
+[ext_resource type="Texture2D" uid="uid://3r3a4rrgjtb8" path="res://assets/char/base/char_up_gs3.png" id="9_36fnw"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_xxy53")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_ins5t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_xxy53")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_fm151")
+}],
+"loop": true,
+"name": &"down",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_uvo0o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_nd7cr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_uvo0o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_icj5w")
+}],
+"loop": true,
+"name": &"side",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_56fwh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_dcrgt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_56fwh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_36fnw")
+}],
+"loop": true,
+"name": &"up",
+"speed": 10.0
+}]

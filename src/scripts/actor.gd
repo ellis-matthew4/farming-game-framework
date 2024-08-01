@@ -6,7 +6,9 @@ class_name Actor
   set(new):
     origin = new
     _set_bounds()
-var bounds
+var bounds:
+  set(new):
+    bounds = new
 @export var speed_mod = 16
 @export var care_about_collision = false
 
@@ -123,6 +125,7 @@ func target_vec():
   return (target - global_position).normalized()
   
 func _set_bounds():
+  print('set bounds')
   bounds = [
     Vector2(origin.x - Globals.MAP_GRID_SIZE, global_position.y - Globals.MAP_GRID_SIZE),
     Vector2(origin.x + Globals.MAP_GRID_SIZE, global_position.y + Globals.MAP_GRID_SIZE),

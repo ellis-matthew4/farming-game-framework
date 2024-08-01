@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3 uid="uid://n8bat8ok7bdj"]
+
+[ext_resource type="Script" path="res://scripts/CharacterSprite.gd" id="1_shgbc"]
+[ext_resource type="SpriteFrames" uid="uid://vaquunxferva" path="res://scenes/character_resources/body_animations.tres" id="2_a4idj"]
+[ext_resource type="Texture2D" uid="uid://bbrd47gpjfmnj" path="res://assets/char/eye/eye1_down.png" id="3_4747y"]
+[ext_resource type="Texture2D" uid="uid://bldxngofd4vmq" path="res://assets/char/eye/eye1_down2.png" id="3_va8uu"]
+[ext_resource type="Texture2D" uid="uid://clkjgw1bvainy" path="res://assets/char/eye/eye1_side.png" id="4_2cewy"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_an1wx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_va8uu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_4747y")
+}],
+"loop": true,
+"name": &"down",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_2cewy")
+}],
+"loop": true,
+"name": &"side",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"up",
+"speed": 5.0
+}]
+
+[node name="CharacterSprite" type="Node2D"]
+script = ExtResource("1_shgbc")
+
+[node name="body" type="AnimatedSprite2D" parent="."]
+modulate = Color(0.913725, 0.784314, 0.737255, 1)
+sprite_frames = ExtResource("2_a4idj")
+animation = &"down"
+centered = false
+
+[node name="eyes" type="AnimatedSprite2D" parent="."]
+modulate = Color(0, 0, 1, 1)
+sprite_frames = SubResource("SpriteFrames_an1wx")
+animation = &"down"
+centered = false

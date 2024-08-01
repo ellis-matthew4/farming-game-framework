@@ -30,6 +30,7 @@ var event_mode = false:
 
 func _ready():
   super()
+  care_about_collision = true
   speed_mod = 16
   var path = str("res://assets/schedules/", npc_name, ".json")
   var file = FileAccess.open(path, FileAccess.READ)
@@ -99,7 +100,9 @@ func _on_state_change(new_state):
       pass
     states.FINISHED:
       if not event_mode:
-        wandering = true
+        if not wandering:
+          origin = global_position
+          wandering = true
       
 func _already_there(pos):
   return global_position == Vector2(pos.x, pos.y)
@@ -126,16 +129,17 @@ func _on_clock_tick():
     if v != origin:
       travel_stack.append(Vector3(origin.x, origin.y, 0))
   else:
-    if rto_tick != null:
-      if int(time) > rto_tick:
-        return
-    if int(time) % 5 == 0:
+    if not travel_stack.is_empty():
+      return
+    if int(time) - rto_tick <= 10:
+      return
+    if wandering and int(time) % 5 == 0:
       wander()
       
 func wander():
   var dir = [Vector2.RIGHT, Vector2.LEFT, Vector2.UP, Vector2.DOWN][randi() % 4]
   var dest = global_position + (dir * Globals.MAP_GRID_SIZE)
-  if is_in_bounds(dest):
+  if true: #is_in_bounds(dest):
     var pos = Vector3(dest.x, dest.y, 0)
     travel_stack.append(pos)
 
