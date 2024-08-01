@@ -9,7 +9,6 @@ var debugging = false
 var reset_timer = false
 var time_display_inst
 
-signal repopulate_qi
 signal xdl_done
 signal fadein
 signal fadeout
@@ -18,8 +17,6 @@ func _ready():
   time_display_inst = time_display.instantiate()
   add_child(time_display_inst)
   #$AnimationPlayer/DayNightCycle.show()
-  repopulate_qi.connect($quick_inventory._populate)
-  emit_signal("repopulate_qi")
 
 func debug_menu():
   if not reset_timer:
@@ -58,7 +55,6 @@ func menu_hide(menu):
   Globals.movement_blocked = false
   $quick_inventory.show()
   menu.queue_free()
-  emit_signal("repopulate_qi")
 
 func reset(timeout):
   reset_timer = true

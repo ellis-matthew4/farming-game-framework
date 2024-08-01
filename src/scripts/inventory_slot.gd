@@ -4,6 +4,8 @@ var item: Item
 var locked = false
 var context
 
+@export var index: int = -1
+
 signal mouse_activity
   
 func from_index(i: int):
@@ -18,12 +20,13 @@ func from_index(i: int):
   var text = "" if quantity <= 1 else str(quantity)
   set_label(text)
   
+func _process(_delta):
+  if index > -1:
+    from_index(index)
+  
 func get_region_rect():
-  if item.has_method("render_region"):
-    return item.render_region(0)
-  else:
-    var dim = item.texture.get_width()
-    return Rect2(0,0,dim, dim)
+  var dim = item.texture.get_width()
+  return Rect2(0,0,dim, dim)
   
 func clear():
   set_texture(null)

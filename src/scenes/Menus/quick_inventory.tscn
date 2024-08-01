@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://ydgkkqqwkjhb"]
+[gd_scene load_steps=3 format=3 uid="uid://ydgkkqqwkjhb"]
 
 [ext_resource type="Script" path="res://scripts/quick_inventory.gd" id="1_dijnf"]
+[ext_resource type="PackedScene" uid="uid://cwdsj3gxhnelb" path="res://scenes/Menus/InventorySlot.tscn" id="2_vgc8l"]
 
 [node name="quick_inventory" type="Control"]
 layout_mode = 3
@@ -27,3 +28,45 @@ offset_top = -40.0
 offset_right = 20.0
 grow_horizontal = 2
 grow_vertical = 0
+
+[node name="InventorySlot" parent="HBoxContainer" instance=ExtResource("2_vgc8l")]
+layout_mode = 2
+index = 0
+
+[node name="InventorySlot2" parent="HBoxContainer" instance=ExtResource("2_vgc8l")]
+layout_mode = 2
+index = 1
+
+[node name="InventorySlot3" parent="HBoxContainer" instance=ExtResource("2_vgc8l")]
+layout_mode = 2
+index = 2
+
+[node name="InventorySlot4" parent="HBoxContainer" instance=ExtResource("2_vgc8l")]
+layout_mode = 2
+index = 3
+
+[node name="InventorySlot5" parent="HBoxContainer" instance=ExtResource("2_vgc8l")]
+layout_mode = 2
+index = 4
+
+[node name="InventorySlot6" parent="HBoxContainer" instance=ExtResource("2_vgc8l")]
+layout_mode = 2
+index = 5
+
+[node name="InventorySlot7" parent="HBoxContainer" instance=ExtResource("2_vgc8l")]
+layout_mode = 2
+index = 6
+
+[node name="InventorySlot8" parent="HBoxContainer" instance=ExtResource("2_vgc8l")]
+layout_mode = 2
+index = 7
+
+[node name="InventorySlot9" parent="HBoxContainer" instance=ExtResource("2_vgc8l")]
+layout_mode = 2
+index = 8
+
+[node name="InventorySlot10" parent="HBoxContainer" instance=ExtResource("2_vgc8l")]
+layout_mode = 2
+index = 9
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]

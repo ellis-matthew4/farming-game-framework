@@ -29,7 +29,7 @@ func depopulate():
   working = false
 
 func _on_listing_pressed(item):
-  var success = Globals.try_purchase(item.value)
+  var success = Globals.try_purchase(item)
   if not success:
     pass # handle bad purchase
 

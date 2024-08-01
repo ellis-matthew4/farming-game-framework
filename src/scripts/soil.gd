@@ -39,7 +39,6 @@ func water():
     watered = true
   
 func sow(i, s: int = 1):
-  print('sowing ', i.key)
   if tilled:
     set_crop_texture(i.get_texture_as_sprite2D(s))
     crop = i

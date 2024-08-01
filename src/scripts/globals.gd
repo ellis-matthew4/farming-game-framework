@@ -49,6 +49,7 @@ var player_position
 # Signals
 signal transition_queue_clear
 signal autosave
+signal day_change
 
 # Methods - Global functions that need to be called outside the context of the game objects
 func get_state():
@@ -134,18 +135,17 @@ func increase_stamina(amount):
   
 func sleep():
   affection_manager.increment_day()
+  money += shipping_cache
+  shipping_cache = 0
   menuLayer.transition("fade_out")
   await menuLayer.get_node("AnimationPlayer").animation_finished
   await save_game(player_name)
-  print('done saving')
   get_tree().change_scene_to_packed(map)
   if clock.time >= 360:
     increment_day()
   menuLayer.transition("fade_in")
   
 func increment_day():
-  money += shipping_cache
-  shipping_cache = 0
   var new_weather = randi() % 100
   if new_weather < 60:
     weather = 'sunny'
@@ -160,16 +160,12 @@ func increment_day():
   calendar.parse_day(day)
   dialog_stack = DialogDatabase.get_dialog_stack()
   last_event_at = 0
-  
-func repopulate_quick_inventory():
-  if is_instance_valid(menuLayer):
-    menuLayer.emit_signal("repopulate_qi")
     
 func add_to_dynamic_layer(node: Node, pos: Vector2):
   dynamicLayer.add_child(node)
   node.global_position = pos
   
-func ship(item: String, quantity: int):
+func ship(item: String, quantity: int = 1):
   var inv_idx = lookup_inventory(item)
   if not inv_idx == null:
     var inst_item: Item = ItemDatabase.get_item(item)
@@ -225,7 +221,6 @@ func start_game(save_name):
   else:
     load_game(save_name)
     increment_day()
-  menuLayer.emit_signal('repopulate_qi')
   menuLayer.transition('fade_in')
   menuLayer.show_hud()
   await menuLayer.fadein

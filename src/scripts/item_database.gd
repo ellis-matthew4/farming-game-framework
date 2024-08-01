@@ -16,9 +16,9 @@ func _ready():
     'weed': Item.new("Weed", 1, "res://assets/items/weed.png", "A weed. Not very useful."),
     'thatch': Item.new("Thatch", 1, "res://assets/items/thatch.png", "A bundle of thatch. Used for lots of things."),
     'generic_crop': Food.new("Sample Crop", 50, "res://assets/items/product.png", 10, "A fruit of some kind."),
-    'generic_seeds': Seeds.new("Sample Seeds", 20, "res://assets/items/crop.png", 3, "generic_crop"),
+    'generic_seeds': Seeds.new("Sample Seeds", 20, "res://assets/items/seeds.png", 3, "generic_crop", "res://assets/tiles/sample_crop_stages.png"),
     'fertilizer': Consumable.new("Fertilizer", 40, "res://assets/items/fertilizer.png", "A mix of high-grade animal manure guaranteed to make your fields more fertile."),
-    'generic_sapling': Sapling.new("Sample Sapling", 100, "res://assets/items/sapling.png", 30, "generic_crop", 1, 28),
+    'generic_sapling': Sapling.new("Sample Sapling", 100, "res://assets/items/sapling.png", 30, "generic_crop", "res://assets/tiles/sample_sapling_stages.png", 1, 28),
   }
   for k in items.keys():
     items[k].key = k

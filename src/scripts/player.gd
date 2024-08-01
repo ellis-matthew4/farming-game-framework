@@ -147,12 +147,10 @@ func _interact(held):
     _set_tool_interact_area_size(false)
   elif currently_held_item is Food:
     Globals.remove_from_inventory(currently_held_item_id, 1)
-    Globals.repopulate_quick_inventory()
   elif currently_held_item is Seeds or currently_held_item is Sapling:
     print("seeds")
     for n in li:
       if n is Soil and n.tilled:
-        print("sowing")
         n.sow(currently_held_item)
         Globals.remove_from_inventory(currently_held_item_id, 1)
   elif currently_held_item is Consumable:

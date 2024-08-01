@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b72bt1wm5h647"
-path="res://.godot/imported/crop.png-ff95c886c64815e93af0c348c577070a.ctex"
+uid="uid://cmi4c8l3ykdtt"
+path="res://.godot/imported/sample_sapling_stages.png-14b352dc7b9f08494dc6ccc5f1c08635.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/items/crop.png"
-dest_files=["res://.godot/imported/crop.png-ff95c886c64815e93af0c348c577070a.ctex"]
+source_file="res://assets/tiles/sample_sapling_stages.png"
+dest_files=["res://.godot/imported/sample_sapling_stages.png-14b352dc7b9f08494dc6ccc5f1c08635.ctex"]
 
 [params]
 

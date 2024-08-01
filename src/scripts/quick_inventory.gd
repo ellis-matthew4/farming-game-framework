@@ -4,13 +4,6 @@ var grid = Grid.new(1, 10)
 @onready var SlotScene = preload("res://scenes/Menus/InventorySlot.tscn")
 
 signal focus_change
-signal populated
-signal empty
-
-func _ready():
-  _populate()
-  await self.populated
-  focus(_get_current(), 0.01)
 
 func _process(_delta):
   if Globals.can_accept_mw_input:
@@ -37,23 +30,6 @@ func _get_prev():
   
 func _get_current():
   return $HBoxContainer.get_child(grid.get_current() - 1)
-  
-func _populate():
-  _depopulate()
-  await self.empty
-  for i in range(0, 10):
-    var slot = SlotScene.instantiate()
-    $HBoxContainer.call_deferred("add_child", slot)
-    slot.from_index(i)
-    slot.context = "quick"
-  await get_tree().process_frame
-  emit_signal("populated")
-
-func _depopulate():
-  for c in $HBoxContainer.get_children():
-    $HBoxContainer.remove_child(c)
-    c.queue_free()
-  emit_signal('empty')
 
 func _wait_and_reset(timeout):
   Globals.can_accept_mw_input = false
@@ -70,3 +46,6 @@ func defocus(node):
 
 func focused_index():
   return grid.get_i()
+
+func _on_visibility_changed():
+  focus(_get_current(), 0.01)

@@ -34,7 +34,6 @@ func create(i: String):
 func interact():
   if can_interact:
     if Globals.try_add_inventory(item_id):
-      Globals.repopulate_quick_inventory()
       queue_free()
   else:
     await self.interactible
