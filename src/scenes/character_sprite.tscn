@@ -1,10 +1,30 @@
-[gd_scene load_steps=7 format=3 uid="uid://n8bat8ok7bdj"]
+[gd_scene load_steps=30 format=3 uid="uid://n8bat8ok7bdj"]
 
 [ext_resource type="Script" path="res://scripts/CharacterSprite.gd" id="1_shgbc"]
 [ext_resource type="SpriteFrames" uid="uid://vaquunxferva" path="res://scenes/character_resources/body_animations.tres" id="2_a4idj"]
 [ext_resource type="Texture2D" uid="uid://bbrd47gpjfmnj" path="res://assets/char/eye/eye1_down.png" id="3_4747y"]
 [ext_resource type="Texture2D" uid="uid://bldxngofd4vmq" path="res://assets/char/eye/eye1_down2.png" id="3_va8uu"]
 [ext_resource type="Texture2D" uid="uid://clkjgw1bvainy" path="res://assets/char/eye/eye1_side.png" id="4_2cewy"]
+[ext_resource type="Texture2D" uid="uid://c1vgvvffjjyyh" path="res://assets/char/eye/eye1_side2.png" id="5_qeyh7"]
+[ext_resource type="Texture2D" uid="uid://dbta0se13tio6" path="res://assets/char/shirt/tshirt_down2.png" id="6_68ry1"]
+[ext_resource type="Texture2D" uid="uid://cn6em2dffw4o6" path="res://assets/char/shirt/tshirt_down1.png" id="7_enmfr"]
+[ext_resource type="Texture2D" uid="uid://dr1ug1ajk0edk" path="res://assets/char/eye/empty.png" id="7_i62fr"]
+[ext_resource type="Texture2D" uid="uid://mr7ospsuogvd" path="res://assets/char/shirt/tshirt_down3.png" id="8_2yp2f"]
+[ext_resource type="Texture2D" uid="uid://bfb3grkcjgjma" path="res://assets/char/shirt/tshit_side2.png" id="9_emah1"]
+[ext_resource type="Texture2D" uid="uid://dea32xascn1p2" path="res://assets/char/shirt/tshit_side1.png" id="10_p34c4"]
+[ext_resource type="Texture2D" uid="uid://bhrb78a8y5huo" path="res://assets/char/shirt/tshit_side3.png" id="11_6h5e2"]
+[ext_resource type="Texture2D" uid="uid://b5ou3hs4r2uj7" path="res://assets/char/pants/shorts_down2.png" id="14_xdtoy"]
+[ext_resource type="Texture2D" uid="uid://deruwx6xpt7bk" path="res://assets/char/pants/shorts_down3.png" id="15_d5k7k"]
+[ext_resource type="Texture2D" uid="uid://bwuy454fq80vi" path="res://assets/char/pants/shorts_down1.png" id="16_7eqx4"]
+[ext_resource type="Texture2D" uid="uid://4sk1t0s5v6mw" path="res://assets/char/pants/shorts_side2.png" id="17_t3ynb"]
+[ext_resource type="Texture2D" uid="uid://dhwvpnioufxfd" path="res://assets/char/pants/shorts_side3.png" id="18_keqcn"]
+[ext_resource type="Texture2D" uid="uid://drtpj20mv1yis" path="res://assets/char/pants/shorts_side1.png" id="19_krlbg"]
+[ext_resource type="Texture2D" uid="uid://bk61v7i3focmo" path="res://assets/char/shoes/shoes1_down2.png" id="20_dkqsd"]
+[ext_resource type="Texture2D" uid="uid://cxffy1tusinsp" path="res://assets/char/shoes/shoes1_down3.png" id="21_mye45"]
+[ext_resource type="Texture2D" uid="uid://dyevkt686d84k" path="res://assets/char/shoes/shoes1_down1.png" id="22_rgdx5"]
+[ext_resource type="Texture2D" uid="uid://bf28uvujsi2ik" path="res://assets/char/shoes/shoes1_side2.png" id="23_ukpbu"]
+[ext_resource type="Texture2D" uid="uid://bsf0x3xwl6wrj" path="res://assets/char/shoes/shoes1_side3.png" id="24_2eskt"]
+[ext_resource type="Texture2D" uid="uid://df7bki83uq6qi" path="res://assets/char/shoes/shoes1_side1.png" id="25_6iawc"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_an1wx"]
 animations = [{
@@ -21,20 +41,189 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("5_qeyh7")
+}, {
+"duration": 1.0,
 "texture": ExtResource("4_2cewy")
 }],
 "loop": true,
 "name": &"side",
-"speed": 5.0
+"speed": 10.0
 }, {
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_i62fr")
+}],
 "loop": true,
 "name": &"up",
 "speed": 5.0
 }]
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_ucmnm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_xdtoy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_d5k7k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_xdtoy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_7eqx4")
+}],
+"loop": true,
+"name": &"down",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_t3ynb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_keqcn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_t3ynb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_krlbg")
+}],
+"loop": true,
+"name": &"side",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_xdtoy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_d5k7k")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_xdtoy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_7eqx4")
+}],
+"loop": true,
+"name": &"up",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mahxh"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_68ry1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_2yp2f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_68ry1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_enmfr")
+}],
+"loop": true,
+"name": &"down",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_emah1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_p34c4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_emah1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_6h5e2")
+}],
+"loop": true,
+"name": &"side",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_68ry1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_2yp2f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_68ry1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_enmfr")
+}],
+"loop": true,
+"name": &"up",
+"speed": 10.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_13iqr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_dkqsd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_mye45")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_dkqsd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_rgdx5")
+}],
+"loop": true,
+"name": &"down",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("23_ukpbu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_2eskt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_ukpbu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_6iawc")
+}],
+"loop": true,
+"name": &"side",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_dkqsd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_mye45")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_dkqsd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_rgdx5")
+}],
+"loop": true,
+"name": &"up",
+"speed": 10.0
+}]
+
 [node name="CharacterSprite" type="Node2D"]
 script = ExtResource("1_shgbc")
+process = true
 
 [node name="body" type="AnimatedSprite2D" parent="."]
 modulate = Color(0.913725, 0.784314, 0.737255, 1)
@@ -45,5 +234,23 @@ centered = false
 [node name="eyes" type="AnimatedSprite2D" parent="."]
 modulate = Color(0, 0, 1, 1)
 sprite_frames = SubResource("SpriteFrames_an1wx")
+animation = &"down"
+centered = false
+
+[node name="pants" type="AnimatedSprite2D" parent="."]
+modulate = Color(0.870588, 0.721569, 0.529412, 1)
+sprite_frames = SubResource("SpriteFrames_ucmnm")
+animation = &"down"
+centered = false
+
+[node name="shirt" type="AnimatedSprite2D" parent="."]
+modulate = Color(0.498039, 1, 0.831373, 1)
+sprite_frames = SubResource("SpriteFrames_mahxh")
+animation = &"down"
+centered = false
+
+[node name="shoes" type="AnimatedSprite2D" parent="."]
+modulate = Color(0.870588, 0.721569, 0.529412, 1)
+sprite_frames = SubResource("SpriteFrames_13iqr")
 animation = &"down"
 centered = false
