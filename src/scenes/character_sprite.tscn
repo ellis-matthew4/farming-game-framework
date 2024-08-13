@@ -1,4 +1,4 @@
-[gd_scene load_steps=68 format=3 uid="uid://n8bat8ok7bdj"]
+[gd_scene load_steps=77 format=3 uid="uid://n8bat8ok7bdj"]
 
 [ext_resource type="Script" path="res://scripts/CharacterSprite.gd" id="1_shgbc"]
 [ext_resource type="SpriteFrames" uid="uid://vaquunxferva" path="res://scenes/character_resources/body_animations.tres" id="2_a4idj"]
@@ -52,13 +52,22 @@
 [ext_resource type="Texture2D" uid="uid://cyji0tys38mpp" path="res://assets/char/eye/moist_lashes_side2.png" id="29_kkxog"]
 [ext_resource type="Texture2D" uid="uid://b0semehlwrvog" path="res://assets/char/eye/moist_lashes_side1.png" id="30_nbtel"]
 [ext_resource type="Texture2D" uid="uid://br8y5mhs1dvun" path="res://assets/char/eye/moist_side2.png" id="31_3ffqi"]
+[ext_resource type="Texture2D" uid="uid://b60q8a6iltivg" path="res://assets/char/pants/pants_down2.png" id="32_5s3fx"]
 [ext_resource type="Texture2D" uid="uid://gl2dcoddk3pp" path="res://assets/char/eye/moist_side1.png" id="32_xdxhq"]
+[ext_resource type="Texture2D" uid="uid://bpg10buhqiyb3" path="res://assets/char/pants/pants_down3.png" id="33_m7fh5"]
+[ext_resource type="Texture2D" uid="uid://54t4ey3c5tk3" path="res://assets/char/pants/pants_down1.png" id="34_nppog"]
+[ext_resource type="Texture2D" uid="uid://b3q4gn5qj3v68" path="res://assets/char/pants/pants_side2.png" id="35_l6nub"]
+[ext_resource type="Texture2D" uid="uid://10u7y3dlm3g6" path="res://assets/char/pants/pants_side3.png" id="36_h1qp0"]
 [ext_resource type="Texture2D" uid="uid://ccyhxeaxhb56e" path="res://assets/char/eye/sclera2.png" id="36_xwfeb"]
+[ext_resource type="Texture2D" uid="uid://7w7emwavcnh0" path="res://assets/char/pants/pants_side1.png" id="37_q1cep"]
 [ext_resource type="Texture2D" uid="uid://jqq7pxphemf7" path="res://assets/char/eye/sclera1.png" id="37_wqunw"]
 [ext_resource type="Texture2D" uid="uid://c4ljmi0bkywu0" path="res://assets/char/eye/sclera_side2.png" id="38_pfcsx"]
 [ext_resource type="Texture2D" uid="uid://eqm6mccbvmbq" path="res://assets/char/eye/sclera_side1.png" id="39_qknct"]
 [ext_resource type="Texture2D" uid="uid://c8bbi6b5ve2ow" path="res://assets/char/hair/pompadour_up2.png" id="40_6mqu0"]
 [ext_resource type="Texture2D" uid="uid://o8aqle67wctx" path="res://assets/char/hair/pompadour_up1.png" id="41_qeyt8"]
+[ext_resource type="Texture2D" uid="uid://b52ikam5ampag" path="res://assets/char/shirt/longsleeve_down2.png" id="44_uotf0"]
+[ext_resource type="Texture2D" uid="uid://bcjtt5lytn8hq" path="res://assets/char/shirt/longsleeve_down3.png" id="45_lll8q"]
+[ext_resource type="Texture2D" uid="uid://bd30um0ht2qrm" path="res://assets/char/shirt/longsleeve_down1.png" id="46_g10g2"]
 [ext_resource type="Texture2D" uid="uid://qpw8hqx175os" path="res://assets/char/hair/pompadour_side2.png" id="58_6cmb1"]
 [ext_resource type="Texture2D" uid="uid://dh0g8n67xna4i" path="res://assets/char/hair/pompadour_side1.png" id="59_xmqh6"]
 
@@ -242,6 +251,57 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("32_5s3fx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_m7fh5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_5s3fx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_nppog")
+}],
+"loop": true,
+"name": &"pants_down",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("35_l6nub")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_h1qp0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_l6nub")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_q1cep")
+}],
+"loop": true,
+"name": &"pants_side",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("32_5s3fx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_m7fh5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_5s3fx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_nppog")
+}],
+"loop": true,
+"name": &"pants_up",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("14_xdtoy")
 }, {
 "duration": 1.0,
@@ -294,6 +354,33 @@ animations = [{
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_mahxh"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("44_uotf0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_lll8q")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_uotf0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_g10g2")
+}],
+"loop": true,
+"name": &"longsleeve_down",
+"speed": 10.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"longsleeve_side",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"longsleeve_up",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("6_68ry1")

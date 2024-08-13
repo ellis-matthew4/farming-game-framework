@@ -11,9 +11,9 @@ extends Node2D
 @export var hair_color: Color = Color.BROWN
 
 @export_enum ("basic", "brows", "lashes", "moist", "moist_brow", "moist_lashes") var eye_style: String = "basic"
-@export_enum ("short_sleeve_tee") var shirt_style: String = "short_sleeve_tee"
+@export_enum ("short_sleeve_tee", "longsleeve") var shirt_style: String = "short_sleeve_tee"
 @export_enum ("combed", "pompadour") var hair_style: String = "combed"
-@export_enum ("shorts") var pants_style: String = "shorts"
+@export_enum ("shorts", "pants") var pants_style: String = "shorts"
 @export_enum ("sneakers") var shoe_style: String = "sneakers"
 
 @export_enum ("up", "down", "side") var animation: String = "down"
