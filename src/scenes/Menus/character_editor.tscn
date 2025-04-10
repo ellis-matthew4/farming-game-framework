@@ -1,0 +1,167 @@
+[gd_scene load_steps=4 format=3 uid="uid://crckauqu8hjdv"]
+
+[ext_resource type="Script" path="res://scripts/character_editor.gd" id="1_u8q5t"]
+[ext_resource type="PackedScene" uid="uid://cyymo1nxtcf40" path="res://scenes/Menus/scrolling_choice_box.tscn" id="2_bk716"]
+[ext_resource type="PackedScene" uid="uid://n8bat8ok7bdj" path="res://scenes/character_sprite.tscn" id="3_nd5xt"]
+
+[node name="CharacterEditor" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_u8q5t")
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(560, 580)
+layout_mode = 0
+offset_right = 30.0
+offset_bottom = 20.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Spacer" type="Control" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Create your Character!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+
+[node name="Label" type="Label" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Skin Color:"
+
+[node name="SkinColorChoice" type="ColorPickerButton" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="HairChoice" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_bk716")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="EyeChoice" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_bk716")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="ShirtChoice" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_bk716")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="PantsChoice" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_bk716")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="ShoeChoice" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_bk716")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="SexChoice" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("2_bk716")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(160, 300)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="WalkCycleToggle" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Walk Cycle"
+
+[node name="CenterContainer" type="CenterContainer" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 270)
+layout_mode = 2
+
+[node name="CharacterSprite" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/CenterContainer" instance=ExtResource("3_nd5xt")]
+position = Vector2(0, -20)
+scale = Vector2(5, 5)
+flip_h = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="RotateLBtn" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+text = "<"
+
+[node name="RotateRBtn" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = ">"
+
+[node name="Spacer" type="Control" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(420, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+
+[node name="CharName" type="LineEdit" parent="PanelContainer/VBoxContainer/PanelContainer"]
+layout_mode = 2
+placeholder_text = "Please enter your name."
+alignment = 1
+context_menu_enabled = false
+selecting_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="FinishBtn" type="Button" parent="PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Finish and Start Game"
+
+[node name="FileDialog" type="FileDialog" parent="."]
+
+[connection signal="color_changed" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/SkinColorChoice" to="." method="_on_skin_color_choice_color_changed"]
+[connection signal="changed" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/HairChoice" to="." method="_on_hair_choice_changed"]
+[connection signal="changed" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/EyeChoice" to="." method="_on_eye_choice_changed"]
+[connection signal="changed" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/ShirtChoice" to="." method="_on_shirt_choice_changed"]
+[connection signal="changed" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/PantsChoice" to="." method="_on_pants_choice_changed"]
+[connection signal="changed" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/VBoxContainer/ShoeChoice" to="." method="_on_shoe_choice_changed"]
+[connection signal="toggled" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/WalkCycleToggle" to="." method="_on_walk_cycle_toggle_toggled"]
+[connection signal="tree_entered" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/CenterContainer/CharacterSprite" to="." method="_on_character_sprite_tree_entered"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/RotateLBtn" to="." method="_on_rotate_l_btn_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/RotateRBtn" to="." method="_on_rotate_r_btn_pressed"]
+[connection signal="tree_entered" from="PanelContainer/VBoxContainer/PanelContainer/CharName" to="." method="_on_char_name_tree_entered"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/FinishBtn" to="." method="_on_finish_btn_pressed"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

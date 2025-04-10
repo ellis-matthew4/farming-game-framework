@@ -10,15 +10,25 @@ extends Node2D
 @export var shoes_color: Color = Color.BURLYWOOD
 @export var hair_color: Color = Color.BROWN
 
+var exposed_eye_styles = ["basic", "brows", "lashes", "moist", "moist_brow", "moist_lashes"]
 @export_enum ("basic", "brows", "lashes", "moist", "moist_brow", "moist_lashes") var eye_style: String = "basic"
+var exposed_shirt_styles = ["short_sleeve_tee", "longsleeve"]
 @export_enum ("short_sleeve_tee", "longsleeve") var shirt_style: String = "short_sleeve_tee"
+var exposed_hair_styles = ["combed", "pompadour"]
 @export_enum ("combed", "pompadour") var hair_style: String = "combed"
+var exposed_pants_styles = ["shorts", "pants"]
 @export_enum ("shorts", "pants") var pants_style: String = "shorts"
+var exposed_shoe_styles = ["sneakers"]
 @export_enum ("sneakers") var shoe_style: String = "sneakers"
 
 @export_enum ("up", "down", "side") var animation: String = "down"
 @export var playing: bool = false 
 @export var frame: int = 0
+@export var flip_h: bool = false:
+  set(value):
+    flip_h = value
+    for c in get_children():
+      c.flip_h = value
 
 func _process(delta):
   if not process:
@@ -50,6 +60,8 @@ func _process(delta):
           pass
         else:
           anim_key = str(eye_style, "_", animation)
+      "sclera":
+        pass
       "pants":
         anim_key = str(pants_style, "_", animation)
       "shirt":
