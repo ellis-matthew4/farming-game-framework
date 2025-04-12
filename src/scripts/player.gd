@@ -11,6 +11,8 @@ func _ready():
   care_about_collision = true
   if Globals.player_position != null:
     global_position = Globals.player_position
+  var char_preset = Globals.player_char
+  $AnimatedSprite2D.deserialize(char_preset)
   connect("state_change", _on_state_change)
 
 func _physics_process(delta):
@@ -42,6 +44,8 @@ func _physics_process(delta):
       Globals.menuLayer.debug_menu()
     elif Input.is_action_just_pressed("debug_talk"):
       Globals.menuLayer.open_shop("sample_shop")
+    elif Input.is_action_just_pressed("ux_cedit"):
+      Globals.menuLayer.open_cedit("ADMIN" if Input.is_action_pressed("ux_modify") else "EDIT")
     
     if state == states.IDLE:
       var input = _parse_movement()
@@ -168,7 +172,7 @@ func _cancel():
   
 func turn_anim(anim):
   if Input.is_action_pressed("ux_modify"):
-    $AnimatedSprite2D.play()
+    $AnimatedSprite2D.play($AnimatedSprite2D.animation)
     return
   else:
     super(anim)

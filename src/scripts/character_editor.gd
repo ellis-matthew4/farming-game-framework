@@ -11,6 +11,7 @@ var CharName
 var CharacterSprite
 
 @export_enum ("BASIC", "EDIT", "ADMIN") var mode = "BASIC"
+signal done
 
 var rotation_index = 0:
   set(value):
@@ -20,7 +21,6 @@ var rotation_index = 0:
       rotation_index = 3
     else:
       rotation_index = value
-    var anim
     if rotation_index == 0:
       CharacterSprite.flip_h = false
       CharacterSprite.animation = "down"
@@ -72,8 +72,6 @@ func _ready():
   SexChoice.hide_color_picker()
   
   CharName = find_child("CharName")
-  
-  CharacterSprite.process = true
 
 func _on_hair_choice_changed(new, color):
   CharacterSprite.hair_style = new
@@ -111,11 +109,13 @@ func _on_skin_color_choice_color_changed(color):
 func _on_finish_btn_pressed():
   match(mode):
     "BASIC":
-      pass
+      Globals.player_char = CharacterSprite.serialize()
     "EDIT":
-      pass
+      Globals.player_char = CharacterSprite.serialize()
+      Globals.player().find_child("AnimatedSprite2D").deserialize(Globals.player_char)
     "ADMIN":
       $FileDialog.popup_centered_ratio()
+  emit_signal("done")
 
 func _on_file_dialog_file_selected(path):
   if not mode == "ADMIN":

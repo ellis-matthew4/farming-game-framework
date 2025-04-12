@@ -1,7 +1,4 @@
-@tool
 extends Node2D
-
-@export var process: bool = false
 
 @export var skin_color: Color = Color('e9c8bc')
 @export var eye_color: Color = Color.BLUE
@@ -31,8 +28,6 @@ var exposed_shoe_styles = ["sneakers"]
       c.flip_h = value
 
 func _process(delta):
-  if not process:
-    return
   if $body.modulate != skin_color:
     $body.modulate = skin_color
   if $eyes.modulate != eye_color:
@@ -72,6 +67,8 @@ func _process(delta):
         print(c.name)
     if c.animation != anim_key:
       c.animation = anim_key
+      
+    # animation controls. TODO: Optimize to not check at all if operation is finished.
     if not playing and c.frame != frame:
       c.frame = frame
     if playing and not c.is_playing():
@@ -82,6 +79,10 @@ func _process(delta):
 func play(anim):
   animation = anim
   playing = true
+  
+func stop():
+  playing = false
+  frame = 0
 
 func serialize():
   return {
@@ -91,6 +92,11 @@ func serialize():
     'pants_color': pants_color,
     'shoes_color': shoes_color,
     'hair_color': hair_color,
+    'eye_style': eye_style,
+    'shirt_style': shirt_style,
+    'pants_style': pants_style,
+    'shoes_style': shoe_style,
+    'hair_style': hair_style,
   }
   
 func deserialize(obj):
@@ -100,3 +106,8 @@ func deserialize(obj):
   pants_color = obj['pants_color']
   shoes_color = obj['shoes_color']
   hair_color = obj['hair_color']
+  eye_style = obj['eye_style']
+  shirt_style = obj['shirt_style']
+  pants_style = obj['pants_style']
+  shoe_style = obj['shoes_style']
+  hair_style = obj['hair_style']

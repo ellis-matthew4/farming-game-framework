@@ -3,7 +3,6 @@ extends CanvasLayer
 @onready var charNodes = get_node("Characters")
 @onready var textBox = get_node("TextBox/TextControl/Dialogue")
 @onready var nameBox = get_node("TextBox/TextControl/Name")
-@onready var lineEdit = get_node("TextBox/TextControl/LineEdit")
 var choice = preload("res://xdl/Choice.tscn") # Change this!
 
 var labels = {}
@@ -161,16 +160,9 @@ func statement():
       hide_all_npcs()
     "cleanup_after_event":
       cleanup_after_event()
-    "ask_for_name":
-      ask_for_name()
     _:
       print(line)
       nextLine()
-      
-func ask_for_name():
-  textBox.hide()
-  lineEdit.show()
-  lineEdit.grab_focus()
       
 func show_npc():
   var args = line['args']
@@ -422,9 +414,3 @@ func TypeOf(s):
     return empty    
   else :
     return operand  
-
-func _on_line_edit_text_submitted(new_text):
-  Globals.player_name = new_text
-  textBox.show()
-  lineEdit.hide()
-  nextLine()

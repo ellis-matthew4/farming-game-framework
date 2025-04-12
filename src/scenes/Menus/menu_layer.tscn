@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=3 uid="uid://bwehqhews1spy"]
+[gd_scene load_steps=19 format=3 uid="uid://bwehqhews1spy"]
 
 [ext_resource type="Script" path="res://scripts/menu_layer.gd" id="1_umgjm"]
 [ext_resource type="PackedScene" uid="uid://ydgkkqqwkjhb" path="res://scenes/Menus/quick_inventory.tscn" id="2_j2ln7"]
 [ext_resource type="Shader" path="res://assets/shaders/weather_effect.gdshader" id="2_xppdk"]
 [ext_resource type="PackedScene" uid="uid://beegtvyc7d17t" path="res://xdl/Display.tscn" id="4_6d05k"]
 [ext_resource type="PackedScene" uid="uid://ccxwdnux1ow56" path="res://scenes/Menus/shop.tscn" id="5_dyafq"]
+[ext_resource type="PackedScene" uid="uid://crckauqu8hjdv" path="res://scenes/Menus/character_editor.tscn" id="6_313ou"]
 
 [sub_resource type="Animation" id="Animation_gdtri"]
 length = 0.001
@@ -292,3 +293,23 @@ visible = false
 
 [node name="Shop" parent="." instance=ExtResource("5_dyafq")]
 visible = false
+
+[node name="CE_Container" type="CenterContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CharacterEditor" parent="CE_Container" instance=ExtResource("6_313ou")]
+layout_mode = 2
+mode = "ADMIN"
+
+[connection signal="done" from="CE_Container/CharacterEditor" to="." method="_on_character_editor_done"]

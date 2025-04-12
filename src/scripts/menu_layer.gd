@@ -111,3 +111,15 @@ func close_shop():
   $Shop.hide()
   show_hud()
   $Shop.depopulate()
+
+func open_cedit(mode):
+  hide_hud()
+  $CE_Container/CharacterEditor.mode = mode
+  $CE_Container.show()
+  
+func hide_cedit():
+  show_hud()
+  $CE_Container.hide()
+
+func _on_character_editor_done():
+  hide_cedit()

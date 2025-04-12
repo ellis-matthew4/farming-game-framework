@@ -8,7 +8,8 @@ func _ready():
   _generate_saves()
 
 func _on_new_pressed():
-  Globals.start_game(null)
+  $Main.hide()
+  $CharEdit.show()
 
 func _on_load_pressed():
   $Main.hide()
@@ -38,3 +39,6 @@ func _generate_saves():
   back_btn.text = "Back"
   $Saves.add_child(back_btn)
   back_btn.connect("pressed2", _back)
+
+func _on_character_editor_done():
+  Globals.start_game(null)

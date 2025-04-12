@@ -8,6 +8,7 @@ const MAP_GRID_SIZE = 16
 var player_name = "Dorito"
 var can_accept_mw_input = true
 var movement_blocked = false
+var player_char = {}
 var max_inventory_slots = 30
 var unlocked_inventory_slots = 10
 var keyboard = true
@@ -278,7 +279,8 @@ func _serialize_game_state():
     'max_stam': max_stamina,
     'money': money,
     'inventory': inventory,
-    'lz': already_seen_events
+    'lz': already_seen_events,
+    'char': player_char
   }
   return save
   
@@ -294,6 +296,7 @@ func _deserialize_save(data):
   money = data['money']
   inventory = data['inventory']
   already_seen_events = data['lz']
+  player_char = data['char']
       
 func get_save_files():
   DirAccess.make_dir_absolute("user://saves")
