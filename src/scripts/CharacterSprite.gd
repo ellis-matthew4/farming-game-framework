@@ -8,24 +8,48 @@ extends Node2D
 @export var hair_color: Color = Color.BROWN
 
 var exposed_eye_styles = ["basic", "brows", "lashes", "moist", "moist_brow", "moist_lashes"]
-@export_enum ("basic", "brows", "lashes", "moist", "moist_brow", "moist_lashes") var eye_style: String = "basic"
+@export_enum ("basic", "brows", "lashes", "moist", "moist_brow", "moist_lashes") var eye_style: String = "basic":
+  set(value):
+    eye_style = value
+    reset()
+    
 var exposed_shirt_styles = ["short_sleeve_tee", "longsleeve"]
-@export_enum ("short_sleeve_tee", "longsleeve") var shirt_style: String = "short_sleeve_tee"
-var exposed_hair_styles = ["combed", "pompadour"]
-@export_enum ("combed", "pompadour") var hair_style: String = "combed"
+@export_enum ("short_sleeve_tee", "longsleeve") var shirt_style: String = "short_sleeve_tee":
+  set(value):
+    shirt_style = value
+    reset()
+    
+var exposed_hair_styles = ["combed", "pompadour", "gang_star"]
+@export_enum ("combed", "pompadour", "gang_star") var hair_style: String = "combed":
+  set(value):
+    hair_style = value
+    reset()
+    
 var exposed_pants_styles = ["shorts", "pants"]
-@export_enum ("shorts", "pants") var pants_style: String = "shorts"
+@export_enum ("shorts", "pants") var pants_style: String = "shorts":
+  set(value):
+    pants_style = value
+    reset()
+    
 var exposed_shoe_styles = ["sneakers"]
-@export_enum ("sneakers") var shoe_style: String = "sneakers"
+@export_enum ("sneakers") var shoe_style: String = "sneakers":
+  set(value):
+    shoe_style = value
+    reset()
 
-@export_enum ("up", "down", "side") var animation: String = "down"
-@export var playing: bool = false 
+@export_enum ("up", "down", "side") var animation: String = "down":
+  set(value):
+    animation = value
+    reset()
+    
+@export var playing: bool = false
 @export var frame: int = 0
 @export var flip_h: bool = false:
   set(value):
     flip_h = value
     for c in get_children():
       c.flip_h = value
+    reset()
 
 func _process(delta):
   if $body.modulate != skin_color:
@@ -67,6 +91,7 @@ func _process(delta):
         print(c.name)
     if c.animation != anim_key:
       c.animation = anim_key
+      print(anim_key)
       
     # animation controls. TODO: Optimize to not check at all if operation is finished.
     if not playing and c.frame != frame:
@@ -76,13 +101,18 @@ func _process(delta):
     elif not playing and c.is_playing():
       c.stop()
 
-func play(anim):
-  animation = anim
+func play():
   playing = true
   
 func stop():
   playing = false
   frame = 0
+  
+func reset():
+  if playing:
+    stop()
+    await  get_tree().create_timer(0.001).timeout
+    play()
 
 func serialize():
   return {

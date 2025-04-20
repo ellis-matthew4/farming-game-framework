@@ -1,4 +1,4 @@
-[gd_scene load_steps=77 format=3 uid="uid://n8bat8ok7bdj"]
+[gd_scene load_steps=86 format=3 uid="uid://n8bat8ok7bdj"]
 
 [ext_resource type="Script" path="res://scripts/CharacterSprite.gd" id="1_shgbc"]
 [ext_resource type="SpriteFrames" uid="uid://vaquunxferva" path="res://scenes/character_resources/body_animations.tres" id="2_a4idj"]
@@ -70,6 +70,15 @@
 [ext_resource type="Texture2D" uid="uid://bd30um0ht2qrm" path="res://assets/char/shirt/longsleeve_down1.png" id="46_g10g2"]
 [ext_resource type="Texture2D" uid="uid://qpw8hqx175os" path="res://assets/char/hair/pompadour_side2.png" id="58_6cmb1"]
 [ext_resource type="Texture2D" uid="uid://dh0g8n67xna4i" path="res://assets/char/hair/pompadour_side1.png" id="59_xmqh6"]
+[ext_resource type="Texture2D" uid="uid://dfs7q7sdoh1yd" path="res://assets/char/hair/gang_star_down1.png" id="65_hxy5f"]
+[ext_resource type="Texture2D" uid="uid://c72k0ac01vu4m" path="res://assets/char/hair/gang_star_down2.png" id="66_oonyl"]
+[ext_resource type="Texture2D" uid="uid://qwyl5sdfcu2k" path="res://assets/char/hair/gang_star_down3.png" id="67_ytj3o"]
+[ext_resource type="Texture2D" uid="uid://0xfxhrxo115u" path="res://assets/char/hair/gang_star_side1.png" id="68_s81rn"]
+[ext_resource type="Texture2D" uid="uid://jxo0ittdtl2y" path="res://assets/char/hair/gang_star_side2.png" id="69_2k5r2"]
+[ext_resource type="Texture2D" uid="uid://dpsoacr2dxr2a" path="res://assets/char/hair/gang_star_side3.png" id="70_3w5pd"]
+[ext_resource type="Texture2D" uid="uid://k0rsjsvmr2gl" path="res://assets/char/hair/gang_star_up1.png" id="71_4rkyb"]
+[ext_resource type="Texture2D" uid="uid://3u7w3v3f2wi2" path="res://assets/char/hair/gang_star_up2.png" id="72_wk57w"]
+[ext_resource type="Texture2D" uid="uid://spow3longdi8" path="res://assets/char/hair/gang_star_up3.png" id="73_8xjdl"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_rvurj"]
 animations = [{
@@ -524,6 +533,57 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": ExtResource("65_hxy5f")
+}, {
+"duration": 1.0,
+"texture": ExtResource("66_oonyl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("67_ytj3o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("66_oonyl")
+}],
+"loop": true,
+"name": &"gang_star_down",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("68_s81rn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("69_2k5r2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("70_3w5pd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("69_2k5r2")
+}],
+"loop": true,
+"name": &"gang_star_side",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("71_4rkyb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("72_wk57w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("73_8xjdl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("72_wk57w")
+}],
+"loop": true,
+"name": &"gang_star_up",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": ExtResource("9_io6ii")
 }, {
 "duration": 1.0,
@@ -573,7 +633,7 @@ centered = false
 [node name="eyes" type="AnimatedSprite2D" parent="."]
 modulate = Color(0, 0, 1, 1)
 sprite_frames = SubResource("SpriteFrames_an1wx")
-animation = &"basic_down"
+animation = &"moist_down"
 centered = false
 
 [node name="pants" type="AnimatedSprite2D" parent="."]
@@ -585,7 +645,7 @@ centered = false
 [node name="shirt" type="AnimatedSprite2D" parent="."]
 modulate = Color(0.498039, 1, 0.831373, 1)
 sprite_frames = SubResource("SpriteFrames_mahxh")
-animation = &"short_sleeve_tee_down"
+animation = &"longsleeve_down"
 centered = false
 
 [node name="shoes" type="AnimatedSprite2D" parent="."]

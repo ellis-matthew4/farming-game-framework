@@ -8,6 +8,7 @@ var PantsChoice
 var ShoeChoice
 var SexChoice
 var CharName
+var WalkCycle = false
 var CharacterSprite
 
 @export_enum ("BASIC", "EDIT", "ADMIN") var mode = "BASIC"
@@ -100,7 +101,8 @@ func _on_rotate_r_btn_pressed():
   rotation_index += 1
 
 func _on_walk_cycle_toggle_toggled(toggled_on):
-  CharacterSprite.playing = toggled_on
+  WalkCycle = toggled_on
+  CharacterSprite.playing = WalkCycle
   CharacterSprite.frame = 0
 
 func _on_skin_color_choice_color_changed(color):
