@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=3 uid="uid://n8bat8ok7bdj"]
+[gd_scene load_steps=89 format=3 uid="uid://n8bat8ok7bdj"]
 
 [ext_resource type="Script" path="res://scripts/CharacterSprite.gd" id="1_shgbc"]
 [ext_resource type="SpriteFrames" uid="uid://vaquunxferva" path="res://scenes/character_resources/body_animations.tres" id="2_a4idj"]
@@ -68,6 +68,9 @@
 [ext_resource type="Texture2D" uid="uid://b52ikam5ampag" path="res://assets/char/shirt/longsleeve_down2.png" id="44_uotf0"]
 [ext_resource type="Texture2D" uid="uid://bcjtt5lytn8hq" path="res://assets/char/shirt/longsleeve_down3.png" id="45_lll8q"]
 [ext_resource type="Texture2D" uid="uid://bd30um0ht2qrm" path="res://assets/char/shirt/longsleeve_down1.png" id="46_g10g2"]
+[ext_resource type="Texture2D" uid="uid://denomjsim6rrg" path="res://assets/char/shirt/longsleeve_side2.png" id="47_yeklx"]
+[ext_resource type="Texture2D" uid="uid://b7c324ep5sf0h" path="res://assets/char/shirt/longsleeve_side1.png" id="48_eh1uc"]
+[ext_resource type="Texture2D" uid="uid://desugbhonlbg3" path="res://assets/char/shirt/longsleeve_side3.png" id="49_oyx2n"]
 [ext_resource type="Texture2D" uid="uid://qpw8hqx175os" path="res://assets/char/hair/pompadour_side2.png" id="58_6cmb1"]
 [ext_resource type="Texture2D" uid="uid://dh0g8n67xna4i" path="res://assets/char/hair/pompadour_side1.png" id="59_xmqh6"]
 [ext_resource type="Texture2D" uid="uid://dfs7q7sdoh1yd" path="res://assets/char/hair/gang_star_down1.png" id="65_hxy5f"]
@@ -380,15 +383,39 @@ animations = [{
 "name": &"longsleeve_down",
 "speed": 10.0
 }, {
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("47_yeklx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_eh1uc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_yeklx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_oyx2n")
+}],
 "loop": true,
 "name": &"longsleeve_side",
-"speed": 5.0
+"speed": 10.0
 }, {
-"frames": [],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("44_uotf0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_g10g2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_uotf0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_lll8q")
+}],
 "loop": true,
 "name": &"longsleeve_up",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,

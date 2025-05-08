@@ -101,8 +101,10 @@ func _process(delta):
     elif not playing and c.is_playing():
       c.stop()
 
-func play():
+func play(anim = null):
   playing = true
+  if anim != null:
+    animation = anim
   
 func stop():
   playing = false

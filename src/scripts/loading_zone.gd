@@ -66,9 +66,9 @@ func camera_constraints():
     viewport.position = new_pos
     return viewport
   # adjust the positions for optimal camera alignment
-  minX -= (Globals.MAP_GRID_SIZE * 2)
+  minX -= (Globals.MAP_GRID_SIZE * 3)
   minY -= (Globals.MAP_GRID_SIZE * 5)
-  maxX += (Globals.MAP_GRID_SIZE * 2)
+  maxX += (Globals.MAP_GRID_SIZE * 3)
   maxY += (Globals.MAP_GRID_SIZE * 2)
   rect = Rect2(minX, minY, (maxX - minX), (maxY - minY))
   return rect

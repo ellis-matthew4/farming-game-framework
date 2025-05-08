@@ -127,3 +127,7 @@ func _on_file_dialog_file_selected(path):
   f.store_string(json)
   f.close()
   await get_tree().create_timer(0.01).timeout
+
+func _on_frame_btn_pressed():
+  var f = CharacterSprite.frame
+  CharacterSprite.frame = f + 1 if f < 3 else 0

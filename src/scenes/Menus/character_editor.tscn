@@ -134,6 +134,10 @@ text = "<"
 layout_mode = 2
 text = ">"
 
+[node name="FrameBtn" type="Button" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "+"
+
 [node name="Spacer" type="Control" parent="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
@@ -170,6 +174,7 @@ text = "Finish and Start Game"
 [connection signal="tree_entered" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/CenterContainer/CharacterSprite" to="." method="_on_character_sprite_tree_entered"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/RotateLBtn" to="." method="_on_rotate_l_btn_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/RotateRBtn" to="." method="_on_rotate_r_btn_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/MarginContainer/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/FrameBtn" to="." method="_on_frame_btn_pressed"]
 [connection signal="tree_entered" from="PanelContainer/VBoxContainer/PanelContainer/CharName" to="." method="_on_char_name_tree_entered"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/FinishBtn" to="." method="_on_finish_btn_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
