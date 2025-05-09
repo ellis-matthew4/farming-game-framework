@@ -45,4 +45,8 @@ collision_mask = 8
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickUpArea"]
 shape = SubResource("CircleShape2D_svtwa")
 
+[node name="DebugCamera" type="Camera2D" parent="."]
+ignore_rotation = false
+enabled = false
+
 [connection signal="body_entered" from="PickUpArea" to="." method="_on_pick_up_area_body_entered"]

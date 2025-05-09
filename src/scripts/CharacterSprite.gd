@@ -91,7 +91,6 @@ func _process(delta):
         print(c.name)
     if c.animation != anim_key:
       c.animation = anim_key
-      print(anim_key)
       
     # animation controls. TODO: Optimize to not check at all if operation is finished.
     if not playing and c.frame != frame:

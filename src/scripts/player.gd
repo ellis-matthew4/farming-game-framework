@@ -42,6 +42,8 @@ func _physics_process(delta):
       Globals.menuLayer.pause_menu()
     elif Input.is_action_just_pressed("ux_debug"):
       Globals.menuLayer.debug_menu()
+      $DebugCamera.enabled = true
+      $DebugCamera.make_current()
     elif Input.is_action_just_pressed("debug_talk"):
       Globals.menuLayer.open_shop("sample_shop")
     elif Input.is_action_just_pressed("ux_cedit"):

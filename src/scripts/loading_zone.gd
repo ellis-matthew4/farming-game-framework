@@ -25,6 +25,7 @@ func _on_body_exited(body):
     emit_signal("player_exited", self)
     
 func _on_player_entered(_zone, _player):
+  print("Entered zone ", get_name())
   if Globals.clock.time < Globals.last_event_at + 180:
     return
   var event_id = ready_to_show_event()
@@ -66,9 +67,9 @@ func camera_constraints():
     viewport.position = new_pos
     return viewport
   # adjust the positions for optimal camera alignment
-  minX -= (Globals.MAP_GRID_SIZE * 3)
-  minY -= (Globals.MAP_GRID_SIZE * 5)
-  maxX += (Globals.MAP_GRID_SIZE * 3)
-  maxY += (Globals.MAP_GRID_SIZE * 2)
+  minX -= (Globals.MAP_GRID_SIZE * 0)
+  minY -= (Globals.MAP_GRID_SIZE * 0)
+  maxX += (Globals.MAP_GRID_SIZE * 0)
+  maxY += (Globals.MAP_GRID_SIZE * 0)
   rect = Rect2(minX, minY, (maxX - minX), (maxY - minY))
   return rect

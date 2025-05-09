@@ -58,7 +58,6 @@ func get_state():
     'seed': game_seed,
     'mw input?': can_accept_mw_input,
     'can_move?': movement_blocked,
-    'player_moving?': player().moving,
     'inventory slots': str(unlocked_inventory_slots) + "/" + str(max_inventory_slots),
     'device': 'keyboard' if keyboard else 'controller',
     'time stopped?': time_stopped,
